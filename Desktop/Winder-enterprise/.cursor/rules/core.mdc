@@ -1,0 +1,40 @@
+---
+alwaysApply: true
+description: "Core rules for Winder Furniture — always active"
+---
+
+# Winder Furniture — Core Agent Rules
+
+## Project identity
+- App: Winder Enterprise — a premium e-commerce furniture shop for a single vendor in Durgapur, West Bengal, India
+- Admin email: winderenterprise.admin@gmail.com
+- Stack: Next.js 14 (App Router), Supabase (PostgreSQL + Auth), Cloudinary (images), Vercel (hosting), Razorpay (payments, Phase 2)
+- Language: TypeScript strict mode — never use `any`
+- Package manager: pnpm (never npm or yarn)
+
+## Non-negotiable rules
+- NEVER delete or overwrite existing working code without explicit instruction
+- NEVER switch the router — App Router only, no Pages Router patterns ever
+- NEVER introduce a new library without stating why and asking first
+- NEVER use inline styles — Tailwind utility classes only
+- NEVER hardcode secrets — all keys go in `.env.local`, referenced via `process.env`
+- NEVER commit `.env.local` — it is gitignored
+
+## Code quality
+- TypeScript strict mode — all files end in `.ts` or `.tsx`
+- Named exports only — no default exports except `page.tsx` and `layout.tsx` (Next.js requires it)
+- All async functions must have try/catch with proper error messages
+- No `console.log` left in production paths — use a `logger` utility
+- Keep components under 200 lines — extract if longer
+
+## File naming
+- Components: PascalCase (`ProductCard.tsx`)
+- Utilities / hooks: camelCase (`useCart.ts`, `formatPrice.ts`)
+- Route folders: kebab-case (`/app/product-detail/`)
+- Database types: generated from Supabase, stored in `types/supabase.ts`
+
+## Commit discipline
+- Commits are small and focused — one feature or fix per commit
+- Commit message format: `type(scope): short description`
+  - types: feat, fix, chore, refactor, style, docs
+  - example: `feat(products): add category filter to listing page`

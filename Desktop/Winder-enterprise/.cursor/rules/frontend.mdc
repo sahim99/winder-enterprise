@@ -1,0 +1,36 @@
+---
+alwaysApply: false
+globs:
+  - "src/app/**"
+  - "src/components/**"
+  - "src/hooks/**"
+description: "Next.js App Router and React component rules — applied to all frontend files"
+---
+
+# Frontend Rules
+
+## Next.js App Router
+- Server Components by default — only add `'use client'` when you need browser APIs, event handlers, or React state
+- Data fetching happens in Server Components via `async/await` — never `useEffect` for initial data
+- Use `loading.tsx` for loading states, `error.tsx` for error boundaries in every route segment
+- Images: always use `next/image` — never `<img>` tags
+
+## Styling
+- Tailwind CSS only — no CSS modules, no styled-components, no inline styles
+- Mobile-first: write base styles for mobile, override at `md:` and `lg:` breakpoints
+- Dark mode aware — use Tailwind `dark:` variants wherever relevant
+
+## Components
+- One component per file
+- Props must be typed with an explicit TypeScript interface above the component
+- Avoid prop drilling beyond 2 levels — use React Context or Zustand
+- shadcn/ui for all UI primitives (Button, Dialog, Input, etc.) — never modify files inside `components/ui/` directly
+
+## State management
+- Local UI state: `useState`
+- Cart state: Zustand store at `store/cart.ts`
+- Server state / caching: Next.js `fetch` with `revalidate`, not React Query (Phase 1)
+
+## Forms
+- react-hook-form + zod for all forms — no uncontrolled inputs
+- Show field-level validation errors inline, not in toasts

@@ -1,0 +1,33 @@
+---
+alwaysApply: false
+globs:
+  - "src/app/api/**"
+  - "src/lib/**"
+  - "supabase/**"
+description: "Supabase, API routes, and server-side logic rules"
+---
+
+# Backend Rules
+
+## Supabase
+- All DB access goes through `src/lib/supabase/` — never import supabase client directly in components
+- Use the server client (`createServerClient`) in Server Components and Route Handlers
+- Use the browser client (`createBrowserClient`) only in Client Components
+- Row Level Security (RLS) must be enabled on every table — no exceptions
+- Never expose the service role key to the client
+
+## API Route Handlers (`app/api/`)
+- Every route handler must validate input with zod before processing
+- Return consistent JSON shape: `{ data, error, message }`
+- HTTP status codes must be correct — 200, 201, 400, 401, 403, 404, 500
+- Rate limit sensitive routes (order creation, auth)
+
+## Database
+- All schema changes go through Supabase migrations (`supabase/migrations/`) — never edit tables manually in the dashboard during dev
+- Foreign keys must have proper `ON DELETE` behaviour defined
+- Index columns that are frequently filtered (`category_id`, `status`, `created_at`)
+
+## Image uploads (Cloudinary)
+- Upload happens server-side in an API route — never expose Cloudinary API secret to browser
+- Store only the Cloudinary public URL in the database, never the raw file
+- Transform images at the URL level (`c_fill,w_800,h_800,q_auto,f_auto`) — no client-side resizing

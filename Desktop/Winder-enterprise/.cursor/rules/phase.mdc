@@ -1,0 +1,38 @@
+---
+alwaysApply: true
+description: "Current build phase constraints — update when moving to next phase"
+---
+
+# Current phase: Phase 1 — Core shop, no payments yet
+
+## What is in scope RIGHT NOW
+- Homepage with hero, categories, featured products
+- Product listing page with category filter
+- Product detail page
+- Shopping cart (Zustand, client-side only)
+- Checkout form (name, phone, address, PIN — no payment gateway yet)
+- Order saved to Supabase, confirmation email via Resend
+- Admin panel at `/admin` — upload products, view orders, update stock
+- Cloudinary image upload in admin
+
+## What is OUT OF SCOPE in Phase 1 — do not build, do not scaffold
+- Razorpay or any payment gateway
+- Customer login / authentication
+- Order tracking page
+- Wishlist
+- Reviews
+- SMS / WhatsApp integration
+- Analytics dashboard
+- Coupons or discount codes
+
+## Phase 1 database tables (only these, nothing more)
+- `products` — id, name, slug, description, price, stock, category, images (text[]), is_published
+- `categories` — id, name, slug
+- `orders` — id, customer_name, phone, address, pin_code, city, state, items (jsonb), total, status, created_at
+- `admin_users` — id, email (single row, you are the only admin)
+
+## Definition of done for Phase 1
+- [ ] Customer can browse, filter, and view products
+- [ ] Customer can add to cart and place an order (cash on delivery)
+- [ ] Admin can log in, upload products with photos, and see incoming orders
+- [ ] Deployed and live on Vercel with a custom domain
