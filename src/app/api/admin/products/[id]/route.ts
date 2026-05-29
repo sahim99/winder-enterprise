@@ -17,14 +17,15 @@ const updateSchema = z.object({
   images: z.array(z.string()).optional(),
 })
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!checkAdmin(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
+    const { id } = await params
     const body = await request.json()
     const parsed = updateSchema.safeParse(body)
     if (!parsed.success) return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
     const supabase = await createServiceClient()
-    const { data, error } = await supabase.from('products').update(parsed.data as any).eq('id', params.id).select().single()
+    const { data, error } = await supabase.from('products').update(parsed.data as any).eq('id', id).select().single()
     if (error) throw error
     return NextResponse.json({ data })
   } catch (error) {
@@ -33,11 +34,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!checkAdmin(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
+    const { id } = await params
     const supabase = await createServiceClient()
-    const { error } = await supabase.from('products').delete().eq('id', params.id)
+    const { error } = await supabase.from('products').delete().eq('id', id)
     if (error) throw error
     return NextResponse.json({ success: true })
   } catch (error) {

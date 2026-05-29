@@ -86,6 +86,7 @@ export interface Database {
           items: Json
           total: number
           status: string
+          user_id: string | null
           created_at: string | null
         }
         Insert: {
@@ -99,6 +100,7 @@ export interface Database {
           items: Json
           total: number
           status?: string
+          user_id?: string | null
           created_at?: string | null
         }
         Update: {
@@ -112,6 +114,34 @@ export interface Database {
           items?: Json
           total?: number
           status?: string
+          user_id?: string | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          id: string
+          name: string | null
+          phone: string | null
+          role: string
+          saved_address: Json | null
+          created_at: string | null
+        }
+        Insert: {
+          id: string
+          name?: string | null
+          phone?: string | null
+          role?: string
+          saved_address?: Json | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          name?: string | null
+          phone?: string | null
+          role?: string
+          saved_address?: Json | null
           created_at?: string | null
         }
         Relationships: []
@@ -142,3 +172,4 @@ export type Product = Database['public']['Tables']['products']['Row'] & {
 }
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Order = Database['public']['Tables']['orders']['Row']
+export type Profile = Database['public']['Tables']['profiles']['Row']

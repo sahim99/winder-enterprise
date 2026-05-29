@@ -28,7 +28,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid order data', details: parsed.error.flatten() }, { status: 400 })
     }
     const supabase = await createServiceClient()
-    const { data, error } = await supabase.from('orders').insert(parsed.data as any).select().single()
+
+    // Get user_id from auth if logged in
+    const { createClient: createServerSupabase } = await import('@/lib/supabase/server')
+    const authClient = await createServerSupabase()
+    const { data: { user } } = await authClient.auth.getUser()
+
+    const { data, error } = await supabase.from('orders').insert({
+      ...parsed.data,
+      user_id: user?.id ?? null,
+    } as any).select().single()
     if (error) throw error
     sendNewOrderEmail(data).catch(err => console.error('Email send failed:', err))
     return NextResponse.json({ data }, { status: 201 })

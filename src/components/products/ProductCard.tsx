@@ -33,40 +33,40 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.slug}`} className="group">
-      <div className="overflow-hidden rounded-xl border bg-white transition-shadow hover:shadow-md">
-        <div className="relative aspect-square bg-gray-100 overflow-hidden">
+      <div className="overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group-hover:-translate-y-1">
+        <div className="relative aspect-[4/5] bg-muted/30 overflow-hidden">
           {product.images[0] ? (
             <Image
               src={product.images[0]}
               alt={product.name}
               fill
-              className="object-cover transition-transform group-hover:scale-105"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">No image</div>
+            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">No image</div>
           )}
           {isOutOfStock && (
-            <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
-              <Badge variant="secondary" className="text-xs">Out of stock</Badge>
+            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center">
+              <Badge variant="secondary" className="text-xs font-semibold uppercase tracking-wider">Out of stock</Badge>
             </div>
           )}
         </div>
-        <div className="p-4 space-y-3">
+        <div className="p-5 flex flex-col gap-3">
           <div>
-            <p className="text-sm text-gray-500 mb-1">{product.categories?.name}</p>
-            <h3 className="font-medium text-gray-900 line-clamp-2 leading-snug">{product.name}</h3>
+            <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase mb-1.5">{product.categories?.name}</p>
+            <h3 className="font-medium text-foreground line-clamp-2 leading-snug">{product.name}</h3>
           </div>
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-lg font-bold text-gray-900">{formatPrice(product.price)}</span>
+          <div className="flex items-end justify-between mt-auto pt-2">
+            <span className="text-lg font-bold text-foreground">{formatPrice(product.price)}</span>
             <Button
               size="sm"
               onClick={handleAddToCart}
               disabled={isOutOfStock}
-              className="flex-shrink-0"
+              className="rounded-full px-4 font-medium transition-transform active:scale-95"
               aria-label={`Add ${product.name} to cart`}
             >
-              <ShoppingCart className="h-4 w-4 mr-1" />
+              <ShoppingCart className="h-4 w-4 mr-1.5" />
               Add
             </Button>
           </div>

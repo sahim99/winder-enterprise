@@ -1,39 +1,96 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Lock } from 'lucide-react'
+
+const shopLinks = [
+  { label: 'Sofas', slug: 'sofas' },
+  { label: 'Beds', slug: 'beds' },
+  { label: 'Chairs', slug: 'chairs' },
+  { label: 'Tables', slug: 'tables' },
+  { label: 'Wardrobes', slug: 'wardrobes' },
+  { label: 'Dining Sets', slug: 'dining-sets' },
+  { label: 'Office Chairs', slug: 'office-chairs' },
+]
+
+const customerLinks = [
+  { label: 'My Account', href: '/account' },
+  { label: 'My Orders', href: '/account/orders' },
+  { label: 'Track Order', href: '/account/orders' },
+]
 
 export function Footer() {
+  const pathname = usePathname()
+
+  if (pathname?.startsWith('/admin')) return null
+  if (pathname === '/login' || pathname === '/register') return null
+
   return (
-    <footer className="border-t bg-gray-50 mt-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="bg-foreground text-background mt-20 pt-12 pb-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+          {/* Logo + tagline */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Winder Enterprise</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Premium furniture delivered to your door across West Bengal and Durgapur.
+            <h3 className="text-xl font-bold tracking-tighter mb-3 text-background">Winder Enterprise</h3>
+            <p className="text-sm text-background/60 leading-relaxed">
+              Premium furniture for every home.
             </p>
           </div>
+
+          {/* Shop */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Shop</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              {['Sofas', 'Beds', 'Chairs', 'Tables', 'Wardrobes'].map(cat => (
-                <li key={cat}>
-                  <Link href={`/products?category=${cat.toLowerCase()}`} className="hover:text-gray-900">
-                    {cat}
+            <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-background/50">Shop</h3>
+            <ul className="space-y-2.5 text-sm text-background/70">
+              {shopLinks.map(cat => (
+                <li key={cat.slug}>
+                  <Link href={`/products?category=${cat.slug}`} className="hover:text-background transition-colors">
+                    {cat.label}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-          <div id="contact">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Contact</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li>Durgapur, West Bengal</li>
-              <li>WhatsApp: +91 XXXXXXXXXX</li>
-              <li>winderenterprise.admin@gmail.com</li>
+
+          {/* Customer */}
+          <div>
+            <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-background/50">Customer</h3>
+            <ul className="space-y-2.5 text-sm text-background/70">
+              {customerLinks.map(link => (
+                <li key={link.href}>
+                  <Link href={link.href} className="hover:text-background transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-background/50">Contact</h3>
+            <ul className="space-y-2.5 text-sm text-background/70">
+              <li>Durgapur, West Bengal</li>
+              <li>+91 XXXXXXXXXX</li>
+              <li>winderenterprise.admin@gmail.com</li>
+            </ul>
+            <Link
+              href="/admin/login"
+              className="inline-flex items-center gap-1.5 mt-4 text-xs text-gray-400 hover:text-gray-200 transition-colors border border-gray-700 rounded-md px-3 py-1.5"
+            >
+              <Lock className="h-3 w-3" />
+              Admin login
+            </Link>
+          </div>
         </div>
-        <div className="mt-8 border-t pt-8 text-center text-xs text-gray-500">
-          © {new Date().getFullYear()} Winder Enterprise. All rights reserved.
+
+        <div className="border-t border-background/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-background/40">
+          <div>© {new Date().getFullYear()} Winder Enterprise. All rights reserved.</div>
+          <div className="flex gap-4">
+            <span>Cash on delivery</span>
+            <span>·</span>
+            <span>Quality guaranteed</span>
+          </div>
         </div>
       </div>
     </footer>

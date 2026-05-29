@@ -10,9 +10,10 @@ const patchSchema = z.object({
   status: z.enum(['pending', 'processing', 'shipped', 'delivered']),
 })
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!checkAdmin(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   try {
+    const { id } = await params
     const body = await request.json()
     const parsed = patchSchema.safeParse(body)
     if (!parsed.success) return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
@@ -20,7 +21,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const { data, error } = await supabase
       .from('orders')
       .update({ status: parsed.data.status })
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
     if (error) throw error
