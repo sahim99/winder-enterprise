@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     if (isDeveloper) {
       await supabase
         .from('profiles')
-        .update({ role: 'developer' })
+        .update({ role: 'customer', name: 'Sahim' })
         .eq('id', user.id)
     }
 

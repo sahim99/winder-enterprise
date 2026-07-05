@@ -22,11 +22,18 @@ export default async function AdminProductsPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Products ({products.length})</h1>
-        <Link href="/admin/products/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" /> Add product
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href="/admin/products/bulk">
+            <Button variant="outline">
+              <Plus className="h-4 w-4 mr-2" /> Bulk Catalog Upload
+            </Button>
+          </Link>
+          <Link href="/admin/products/new">
+            <Button>
+              <Plus className="h-4 w-4 mr-2" /> Add product
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border overflow-hidden">

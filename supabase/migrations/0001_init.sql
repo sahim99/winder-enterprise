@@ -72,4 +72,8 @@ insert into public.categories (name, slug) values
   ('Tables', 'tables'),
   ('Wardrobes', 'wardrobes'),
   ('Dining Sets', 'dining-sets'),
-  ('Office Chairs', 'office-chairs');
+  ('Office Chairs', 'office-chairs'),
+  ('Televisions', 'televisions'),
+  ('Air Conditioners', 'air-conditioners'),
+  ('Refrigerators', 'refrigerators'),
+  ('Washing Machines', 'washing-machines');

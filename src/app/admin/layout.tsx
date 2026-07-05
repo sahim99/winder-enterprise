@@ -1,10 +1,14 @@
 import Link from 'next/link'
-import { LayoutDashboard, Package, ShoppingBag, LogOut } from 'lucide-react'
+import { LayoutDashboard, Package, ShoppingBag, LogOut, Upload, Users, MessageSquare, CreditCard } from 'lucide-react'
 
 const navItems = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'Products', href: '/admin/products', icon: Package },
+  { label: 'Bulk Uploader', href: '/admin/products/bulk', icon: Upload },
   { label: 'Orders', href: '/admin/orders', icon: ShoppingBag },
+  { label: 'Billing & Invoices', href: '/admin/billing', icon: CreditCard },
+  { label: 'Customers', href: '/admin/customers', icon: Users },
+  { label: 'Support Tickets', href: '/admin/tickets', icon: MessageSquare },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

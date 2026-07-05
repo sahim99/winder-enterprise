@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -19,7 +19,7 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>
 
-export default function LoginPage() {
+function LoginFormContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') ?? '/account'
@@ -47,8 +47,7 @@ export default function LoginPage() {
     // Call mark-developer after login
     await fetch('/api/auth/mark-developer', { method: 'POST' })
     
-    router.push(redirect)
-    router.refresh()
+    window.location.href = redirect
   }
 
   return (
@@ -95,11 +94,10 @@ export default function LoginPage() {
                   const res = await fetch('/api/auth/dev-login', { method: 'POST' })
                   if (!res.ok) {
                     const data = await res.json()
-                    throw new Error(data.error || 'Failed to login as developer')
+                    throw new Error(data.error || 'Failed to login as demo customer')
                   }
                   await fetch('/api/auth/mark-developer', { method: 'POST' })
-                  router.push(redirect)
-                  router.refresh()
+                  window.location.href = redirect
                 } catch (err: any) {
                   setAuthError(err.message)
                   setLoading(false)
@@ -108,11 +106,23 @@ export default function LoginPage() {
               disabled={loading}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors bg-transparent border-none cursor-pointer"
             >
-              Developer Option
+              Demo Customer Login (Bypass)
             </button>
           </div>
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-muted/20 px-4">
+        <p className="text-muted-foreground">Loading…</p>
+      </div>
+    }>
+      <LoginFormContent />
+    </Suspense>
   )
 }

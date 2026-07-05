@@ -53,8 +53,7 @@ export default function RegisterPage() {
     // Call mark-developer after registration
     await fetch('/api/auth/mark-developer', { method: 'POST' })
 
-    router.push('/account')
-    router.refresh()
+    window.location.href = '/account'
   }
 
   return (

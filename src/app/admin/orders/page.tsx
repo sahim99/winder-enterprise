@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/server'
 import { formatPrice } from '@/lib/utils'
 import { OrderStatusUpdater } from '@/components/admin/OrderStatusUpdater'
@@ -44,13 +45,37 @@ export default async function AdminOrdersPage() {
                 <div>
                   <p className="font-mono text-xs text-gray-500 mb-1">#{order.id.slice(0, 8).toUpperCase()}</p>
                   <p className="font-semibold text-gray-900">{order.customer_name}</p>
-                  <p className="text-sm text-gray-600">{order.phone}</p>
+                  <div className="flex items-center gap-3 text-sm text-gray-600">
+                    <span>{order.phone}</span>
+                    <span className="text-gray-300">|</span>
+                    <a 
+                      href={`https://wa.me/91${order.phone.replace(/[^0-9]/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-green-600 hover:text-green-700 font-bold uppercase tracking-wider"
+                    >
+                      WhatsApp
+                    </a>
+                    <a 
+                      href={`tel:${order.phone}`}
+                      className="text-xs text-blue-600 hover:text-blue-700 font-bold uppercase tracking-wider"
+                    >
+                      Call
+                    </a>
+                  </div>
                   <p className="text-sm text-gray-600 mt-1">{order.address}, {order.city}, {order.state} — {order.pin_code}</p>
                 </div>
                 <div className="text-right space-y-2">
                   <p className="text-lg font-bold text-gray-900">{formatPrice(order.total)}</p>
                   <p className="text-xs text-gray-500">{new Date(order.created_at).toLocaleString('en-IN')}</p>
                   <OrderStatusUpdater orderId={order.id} currentStatus={order.status} />
+                  <Link 
+                    href={`/admin/billing/invoice/${order.id}`} 
+                    target="_blank" 
+                    className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 font-bold block mt-1"
+                  >
+                    View Invoice
+                  </Link>
                 </div>
               </div>
               <div className="p-6">

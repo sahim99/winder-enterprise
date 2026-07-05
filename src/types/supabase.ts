@@ -146,12 +146,125 @@ export interface Database {
         }
         Relationships: []
       }
+      wishlist_items: {
+        Row: {
+          id: string
+          user_id: string | null
+          product_id: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          product_id?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          product_id?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wishlist_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      payment_methods: {
+        Row: {
+          id: string
+          user_id: string | null
+          card_brand: string
+          last_four: string
+          exp_month: number
+          exp_year: number
+          is_default: boolean | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          card_brand: string
+          last_four: string
+          exp_month: number
+          exp_year: number
+          is_default?: boolean | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          card_brand?: string
+          last_four?: string
+          exp_month?: number
+          exp_year?: number
+          is_default?: boolean | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      support_tickets: {
+        Row: {
+          id: string
+          user_id: string | null
+          order_id: string | null
+          subject: string
+          description: string
+          status: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          order_id?: string | null
+          subject: string
+          description: string
+          status?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          order_id?: string | null
+          subject?: string
+          description?: string
+          status?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      place_order_and_decrement_stock: {
+        Args: {
+          p_customer_name: string
+          p_phone: string
+          p_address: string
+          p_pin_code: string
+          p_city: string
+          p_state: string
+          p_items: Json
+          p_total: number
+          p_user_id?: string | null
+        }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

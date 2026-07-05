@@ -24,7 +24,8 @@ export function Footer() {
   const pathname = usePathname()
 
   if (pathname?.startsWith('/admin')) return null
-  if (pathname === '/login' || pathname === '/register') return null
+  if (pathname?.startsWith('/account')) return null
+  if (pathname === '/login' || pathname === '/register' || pathname === '/checkout') return null
 
   return (
     <footer className="bg-foreground text-background mt-20 pt-12 pb-8">
@@ -57,7 +58,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-background/50">Customer</h3>
             <ul className="space-y-2.5 text-sm text-background/70">
               {customerLinks.map(link => (
-                <li key={link.href}>
+                <li key={link.label}>
                   <Link href={link.href} className="hover:text-background transition-colors">
                     {link.label}
                   </Link>
@@ -70,7 +71,7 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-background/50">Contact</h3>
             <ul className="space-y-2.5 text-sm text-background/70">
-              <li>Durgapur, West Bengal</li>
+              <li>Jangipur, West Bengal</li>
               <li>+91 XXXXXXXXXX</li>
               <li>winderenterprise.admin@gmail.com</li>
             </ul>

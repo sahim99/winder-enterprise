@@ -25,13 +25,12 @@ const navLinks = [
   { label: 'Contact', href: '/#contact' },
 ]
 
-export function Navbar() {
+export function LandingNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [user, setUser] = useState<SupabaseUser | null>(null)
   const [userInitial, setUserInitial] = useState('')
-  const [isDeveloper, setIsDeveloper] = useState(false)
 
   const totalItems = useCartStore(s => s.totalItems())
   const pathname = usePathname()
@@ -54,14 +53,6 @@ export function Navbar() {
       if (user) {
         const name = user.user_metadata?.name || user.email || ''
         setUserInitial(name.charAt(0).toUpperCase())
-        
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single()
-          
-        setIsDeveloper(profile?.role === 'developer')
       }
     })
 
@@ -151,11 +142,6 @@ export function Navbar() {
                         aria-label="Account menu"
                       >
                         {userInitial}
-                        {isDeveloper && (
-                          <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-white text-[9px] font-bold">
-                            D
-                          </span>
-                        )}
                       </button>
                     }
                   />

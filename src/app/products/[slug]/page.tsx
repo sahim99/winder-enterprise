@@ -4,7 +4,7 @@ import { ProductDetailClient } from './ProductDetailClient'
 import { createClient } from '@/lib/supabase/server'
 
 interface PageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 async function getProduct(slug: string) {
@@ -18,13 +18,15 @@ async function getProduct(slug: string) {
   return data
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params
   const product = await getProduct(params.slug)
   if (!product) return { title: 'Product not found' }
   return { title: product.name, description: product.description ?? undefined }
 }
 
-export default async function ProductDetailPage({ params }: PageProps) {
+export default async function ProductDetailPage(props: PageProps) {
+  const params = await props.params
   const product = await getProduct(params.slug)
   if (!product) notFound()
   return <ProductDetailClient product={product} />

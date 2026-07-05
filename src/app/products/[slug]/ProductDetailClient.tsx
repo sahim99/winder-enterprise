@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, ArrowLeft, Package } from 'lucide-react'
@@ -10,12 +10,34 @@ import { useCartStore } from '@/store/cart'
 import { toast } from 'sonner'
 import { formatPrice } from '@/lib/utils'
 import type { Product } from '@/types/supabase'
+import { RecentlyViewed } from '@/components/products/RecentlyViewed'
 
 export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const addItem = useCartStore(s => s.addItem)
   const isOutOfStock = product.stock === 0
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const cachedRaw = localStorage.getItem('winder_recently_viewed')
+    let cached: any[] = []
+    if (cachedRaw) {
+      try { cached = JSON.parse(cachedRaw) } catch {}
+    }
+    const filtered = cached.filter((item: any) => item.slug !== product.slug)
+    const updated = [
+      {
+        slug: product.slug,
+        name: product.name,
+        price: product.price,
+        imageUrl: product.images[0] || '',
+        category: (product as any).categories?.name || ''
+      },
+      ...filtered
+    ].slice(0, 4)
+    localStorage.setItem('winder_recently_viewed', JSON.stringify(updated))
+  }, [product])
 
   function handleAddToCart() {
     addItem({ id: product.id, name: product.name, price: product.price, images: product.images, slug: product.slug }, quantity)
@@ -95,6 +117,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </div>
         </div>
       </div>
+      <RecentlyViewed />
     </div>
   )
 }

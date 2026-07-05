@@ -6,6 +6,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/client'
 import { formatPrice } from '@/lib/utils'
+import { OrderTracker } from '@/components/orders/OrderTracker'
 
 type OrderItem = {
   name: string
@@ -85,6 +86,12 @@ export default function OrdersPage() {
                   }) : '—'}
                 </span>
               </div>
+
+              {/* Visual shipment progress stepper */}
+              <div className="border-t border-b border-border/40 py-2 my-1.5">
+                <OrderTracker status={order.status} />
+              </div>
+
               <div className="space-y-1.5">
                 {(order.items as OrderItem[]).map((item, i) => (
                   <div key={i} className="flex justify-between text-sm">

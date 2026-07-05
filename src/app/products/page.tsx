@@ -5,27 +5,26 @@ import { CategoryFilter } from '@/components/products/CategoryFilter'
 import { Skeleton } from '@/components/ui/skeleton'
 import { createClient } from '@/lib/supabase/server'
 
-export const metadata: Metadata = { title: 'All Products' }
+export const metadata: Metadata = { title: 'Products | Winder Enterprise' }
 
 interface PageProps {
-  searchParams: { category?: string }
+  searchParams: Promise<{ category?: string, search?: string }>
 }
 
-async function getProducts(category?: string) {
+async function getProducts(category?: string, search?: string) {
   const supabase = await createClient()
   let query = supabase
     .from('products')
-    .select('*, categories(name, slug)')
+    .select('*, categories!inner(name, slug)')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
 
   if (category) {
-    const { data: cat } = await supabase
-      .from('categories')
-      .select('id')
-      .eq('slug', category)
-      .single()
-    if (cat) query = query.eq('category_id', cat.id)
+    query = query.eq('categories.slug', category)
+  }
+  
+  if (search) {
+    query = query.ilike('name', `%${search}%`)
   }
 
   const { data } = await query
@@ -38,42 +37,63 @@ async function getCategories() {
   return data ?? []
 }
 
-export default async function ProductsPage({ searchParams }: PageProps) {
+export default async function ProductsPage(props: PageProps) {
+  const searchParams = await props.searchParams
   const [products, categories] = await Promise.all([
-    getProducts(searchParams.category),
+    getProducts(searchParams.category, searchParams.search),
     getCategories(),
   ])
 
   return (
-    <div className="flex flex-col min-h-screen pb-20">
-      <div className="bg-muted py-16 md:py-24 border-b border-border/40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">Our Collection</h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Browse our complete range of premium furniture, designed for modern living and crafted to last.
+    <div className="bg-muted/10 min-h-[calc(100vh-4rem)] pt-8 pb-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            {searchParams.search ? `Search results for "${searchParams.search}"` : 'All Products'}
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Showing {products.length} {products.length === 1 ? 'product' : 'products'}
           </p>
         </div>
-      </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 w-full">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-          <p className="text-muted-foreground font-medium">Showing <span className="text-foreground">{products.length}</span> products</p>
-          <Suspense>
-            <CategoryFilter categories={categories} />
-          </Suspense>
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          
+          {/* Sidebar Filters */}
+          <aside className="w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-24 bg-background p-5 rounded-3xl border border-border/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <h3 className="font-semibold text-foreground mb-4 pb-4 border-b border-border/40">Categories</h3>
+            <Suspense fallback={<div className="h-40 bg-muted animate-pulse rounded-xl" />}>
+              <CategoryFilter categories={categories} />
+            </Suspense>
+          </aside>
+
+          {/* Product Grid */}
+          <div className="flex-1 w-full min-w-0">
+            {products.length === 0 ? (
+              <div className="text-center py-24 bg-background rounded-3xl border border-dashed border-border/60 p-8 space-y-3">
+                <h3 className="text-xl font-bold text-gray-900">Coming Soon!</h3>
+                <p className="text-muted-foreground text-sm max-w-md mx-auto">
+                  {searchParams.search 
+                    ? `The product "${searchParams.search}" is not currently in our catalog, but it's coming soon! Our team is preparing this item.` 
+                    : 'We are expanding our product catalog. Check back shortly!'}
+                </p>
+                <div className="pt-2">
+                  <a href="/products" className="text-xs font-semibold bg-primary text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity">
+                    Browse All Products
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+          </div>
+          
         </div>
-        
-        {products.length === 0 ? (
-          <div className="text-center py-32 bg-muted/10 rounded-3xl border border-dashed border-border">
-            <p className="text-muted-foreground text-lg">No products found in this category.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
-            {products.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
       </div>
     </div>
   )

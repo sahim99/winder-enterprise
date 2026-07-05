@@ -30,11 +30,28 @@ export async function middleware(request: NextRequest) {
   )
 
   // Refresh auth token
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const path = request.nextUrl.pathname
+  const search = request.nextUrl.search
+
+  // Customer portal & checkout route protection
+  if (path.startsWith('/account') || path === '/checkout') {
+    if (!user) {
+      const redirectUrl = new URL('/login', request.url)
+      redirectUrl.searchParams.set('redirect', path + search)
+      return NextResponse.redirect(redirectUrl)
+    }
+  }
+
+  // Redirect authenticated users away from auth pages
+  if (user && (path === '/login' || path === '/register')) {
+    return NextResponse.redirect(new URL('/account', request.url))
+  }
 
   // Admin route protection
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (request.nextUrl.pathname === '/admin/login') {
+  if (path.startsWith('/admin')) {
+    if (path === '/admin/login') {
       return supabaseResponse
     }
     const adminToken = request.cookies.get('admin_token')?.value

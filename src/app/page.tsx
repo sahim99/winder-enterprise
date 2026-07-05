@@ -1,19 +1,10 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, CheckCircle2, TrendingUp, Sparkles, Sofa, Bed, Tv } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ProductCard } from '@/components/products/ProductCard'
 import { createClient } from '@/lib/supabase/server'
-
-const categoryEmojis: Record<string, string> = {
-  'sofas': '🛋️',
-  'beds': '🛏️',
-  'chairs': '🪑',
-  'tables': '🪵',
-  'wardrobes': '🚪',
-  'dining-sets': '🍽️',
-  'office-chairs': '💼',
-}
+import { HomeHero } from '@/components/home/HomeHero'
 
 async function getCategories() {
   const supabase = await createClient()
@@ -21,142 +12,214 @@ async function getCategories() {
   return data ?? []
 }
 
-async function getFeaturedProducts() {
+async function getTrendingProducts() {
   const supabase = await createClient()
   const { data } = await supabase
     .from('products')
     .select('*, categories(name, slug)')
     .eq('is_published', true)
-    .order('created_at', { ascending: false })
+    .order('stock', { ascending: false }) // Trending mock
     .limit(4)
   return data ?? []
 }
 
+async function getCategoryShelf(categorySlugs: string[], limit = 4) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('products')
+    .select('*, categories!inner(name, slug)')
+    .eq('is_published', true)
+    .in('categories.slug', categorySlugs)
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  return data ?? []
+}
+
 export default async function HomePage() {
-  const [products, categories] = await Promise.all([
-    getFeaturedProducts(),
+  const [
+    trending,
+    livingRoom,
+    bedroom,
+    appliances,
+    categories
+  ] = await Promise.all([
+    getTrendingProducts(),
+    getCategoryShelf(['sofas', 'chairs', 'tables', 'office-chairs'], 4),
+    getCategoryShelf(['beds', 'wardrobes', 'dining-sets'], 4),
+    getCategoryShelf(['televisions', 'air-conditioners', 'refrigerators', 'washing-machines'], 4),
     getCategories()
   ])
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Section 1 - Hero */}
-      <section className="relative bg-muted overflow-hidden flex items-center min-h-[100vh]">
-        <div className="absolute inset-0 bg-gray-900/80 z-10" />
-        <div 
-          className="absolute inset-0 bg-cover bg-center z-0" 
-          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop)' }}
-        />
-        <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-          <div className="max-w-2xl pt-20 pb-24 md:pt-32 md:pb-40">
-            <h1 className="text-5xl md:text-7xl font-bold leading-[1.1] mb-6 tracking-tight text-white">
-              Premium furniture for every home
-            </h1>
-            <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-lg leading-relaxed">
-              Handcrafted quality. Delivered across West Bengal. Cash on delivery available.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/products" className={cn(buttonVariants({ size: "lg" }), "rounded-full px-8 font-medium h-14 text-base")}>
-                Shop now
-              </Link>
-              <Link href="#categories" className={cn(buttonVariants({ size: "lg", variant: "outline" }), "rounded-full px-8 font-medium h-14 text-base bg-transparent text-white border-white hover:bg-white/10 hover:text-white transition-all")}>
-                View catalogue
-              </Link>
+    <div className="flex flex-col min-h-screen bg-muted/10">
+      
+      {/* Flipkart-Style Sliding Hero Banner */}
+      <HomeHero />
+
+      {/* Trust bar */}
+      <section className="py-5 border-b bg-white shadow-sm">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
+            <span className="text-xs uppercase tracking-widest font-bold text-gray-400">Guaranteed Assured shopping</span>
+            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+              {[
+                { label: "Cash on delivery", desc: "Pay at your doorstep" },
+                { label: "Quality guaranteed", desc: "100% inspected timber" },
+                { label: "West Bengal shipping", desc: "Free assembly in Jangipur" }
+              ].map(item => (
+                <div key={item.label} className="flex items-center gap-2.5 text-left">
+                  <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{item.label}</p>
+                    <p className="text-[10px] text-gray-400 font-medium">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section 2 - Trust bar */}
-      <section className="py-6 border-b border-border/40 bg-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
-            {[
-              "Cash on delivery",
-              "Quality guaranteed",
-              "West Bengal delivery"
-            ].map(item => (
-              <div key={item} className="flex items-center gap-2 text-foreground font-medium text-sm md:text-base">
-                <CheckCircle2 className="h-5 w-5 text-primary" />
-                {item}
+      {/* Trending Products Zone */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex items-center justify-between mb-8 border-b pb-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-primary" />
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Trending Now</h2>
+          </div>
+          <Link href="/products" className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 group">
+            View All <ArrowRight className="h-3 w-3 transform group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        </div>
+        
+        {trending.length === 0 ? (
+          <div className="text-center py-20 bg-white border border-dashed rounded-3xl text-gray-400 text-sm font-medium">
+            New products are arriving shortly.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {trending.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Flagship Departments - Line-by-Line Shelves */}
+      <div className="space-y-16 pb-24">
+        
+        {/* Shelf 1: Living Room */}
+        <section className="bg-white py-16 border-t border-b shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-8 border-b pb-4">
+              <div>
+                <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
+                  <Sofa className="h-3 w-3" /> Comfort Living
+                </span>
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Flagship Living Room</h2>
+                <p className="text-xs text-gray-500 mt-1">Premium teak wood sofas, executive chairs, study desks, and center tables.</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3 - Category showcase */}
-      <section id="categories" className="py-24 bg-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center mb-16 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">Shop by category</h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-4">
-            {categories.map(cat => (
-              <Link
-                key={cat.slug}
-                href={`/products?category=${cat.slug}`}
-                className="group flex flex-col items-center gap-4 rounded-2xl bg-muted/30 p-6 text-center transition-all duration-300 hover:bg-white hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1"
-              >
-                <div className="h-16 w-16 rounded-full bg-white shadow-sm flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-300">
-                  {categoryEmojis[cat.slug] || '✨'}
-                </div>
-                <span className="text-sm font-semibold tracking-wide text-muted-foreground group-hover:text-foreground">{cat.name}</span>
+              <Link href="/products?category=sofas" className="text-xs font-semibold text-primary hover:underline">
+                Explore sofas &rarr;
               </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
 
-      {/* Section 4 - Featured products strip */}
-      <section className="py-24 bg-muted/10 border-t border-border/30">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3 tracking-tight">Latest arrivals</h2>
-            <Link href="/products" className="hidden sm:flex text-sm font-semibold text-primary hover:text-primary/80 items-center gap-1 group transition-colors">
-              View all <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
+            {livingRoom.length === 0 ? (
+              <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {livingRoom.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Shelf 2: Bedroom */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="flex items-center justify-between mb-8 border-b pb-4">
+            <div>
+              <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
+                <Bed className="h-3 w-3" /> Restful Space
+              </span>
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900">Royal Bedrooms</h2>
+              <p className="text-xs text-gray-500 mt-1">Solid mahogany beds, spacious wardrobes, dressers, and custom dining sets.</p>
+            </div>
+            <Link href="/products?category=beds" className="text-xs font-semibold text-primary hover:underline">
+              Explore beds &rarr;
             </Link>
           </div>
-          
-          {products.length === 0 ? (
-            <div className="text-center py-32 bg-white rounded-3xl border border-dashed border-border">
-              <p className="text-muted-foreground font-medium">New collections are arriving soon. Please check back shortly!</p>
-            </div>
+
+          {bedroom.length === 0 ? (
+            <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
-              {products.map(product => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {bedroom.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}
-          
-          <div className="mt-12 text-center sm:hidden">
-            <Link href="/products" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "rounded-full w-full")}>
-              View all
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Section 5 - About / why us */}
-      <section className="py-24 bg-background">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-muted/20 border border-border/50 rounded-3xl p-10 text-center transition-transform hover:-translate-y-1 duration-300">
-              <h3 className="text-xl font-bold text-foreground mb-3">Family business</h3>
-              <p className="text-muted-foreground leading-relaxed">Built from a passion for timeless design, Winder Enterprise has been serving homes with dedication and a personal touch.</p>
+        {/* Shelf 3: Appliances */}
+        <section className="bg-white py-16 border-t border-b shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-8 border-b pb-4">
+              <div>
+                <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
+                  <Tv className="h-3 w-3" /> Modern Home
+                </span>
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Smart Electronics & Appliances</h2>
+                <p className="text-xs text-gray-500 mt-1">Advanced televisions, high-cooling air conditioners, climate systems, and washing machines.</p>
+              </div>
+              <Link href="/products?category=televisions" className="text-xs font-semibold text-primary hover:underline">
+                Explore appliances &rarr;
+              </Link>
             </div>
-            <div className="bg-muted/20 border border-border/50 rounded-3xl p-10 text-center transition-transform hover:-translate-y-1 duration-300">
-              <h3 className="text-xl font-bold text-foreground mb-3">Quality first</h3>
-              <p className="text-muted-foreground leading-relaxed">Every piece is meticulously inspected by our experts before delivery. We never compromise on craftsmanship.</p>
+
+            {appliances.length === 0 ? (
+              <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {appliances.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Legacy & History Segment */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-t pt-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <span className="inline-flex items-center gap-1 text-xs uppercase font-bold tracking-widest text-primary">
+                <Sparkles className="h-3 w-3" /> Winder Legacy
+              </span>
+              <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
+                Our Legacy of Handcrafted Timber & Modern Living
+              </h2>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Winder Enterprise began in a modest wood shop in Jangipur, West Bengal, driven by a simple goal: to design timber furniture that lasts for generations. Using locally sourced premium hardwoods like solid Teak, Sal, and Mahogany, our local master carpenters employ traditional joinery techniques paired with beautiful modern finishes.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Over the years, we have expanded our dedication to help build modern households. Today, we bring that same rigorous standard of quality check to essential home appliances and televisions, ensuring families throughout West Bengal have access to the finest living room setups, kitchen appliances, and climate systems.
+              </p>
             </div>
-            <div className="bg-muted/20 border border-border/50 rounded-3xl p-10 text-center transition-transform hover:-translate-y-1 duration-300">
-              <h3 className="text-xl font-bold text-foreground mb-3">Local delivery</h3>
-              <p className="text-muted-foreground leading-relaxed">Based in Durgapur, we ensure fast and reliable delivery to your doorstep anywhere across West Bengal.</p>
+            
+            <div className="relative aspect-video lg:aspect-[4/3] rounded-3xl overflow-hidden bg-muted shadow-md group">
+              <div className="absolute inset-0 bg-gray-950/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
+              <img 
+                src="/winder_showroom.jpg" 
+                alt="Winder Enterprise Modern Showroom Storefront" 
+                className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-700" 
+              />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+      </div>
     </div>
   )
 }

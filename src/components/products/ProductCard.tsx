@@ -1,35 +1,62 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { useCartStore } from '@/store/cart'
-import { toast } from 'sonner'
 import { formatPrice } from '@/lib/utils'
 import type { Product } from '@/types/supabase'
+import { createClient } from '@/lib/supabase/client'
+import { toast } from 'sonner'
 
 interface ProductCardProps {
   product: Product
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const addItem = useCartStore(s => s.addItem)
-
-  function handleAddToCart(e: React.MouseEvent) {
-    e.preventDefault()
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      images: product.images,
-      slug: product.slug,
-    })
-    toast.success('Added to cart', { description: product.name })
-  }
+  const [wishlisted, setWishlisted] = useState(false)
+  const [animating, setAnimating] = useState(false)
 
   const isOutOfStock = product.stock === 0
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return
+      supabase
+        .from('wishlist_items')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('product_id', product.id)
+        .single()
+        .then(({ data }) => {
+          if (data) setWishlisted(true)
+        })
+    })
+  }, [product.id])
+
+  async function handleToggleWishlist(e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    setAnimating(true)
+    setTimeout(() => setAnimating(false), 450)
+
+    const { toggleWishlist } = await import('@/app/actions/wishlist')
+    const res = await toggleWishlist(product.id)
+
+    if (res.success) {
+      if (res.action === 'added') {
+        setWishlisted(true)
+        toast.success('Added to Wishlist', { description: product.name })
+      } else {
+        setWishlisted(false)
+        toast.info('Removed from Wishlist', { description: product.name })
+      }
+    } else {
+      toast.error(res.error || 'Please log in to save items')
+    }
+  }
 
   return (
     <Link href={`/products/${product.slug}`} className="group">
@@ -51,6 +78,29 @@ export function ProductCard({ product }: ProductCardProps) {
               <Badge variant="secondary" className="text-xs font-semibold uppercase tracking-wider">Out of stock</Badge>
             </div>
           )}
+          
+          <button 
+            onClick={handleToggleWishlist}
+            className={`absolute top-3 right-3 p-2 rounded-full bg-white/70 backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 z-10 ${
+              wishlisted ? 'text-red-500 bg-white opacity-100' : 'text-gray-500 hover:text-red-500 hover:bg-white'
+            } ${animating ? 'animate-heart-pop' : ''}`}
+            aria-label="Add to wishlist"
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="18" 
+              height="18" 
+              viewBox="0 0 24 24" 
+              fill={wishlisted ? 'currentColor' : 'none'} 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+          </button>
+
         </div>
         <div className="p-5 flex flex-col gap-3">
           <div>
@@ -59,16 +109,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
           <div className="flex items-end justify-between mt-auto pt-2">
             <span className="text-lg font-bold text-foreground">{formatPrice(product.price)}</span>
-            <Button
-              size="sm"
-              onClick={handleAddToCart}
-              disabled={isOutOfStock}
-              className="rounded-full px-4 font-medium transition-transform active:scale-95"
-              aria-label={`Add ${product.name} to cart`}
-            >
-              <ShoppingCart className="h-4 w-4 mr-1.5" />
-              Add
-            </Button>
+            <span className="text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">View details &rarr;</span>
           </div>
         </div>
       </div>

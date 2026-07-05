@@ -34,13 +34,23 @@ export async function POST(request: NextRequest) {
     const authClient = await createServerSupabase()
     const { data: { user } } = await authClient.auth.getUser()
 
-    const { data, error } = await supabase.from('orders').insert({
-      ...parsed.data,
-      user_id: user?.id ?? null,
-    } as any).select().single()
+    // Call the RPC function to insert order and decrement stock atomically
+    const { data, error } = await supabase.rpc('place_order_and_decrement_stock', {
+      p_customer_name: parsed.data.customer_name,
+      p_phone: parsed.data.phone,
+      p_address: parsed.data.address,
+      p_pin_code: parsed.data.pin_code,
+      p_city: parsed.data.city,
+      p_state: parsed.data.state,
+      p_items: parsed.data.items,
+      p_total: parsed.data.total,
+      p_user_id: user?.id ?? null,
+    })
     if (error) throw error
-    sendNewOrderEmail(data).catch(err => console.error('Email send failed:', err))
-    return NextResponse.json({ data }, { status: 201 })
+
+    const orderData = data as any
+    sendNewOrderEmail(orderData).catch(err => console.error('Email send failed:', err))
+    return NextResponse.json({ data: orderData }, { status: 201 })
   } catch (error) {
     console.error('Order creation error:', error)
     return NextResponse.json({ error: 'Failed to create order' }, { status: 500 })
