@@ -133,36 +133,25 @@ export function AppNavbar() {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-              {/* Auth Dropdown */}
+              {/* Profile Link & Sign Out */}
               {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger
-                    render={
-                      <button
-                        className="relative h-9 w-9 rounded-full bg-foreground text-background text-sm font-medium flex items-center justify-center cursor-pointer select-none hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                        aria-label="Account menu"
-                      >
-                        {userInitial}
-                      </button>
-                    }
-                  />
-                  <DropdownMenuContent align="end" className="w-56 mt-2">
-                    <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground mb-1">My Account</div>
-                    <DropdownMenuItem onClick={() => router.push('/account/profile')} className="cursor-pointer">
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push('/account/orders')} className="cursor-pointer">
-                      Orders
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push('/account/address')} className="cursor-pointer">
-                      Addresses
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 focus:bg-red-50 focus:text-red-700">
-                      Sign out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/account"
+                    className="relative h-9 w-9 rounded-full bg-foreground text-background text-sm font-medium flex items-center justify-center cursor-pointer select-none hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    aria-label="Account page"
+                  >
+                    {userInitial}
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleSignOut} 
+                    className="hidden sm:inline-flex text-xs font-semibold text-muted-foreground hover:text-red-600 hover:bg-red-50/30 transition-colors h-9 px-3 rounded-full"
+                  >
+                    Sign out
+                  </Button>
+                </div>
               ) : (
                 <div className="hidden sm:flex items-center gap-3">
                   <Link 

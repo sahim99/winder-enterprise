@@ -53,7 +53,7 @@ export default function RegisterPage() {
     // Call mark-developer after registration
     await fetch('/api/auth/mark-developer', { method: 'POST' })
 
-    window.location.href = '/account'
+    window.location.href = '/'
   }
 
   return (

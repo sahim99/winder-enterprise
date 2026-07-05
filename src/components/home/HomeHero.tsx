@@ -68,7 +68,7 @@ export function HomeHero() {
   }
 
   return (
-    <section className="relative w-full h-[80vh] md:h-[90vh] bg-gray-900 overflow-hidden flex items-center justify-center">
+    <section className="relative w-full h-[calc(100vh-4rem)] bg-gray-900 overflow-hidden flex items-center justify-center">
       
       {/* Floating Login Button (Only visible if logged out) */}
       {!user && (

@@ -97,7 +97,7 @@ export default async function HomePage() {
             New products are arriving shortly.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in-right">
             {trending.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -127,7 +127,7 @@ export default async function HomePage() {
             {livingRoom.length === 0 ? (
               <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in-left">
                 {livingRoom.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -154,7 +154,7 @@ export default async function HomePage() {
           {bedroom.length === 0 ? (
             <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in-right">
               {bedroom.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -181,7 +181,7 @@ export default async function HomePage() {
             {appliances.length === 0 ? (
               <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in-left">
                 {appliances.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -193,7 +193,7 @@ export default async function HomePage() {
         {/* Legacy & History Segment */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-t pt-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
+            <div className="space-y-6 animate-slide-in-left">
               <span className="inline-flex items-center gap-1 text-xs uppercase font-bold tracking-widest text-primary">
                 <Sparkles className="h-3 w-3" /> Winder Legacy
               </span>
@@ -208,7 +208,7 @@ export default async function HomePage() {
               </p>
             </div>
             
-            <div className="relative aspect-video lg:aspect-[4/3] rounded-3xl overflow-hidden bg-muted shadow-md group">
+            <div className="relative aspect-video lg:aspect-[4/3] rounded-3xl overflow-hidden bg-muted shadow-md group animate-slide-in-right">
               <div className="absolute inset-0 bg-gray-950/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
               <img 
                 src="/winder_showroom.jpg" 
