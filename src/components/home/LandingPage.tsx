@@ -93,28 +93,22 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
           </div>
         </div>
         
-        {/* Scroll indicator */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-fade-in-up delay-500 flex flex-col items-center">
-          <span className="text-[10px] uppercase tracking-widest font-semibold text-white/50 mb-2">Scroll</span>
-          <ChevronDown className="w-5 h-5 text-white/70 animate-bounce" />
-        </div>
-      </section>
-
-      {/* 3. Quick-Stats Strip */}
-      <section className="bg-white border-b border-gray-100 py-12 relative z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-gray-200">
-            {[
-              { stat: "15+", label: "Years Experience" },
-              { stat: "500+", label: "Premium Products" },
-              { stat: "100%", label: "Quality Inspected" },
-              { stat: "COD", label: "Cash on Delivery" },
-            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center justify-center px-4">
-                <span className="text-3xl lg:text-4xl font-black text-gray-900 mb-1">{item.stat}</span>
-                <span className="text-[10px] sm:text-xs uppercase tracking-wider text-gray-500 font-bold">{item.label}</span>
-              </div>
-            ))}
+        {/* Quick-Stats floating on the image */}
+        <div className="absolute bottom-0 left-0 w-full z-20 bg-gradient-to-t from-gray-950/80 to-transparent pt-12 pb-6 border-t border-white/10 backdrop-blur-[2px]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
+              {[
+                { stat: "15+", label: "Years Experience" },
+                { stat: "500+", label: "Premium Products" },
+                { stat: "100%", label: "Quality Inspected" },
+                { stat: "COD", label: "Cash on Delivery" },
+              ].map((item, i) => (
+                <div key={i} className="flex flex-col items-center justify-center px-4 animate-fade-in-up" style={{ animationDelay: `${500 + (i * 100)}ms` }}>
+                  <span className="text-3xl lg:text-4xl font-black text-white mb-1 drop-shadow-md">{item.stat}</span>
+                  <span className="text-[10px] sm:text-xs uppercase tracking-wider text-gray-300 font-bold drop-shadow-md">{item.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
