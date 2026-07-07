@@ -45,27 +45,42 @@ export default async function ProductsPage(props: PageProps) {
   ])
 
   return (
-    <div className="bg-muted/10 min-h-[calc(100vh-4rem)] pt-8 pb-16">
+    <div className="bg-muted/10 min-h-[calc(100vh-4rem)] pt-4 md:pt-8 pb-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
             {searchParams.search ? `Search results for "${searchParams.search}"` : 'All Products'}
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-1 md:mt-2 text-sm md:text-base">
             Showing {products.length} {products.length === 1 ? 'product' : 'products'}
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
+        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-start">
           
-          {/* Sidebar Filters */}
-          <aside className="w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-24 bg-background p-5 rounded-3xl border border-border/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+          {/* Sidebar Filters - Desktop */}
+          <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-24 bg-background p-5 rounded-3xl border border-border/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
             <h3 className="font-semibold text-foreground mb-4 pb-4 border-b border-border/40">Categories</h3>
             <Suspense fallback={<div className="h-40 bg-muted animate-pulse rounded-xl" />}>
               <CategoryFilter categories={categories} />
             </Suspense>
+          </aside>
+
+          {/* Sidebar Filters - Mobile Collapsible */}
+          <aside className="lg:hidden w-full bg-background p-4 rounded-2xl border border-border/40 shadow-sm">
+            <details className="group">
+              <summary className="font-semibold text-foreground cursor-pointer list-none flex items-center justify-between">
+                Filter by Category
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-open:rotate-180"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <div className="pt-4 mt-4 border-t border-border/40">
+                <Suspense fallback={<div className="h-20 bg-muted animate-pulse rounded-xl" />}>
+                  <CategoryFilter categories={categories} />
+                </Suspense>
+              </div>
+            </details>
           </aside>
 
           {/* Product Grid */}

@@ -36,17 +36,17 @@ export function Footer() {
         
         {/* Top Section: Newsletter / Tagline */}
         <div className="flex flex-col md:flex-row items-center justify-between pb-12 border-b border-white/10 gap-6">
-          <div className="max-w-xl">
+          <div className="max-w-xl text-center md:text-left">
             <h2 className="text-2xl font-bold tracking-tight mb-2">Join the Winder family.</h2>
             <p className="text-gray-400 text-sm">Sign up to get the latest on sales, new releases, and expert design advice.</p>
           </div>
-          <div className="flex w-full md:w-auto items-center gap-2">
+          <div className="flex flex-col sm:flex-row w-full md:w-auto items-center gap-2">
             <input 
               type="email" 
               placeholder="Enter your email address" 
               className="bg-white/5 border border-white/10 rounded-full px-4 h-10 text-sm w-full md:w-72 focus:outline-none focus:ring-1 focus:ring-white/30 transition-all placeholder:text-gray-500"
             />
-            <Button className="rounded-full h-10 px-6 font-semibold bg-white text-black hover:bg-gray-200 transition-colors">
+            <Button className="rounded-full h-10 px-6 font-semibold bg-white text-black hover:bg-gray-200 transition-colors w-full sm:w-auto">
               Subscribe
             </Button>
           </div>

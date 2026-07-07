@@ -114,7 +114,7 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
       </section>
 
       {/* 4. Category Showcase Cards */}
-      <section className="py-24 bg-gray-50 relative z-30">
+      <section className="py-16 md:py-24 bg-gray-50 relative z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 space-y-4">
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900">Explore Our Departments</h2>
@@ -128,7 +128,7 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
               { title: "Electronics & Appliances", icon: <Tv className="w-6 h-6" />, link: "/login", color: "bg-purple-50 text-purple-600 border-purple-100" },
               { title: "Home Essentials", icon: <Package className="w-6 h-6" />, link: "/login", color: "bg-emerald-50 text-emerald-600 border-emerald-100" },
             ].map((cat, i) => (
-              <Link href={cat.link} key={i} className="group relative overflow-hidden rounded-3xl bg-white border border-gray-100 p-8 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+              <Link href={cat.link} key={i} className="group relative overflow-hidden rounded-3xl bg-white border border-gray-100 p-6 sm:p-8 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <div className={`w-14 h-14 rounded-2xl ${cat.color} border flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   {cat.icon}
                 </div>
@@ -201,13 +201,13 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
       </section>
 
       {/* 7. Brand Story */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 w-full bg-white">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-32 w-full bg-white">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <div className="space-y-8">
             <span className="inline-flex items-center gap-2 text-xs uppercase font-bold tracking-[0.2em] text-primary">
               <Sparkles className="h-4 w-4" /> Winder Legacy
             </span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-[1.1]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-[1.1]">
               Handcrafted Timber & Modern Living
             </h2>
             <div className="space-y-6 text-gray-600 text-lg leading-relaxed">
@@ -237,11 +237,11 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
       </section>
 
       {/* 8. Final CTA Banner */}
-      <section className="bg-gray-950 text-white py-32 text-center relative overflow-hidden">
+      <section className="bg-gray-950 text-white py-20 lg:py-32 text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-primary/20" />
-        <div className="max-w-3xl mx-auto px-4 space-y-10 relative z-10">
-          <h2 className="text-5xl md:text-6xl font-black tracking-tight">Ready to furnish your dream home?</h2>
-          <p className="text-gray-300 text-xl font-medium max-w-2xl mx-auto">Join thousands of satisfied customers across West Bengal who have chosen Winder Enterprise for quality and trust.</p>
+        <div className="max-w-3xl mx-auto px-6 space-y-10 relative z-10">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight">Ready to furnish your dream home?</h2>
+          <p className="text-gray-300 text-lg sm:text-xl font-medium max-w-2xl mx-auto">Join thousands of satisfied customers across West Bengal who have chosen Winder Enterprise for quality and trust.</p>
           <div className="pt-4 flex justify-center">
             <Link href="/register" className="inline-block">
               <Button size="lg" className="bg-white text-black hover:bg-gray-200 rounded-full h-16 px-12 text-lg font-bold shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] transition-all hover:-translate-y-1">
