@@ -48,53 +48,55 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
         </div>
       </header>
 
-      {/* 2. Premium Shop Showcase Hero */}
-      <section className="relative w-full pt-[80px] lg:pt-[100px] pb-12 lg:pb-20 overflow-hidden bg-gray-950 flex items-center min-h-[70vh]">
-        {/* Blurred Background Layer */}
+      {/* 2. Full-Screen Cinematic Hero */}
+      <section className="relative w-full h-screen min-h-[600px] overflow-hidden bg-black flex flex-col justify-end lg:justify-center">
+        {/* Background Image with Ken Burns */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/shop-photo.png" 
-            alt="Background blur" 
-            className="w-full h-full object-cover blur-3xl opacity-40 scale-110"
+            src="/winder-hero-fullscreen.png" 
+            alt="Winder Enterprise Shop" 
+            className="w-full h-full object-cover animate-ken-burns origin-right"
           />
-          {/* Gradient overlay: dark on left for text readability, clear on right */}
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-950/80 to-transparent" />
         </div>
         
-        {/* Content Layer */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side: Text and CTA */}
-            <div className="text-white space-y-6 text-center lg:text-left">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] animate-fade-in-up delay-100">
-                Style For <br className="hidden lg:block" /> Everyone.
-              </h1>
-              <p className="text-gray-300 font-medium text-lg sm:text-xl max-w-xl mx-auto lg:mx-0 leading-relaxed animate-fade-in-up delay-200">
-                Serving Jangipur & West Bengal since 2010. Experience premium handcrafted quality and smart living essentials all under one roof.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4 animate-fade-in-up delay-300">
-                <Link href="/register">
-                  <Button size="lg" className="rounded-full px-10 font-bold bg-white text-black hover:bg-gray-200 h-14 w-full sm:w-auto shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 text-base">
-                    Sign Up & Shop
-                  </Button>
-                </Link>
-                <Link href="/login">
-                  <Button size="lg" className="rounded-full px-10 font-bold bg-transparent border border-white/20 text-white hover:bg-white/10 hover:text-white h-14 w-full sm:w-auto hover:-translate-y-0.5 transition-all text-base backdrop-blur-md">
-                    Sign In
-                  </Button>
-                </Link>
-              </div>
+        {/* Subtle Dark Gradient Overlay - The new image already has dark space on the left, so we just need a gentle fade for text contrast */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-gray-950/90 via-gray-950/20 to-transparent lg:bg-gradient-to-r lg:from-gray-950/90 lg:via-transparent lg:to-transparent" />
+        
+        {/* Floating Modern Text */}
+        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 lg:pb-0 pt-32 lg:pt-0">
+          <div className="max-w-xl text-white space-y-6">
+            <div className="animate-fade-in-up delay-100 flex items-center gap-3">
+              <span className="w-10 h-0.5 bg-primary"></span>
+              <span className="text-xs uppercase tracking-[0.2em] font-bold text-gray-300">Jangipur, West Bengal</span>
             </div>
-
-            {/* Right Side: Crisp Foreground Image */}
-            <div className="flex justify-center lg:justify-end perspective-1000 animate-slide-in-right delay-200">
-              <img 
-                src="/shop-photo.png" 
-                alt="Winder Enterprise Shop" 
-                className="w-full max-w-2xl h-auto object-contain rounded-2xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] ring-1 ring-white/10 transform hover:scale-[1.02] hover:-rotate-1 transition-all duration-500"
-              />
+            
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tighter leading-[1.05] animate-fade-in-up delay-200">
+              Style <br/> For <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Everyone.</span>
+            </h1>
+            
+            <p className="text-gray-300 font-medium text-lg sm:text-xl max-w-lg leading-relaxed animate-fade-in-up delay-300">
+              Serving our community since 2010. Experience premium handcrafted quality and smart living essentials.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 animate-fade-in-up delay-400">
+              <Link href="/register" className="w-full sm:w-auto">
+                <Button size="lg" className="rounded-full px-10 font-bold bg-white text-black hover:bg-gray-200 h-14 w-full shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 text-base">
+                  Sign Up & Shop
+                </Button>
+              </Link>
+              <Link href="/login" className="w-full sm:w-auto">
+                <Button size="lg" className="rounded-full px-10 font-bold bg-transparent border border-white/20 text-white hover:bg-white/10 hover:text-white h-14 w-full hover:-translate-y-1 transition-all text-base backdrop-blur-md">
+                  Sign In
+                </Button>
+              </Link>
             </div>
           </div>
+        </div>
+        
+        {/* Scroll indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-fade-in-up delay-500 flex flex-col items-center">
+          <span className="text-[10px] uppercase tracking-widest font-semibold text-white/50 mb-2">Scroll</span>
+          <ChevronDown className="w-5 h-5 text-white/70 animate-bounce" />
         </div>
       </section>
 
