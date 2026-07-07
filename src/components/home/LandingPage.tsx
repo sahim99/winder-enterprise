@@ -49,7 +49,7 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
       </header>
 
       {/* 2. Full-Screen Cinematic Hero */}
-      <section className="relative w-full h-screen min-h-[600px] overflow-hidden bg-black flex flex-col justify-end lg:justify-center">
+      <section className="relative w-full h-screen min-h-[650px] overflow-hidden bg-black flex flex-col justify-center">
         {/* Background Image with Ken Burns */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -63,7 +63,7 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-gray-950/90 via-gray-950/20 to-transparent lg:bg-gradient-to-r lg:from-gray-950/90 lg:via-transparent lg:to-transparent" />
         
         {/* Floating Modern Text */}
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 lg:pb-0 pt-32 lg:pt-0">
+        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 sm:pb-24 lg:pb-0 pt-16 lg:pt-0">
           <div className="max-w-xl text-white space-y-6">
             <div className="animate-fade-in-up delay-100 flex items-center gap-3">
               <span className="w-10 h-0.5 bg-primary"></span>
