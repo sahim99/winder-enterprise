@@ -101,9 +101,9 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
       </section>
 
       {/* 3. Quick-Stats Strip */}
-      <section className="bg-gray-950 border-t border-gray-900 py-8 relative z-30 shadow-2xl">
+      <section className="bg-white border-b border-gray-100 py-12 relative z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-gray-800">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-gray-200">
             {[
               { stat: "15+", label: "Years Experience" },
               { stat: "500+", label: "Premium Products" },
@@ -111,8 +111,8 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
               { stat: "COD", label: "Cash on Delivery" },
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center justify-center px-4">
-                <span className="text-3xl font-black text-white mb-1">{item.stat}</span>
-                <span className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">{item.label}</span>
+                <span className="text-3xl lg:text-4xl font-black text-gray-900 mb-1">{item.stat}</span>
+                <span className="text-[10px] sm:text-xs uppercase tracking-wider text-gray-500 font-bold">{item.label}</span>
               </div>
             ))}
           </div>
