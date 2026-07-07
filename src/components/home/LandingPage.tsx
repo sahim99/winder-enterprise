@@ -63,7 +63,7 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-gray-950/90 via-gray-950/20 to-transparent lg:bg-gradient-to-r lg:from-gray-950/90 lg:via-transparent lg:to-transparent" />
         
         {/* Floating Modern Text */}
-        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 sm:pb-24 lg:pb-0 pt-16 lg:pt-0">
+        <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-40 sm:pb-32 lg:pb-16 pt-16 lg:pt-0">
           <div className="max-w-xl text-white space-y-6">
             <div className="animate-fade-in-up delay-100 flex items-center gap-3">
               <span className="w-10 h-0.5 bg-primary"></span>
@@ -94,7 +94,7 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
         </div>
         
         {/* Quick-Stats floating on the image */}
-        <div className="absolute bottom-0 left-0 w-full z-20 bg-gradient-to-t from-gray-950/80 to-transparent pt-12 pb-6 border-t border-white/10 backdrop-blur-[2px]">
+        <div className="absolute bottom-0 left-0 w-full z-20 bg-gradient-to-t from-gray-950/80 to-transparent pt-6 pb-4 border-t border-white/10 backdrop-blur-[2px]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x divide-white/20">
               {[
