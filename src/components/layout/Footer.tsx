@@ -5,6 +5,9 @@ import { usePathname } from 'next/navigation'
 import { Lock, Mail, Phone, MapPin, ArrowRight, ShieldCheck, Truck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
+
 const shopLinks = [
   { label: 'Sofas & Seating', slug: 'sofas' },
   { label: 'Premium Beds', slug: 'beds' },
@@ -25,10 +28,29 @@ const customerLinks = [
 
 export function Footer() {
   const pathname = usePathname()
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
 
-  if (pathname?.startsWith('/admin')) return null
-  if (pathname?.startsWith('/account')) return null
-  if (pathname === '/login' || pathname === '/register' || pathname === '/checkout') return null
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsLoggedIn(!!user)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  // Only show on the landing page
+  if (pathname !== '/') return null
+  
+  // Do not show if the user is logged in
+  if (isLoggedIn === true) return null
+
+  // Optionally, you can also return null while loading if you want to avoid a flash:
+  // if (isLoggedIn === null) return null
 
   return (
     <footer className="bg-[#0a0a0a] text-white border-t border-white/10 pt-16 pb-8">
