@@ -79,7 +79,7 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
                   </Button>
                 </Link>
                 <Link href="/login">
-                  <Button size="lg" variant="outline" className="rounded-full px-10 font-bold border-white/20 text-white hover:bg-white/10 hover:text-white h-14 w-full sm:w-auto hover:-translate-y-0.5 transition-all text-base backdrop-blur-md">
+                  <Button size="lg" className="rounded-full px-10 font-bold bg-transparent border border-white/20 text-white hover:bg-white/10 hover:text-white h-14 w-full sm:w-auto hover:-translate-y-0.5 transition-all text-base backdrop-blur-md">
                     Sign In
                   </Button>
                 </Link>
