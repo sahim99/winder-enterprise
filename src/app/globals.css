@@ -157,6 +157,11 @@
   100% { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes kenBurns {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
 .animate-slide-in-right {
   animation: slideInFromRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -168,3 +173,14 @@
 .animate-fade-in-up {
   animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+.animate-ken-burns {
+  animation: kenBurns 20s ease-out forwards;
+}
+
+/* Delay utilities */
+.delay-100 { animation-delay: 100ms; opacity: 0; }
+.delay-200 { animation-delay: 200ms; opacity: 0; }
+.delay-300 { animation-delay: 300ms; opacity: 0; }
+.delay-400 { animation-delay: 400ms; opacity: 0; }
+.delay-500 { animation-delay: 500ms; opacity: 0; }

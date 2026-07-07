@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { ProductCard } from '@/components/products/ProductCard'
 import { createClient } from '@/lib/supabase/server'
 import { HomeHero } from '@/components/home/HomeHero'
+import { LandingPage } from '@/components/home/LandingPage'
 
 async function getCategories() {
   const supabase = await createClient()
@@ -36,6 +37,17 @@ async function getCategoryShelf(categorySlugs: string[], limit = 4) {
 }
 
 export default async function HomePage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    const [trending, livingRoom] = await Promise.all([
+      getTrendingProducts(),
+      getCategoryShelf(['sofas', 'chairs', 'tables', 'office-chairs'], 4),
+    ])
+    return <LandingPage trending={trending} livingRoom={livingRoom} />
+  }
+
   const [
     trending,
     livingRoom,
@@ -52,7 +64,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-muted/10">
-      
+
       {/* Flipkart-Style Sliding Hero Banner */}
       <HomeHero />
 
@@ -187,35 +199,6 @@ export default async function HomePage() {
                 ))}
               </div>
             )}
-          </div>
-        </section>
-
-        {/* Legacy & History Segment */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full border-t pt-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6 animate-slide-in-left">
-              <span className="inline-flex items-center gap-1 text-xs uppercase font-bold tracking-widest text-primary">
-                <Sparkles className="h-3 w-3" /> Winder Legacy
-              </span>
-              <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
-                Our Legacy of Handcrafted Timber & Modern Living
-              </h2>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Winder Enterprise began in a modest wood shop in Jangipur, West Bengal, driven by a simple goal: to design timber furniture that lasts for generations. Using locally sourced premium hardwoods like solid Teak, Sal, and Mahogany, our local master carpenters employ traditional joinery techniques paired with beautiful modern finishes.
-              </p>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Over the years, we have expanded our dedication to help build modern households. Today, we bring that same rigorous standard of quality check to essential home appliances and televisions, ensuring families throughout West Bengal have access to the finest living room setups, kitchen appliances, and climate systems.
-              </p>
-            </div>
-            
-            <div className="relative aspect-video lg:aspect-[4/3] rounded-3xl overflow-hidden bg-muted shadow-md group animate-slide-in-right">
-              <div className="absolute inset-0 bg-gray-950/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
-              <img 
-                src="/winder_showroom.jpg" 
-                alt="Winder Enterprise Modern Showroom Storefront" 
-                className="object-cover h-full w-full group-hover:scale-105 transition-transform duration-700" 
-              />
-            </div>
           </div>
         </section>
 

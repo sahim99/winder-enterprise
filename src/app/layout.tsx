@@ -5,7 +5,7 @@ import './globals.css'
 import { NavbarWrapper } from '@/components/layout/NavbarWrapper'
 import { Footer } from '@/components/layout/Footer'
 import { Toaster } from '@/components/ui/sonner'
-import { PromoBanner } from '@/components/layout/PromoBanner'
+import { PromoBannerWrapper } from '@/components/layout/PromoBannerWrapper'
 
 const outfit = Outfit({ 
   subsets: ['latin'],
@@ -21,7 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${outfit.variable} font-sans antialiased`}>
-        <PromoBanner />
+        <Suspense fallback={null}>
+          <PromoBannerWrapper />
+        </Suspense>
         <Suspense fallback={null}>
           <NavbarWrapper />
         </Suspense>
