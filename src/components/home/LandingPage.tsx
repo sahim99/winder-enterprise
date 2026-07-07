@@ -53,7 +53,7 @@ export function LandingPage({ trending = [], livingRoom = [] }: LandingPageProps
         {/* Background Image with Ken Burns */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/winder-hero.png" 
+            src="/winder-hero-angled.png" 
             alt="Winder Enterprise Shop" 
             className="w-full h-full object-cover animate-ken-burns origin-right"
           />
