@@ -1,0 +1,35 @@
+﻿# Ignore personal folders and Windows system files
+/AppData/
+/Contacts/
+/Documents/
+/Downloads/
+/Favorites/
+/Links/
+/Music/
+/OneDrive/
+/Pictures/
+/Saved Games/
+/Searches/
+/Videos/
+/AndroidStudioProjects/
+/CrossDevice/
+/Oracle/
+/maven/
+/flutter/
+
+# Ignore dotfiles and dotfolders (except .gitignore)
+.*
+!.gitignore
+
+# Ignore NTUSER and other root files
+NTUSER*
+ntuser*
+*.log
+*.ini
+*.blf
+*.regtrans-ms
+*.cnpf
+
+# Ignore everything in Desktop EXCEPT Winder-enterprise
+/Desktop/*
+!/Desktop/Winder-enterprise/
