@@ -92,11 +92,17 @@ export default function AdminMessagesPage() {
     setIsLoading(true)
 
     try {
-      await fetch('/api/messages', {
+      const res = await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: tempMsg.message, senderType: 'admin', targetUserId: activeUserId })
       })
+      if (!res.ok) {
+        const text = await res.text()
+        alert('Failed to send message: ' + text)
+        // Remove optimistic update if failed
+        setMessages(prev => prev.filter(m => m.id !== tempMsg.id))
+      }
       fetchMessages(activeUserId)
       fetchThreads()
     } catch (e) {
