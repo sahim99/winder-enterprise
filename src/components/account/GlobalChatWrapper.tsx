@@ -48,7 +48,7 @@ export function GlobalChatWrapper() {
     }
   }, [])
 
-  if (loading || !user) return null
+  if (loading) return null
 
-  return <LiveChatWidget profile={profile} userId={user.id} />
+  return <LiveChatWidget profile={profile} userId={user?.id} />
 }

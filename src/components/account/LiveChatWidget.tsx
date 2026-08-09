@@ -12,7 +12,7 @@ type Message = {
   is_read?: boolean
 }
 
-export function LiveChatWidget({ profile, userId }: { profile: any, userId: string }) {
+export function LiveChatWidget({ profile, userId }: { profile: any, userId?: string }) {
   const [isOpen, setIsOpen] = useState(false)
   const [showPhoneModal, setShowPhoneModal] = useState(false)
   const [phone, setPhone] = useState('')
@@ -20,6 +20,14 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const handleOpenChat = () => {
+    if (!userId) {
+      window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`
+      return
+    }
+    setIsOpen(true)
+  }
 
   const fetchMessages = async (markRead: boolean) => {
     try {
@@ -55,12 +63,12 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
 
   // Poll for messages whether open or closed so we can show the unread badge
   useEffect(() => {
-    if (phone) {
+    if (phone && userId) {
       fetchMessages(isOpen)
       const interval = setInterval(() => fetchMessages(isOpen), 5000)
       return () => clearInterval(interval)
     }
-  }, [isOpen, phone])
+  }, [phone, isOpen, userId])
 
   useEffect(() => {
     if (isOpen) {
@@ -127,7 +135,7 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
       {/* Floating Chat Button */}
       <div className="fixed bottom-20 md:bottom-8 right-4 md:right-8 z-50">
         <Button 
-          onClick={() => setIsOpen(true)}
+          onClick={handleOpenChat}
           className="relative h-14 w-14 rounded-full bg-primary/80 hover:bg-primary shadow-2xl backdrop-blur-md border border-white/20 text-primary-foreground flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
         >
           <MessageCircle className="h-6 w-6" />
