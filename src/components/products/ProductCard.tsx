@@ -8,6 +8,9 @@ import { formatPrice } from '@/lib/utils'
 import type { Product } from '@/types/supabase'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { useCartStore } from '@/store/cart'
+import { ShoppingBag, Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface ProductCardProps {
   product: Product
@@ -16,6 +19,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const [wishlisted, setWishlisted] = useState(false)
   const [animating, setAnimating] = useState(false)
+  const [isAdding, setIsAdding] = useState(false)
 
   const isOutOfStock = product.stock === 0
 
@@ -58,10 +62,19 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   }
 
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsAdding(true)
+    useCartStore.getState().addItem(product)
+    toast.success('Added to Cart', { description: product.name })
+    setTimeout(() => setIsAdding(false), 500)
+  }
+
   return (
     <Link href={`/products/${product.slug}`} className="group">
-      <div className="overflow-hidden rounded-2xl bg-white transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] group-hover:-translate-y-1">
-        <div className="relative aspect-[4/5] bg-muted/30 overflow-hidden">
+      <div className="overflow-hidden glass-card transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.12)] hover:-translate-y-2">
+        <div className="relative aspect-[4/5] bg-muted/20 overflow-hidden">
           {product.images[0] ? (
             <Image
               src={product.images[0]}
@@ -74,8 +87,8 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm">No image</div>
           )}
           {isOutOfStock && (
-            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center">
-              <Badge variant="secondary" className="text-xs font-semibold uppercase tracking-wider">Out of stock</Badge>
+            <div className="absolute inset-0 bg-white/40 backdrop-blur-md flex items-center justify-center">
+              <Badge variant="secondary" className="text-xs font-semibold uppercase tracking-wider glass shadow-lg">Out of stock</Badge>
             </div>
           )}
           
@@ -107,9 +120,27 @@ export function ProductCard({ product }: ProductCardProps) {
             <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase mb-1.5">{product.categories?.name}</p>
             <h3 className="font-medium text-foreground line-clamp-2 leading-snug">{product.name}</h3>
           </div>
-          <div className="flex items-end justify-between mt-auto pt-2">
-            <span className="text-lg font-bold text-foreground">{formatPrice(product.price)}</span>
-            <span className="text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">View details &rarr;</span>
+          <div className="flex items-center justify-between mt-auto">
+            <span className="text-lg font-bold gradient-text">{formatPrice(product.price)}</span>
+            <button 
+              disabled={isAdding || isOutOfStock}
+              onClick={handleAddToCart}
+              className="h-8 w-8 rounded-full glass flex items-center justify-center text-gray-600 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all flex-shrink-0 disabled:opacity-50 group-hover:scale-110 active:scale-95"
+              aria-label="Quick add to cart"
+            >
+              <ShoppingBag className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="pt-2">
+            <Button 
+              disabled={isAdding || isOutOfStock}
+              onClick={handleAddToCart}
+              className="w-full h-9 rounded-xl font-semibold text-xs tracking-wide shadow-md transition-all active:scale-95 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:opacity-90 shimmer relative overflow-hidden"
+            >
+              <Plus className="h-3.5 w-3.5 mr-1.5" /> 
+              {isAdding ? 'Adding...' : 'Add to Cart'}
+            </Button>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart, ArrowLeft, Package } from 'lucide-react'
+import { ShoppingCart, ArrowLeft, Package, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useCartStore } from '@/store/cart'
@@ -15,6 +15,7 @@ import { RecentlyViewed } from '@/components/products/RecentlyViewed'
 export function ProductDetailClient({ product }: { product: Product }) {
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const addItem = useCartStore(s => s.addItem)
   const isOutOfStock = product.stock === 0
 
@@ -50,8 +51,11 @@ export function ProductDetailClient({ product }: { product: Product }) {
         <ArrowLeft className="h-4 w-4" /> Back to Collection
       </Link>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-        <div className="space-y-4 sticky top-28">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted/30">
+        <div className="space-y-4 md:sticky md:top-28">
+          <div 
+            className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-muted/30 cursor-zoom-in"
+            onClick={() => { if (product.images[selectedImage]) setLightboxOpen(true) }}
+          >
             {product.images[selectedImage] ? (
               <Image src={product.images[selectedImage]} alt={product.name} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" priority />
             ) : (
@@ -77,7 +81,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
               </Link>
             )}
             <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight leading-[1.1]">{product.name}</h1>
-            <p className="text-3xl font-bold text-foreground">{formatPrice(product.price)}</p>
+            <p className="text-3xl font-bold gradient-text">{formatPrice(product.price)}</p>
           </div>
           
           <div className="flex items-center gap-2 pb-6 border-b border-border/50">
@@ -96,18 +100,18 @@ export function ProductDetailClient({ product }: { product: Product }) {
           
           {!isOutOfStock && (
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-6">
-              <div className="flex items-center border border-border rounded-full h-14 w-full sm:w-auto px-2">
-                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" aria-label="Decrease">−</button>
-                <span className="w-8 text-center text-base font-semibold">{quantity}</span>
-                <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))} className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors" aria-label="Increase">+</button>
+              <div className="flex items-center justify-between border border-border rounded-full h-14 w-full sm:w-32 px-2">
+                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors shrink-0" aria-label="Decrease">−</button>
+                <span className="text-center text-base font-semibold">{quantity}</span>
+                <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))} className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors shrink-0" aria-label="Increase">+</button>
               </div>
-              <Button size="lg" className="flex-1 h-14 rounded-full text-base font-medium shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all" onClick={handleAddToCart}>
+              <Button size="lg" className="flex-1 h-14 rounded-full text-base font-medium shadow-lg hover:shadow-xl transition-all bg-gradient-to-r from-primary to-primary/80 shimmer text-white relative overflow-hidden" onClick={handleAddToCart}>
                 <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
               </Button>
             </div>
           )}
           
-          <div className="rounded-2xl bg-muted/30 p-6 space-y-4 mt-8">
+          <div className="glass-card p-6 space-y-4 mt-8">
             <h3 className="font-semibold text-foreground tracking-tight">Delivery & Services</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-2"><span className="text-primary">✓</span> Cash on delivery available</li>
@@ -118,6 +122,35 @@ export function ProductDetailClient({ product }: { product: Product }) {
         </div>
       </div>
       <RecentlyViewed />
+
+      {/* Fullscreen Image Lightbox */}
+      {lightboxOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 sm:p-8 animate-in fade-in duration-200">
+          <button 
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-6 right-6 z-50 p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+            aria-label="Close fullscreen image"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <div 
+            className="absolute inset-0 cursor-zoom-out" 
+            onClick={() => setLightboxOpen(false)} 
+          />
+          <div className="relative w-full h-full max-w-5xl max-h-[85vh] pointer-events-none">
+            {product.images[selectedImage] && (
+              <Image 
+                src={product.images[selectedImage]} 
+                alt={product.name} 
+                fill 
+                className="object-contain pointer-events-auto" 
+                sizes="100vw"
+                priority
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

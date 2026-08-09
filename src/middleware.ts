@@ -35,8 +35,8 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
   const search = request.nextUrl.search
 
-  // Customer portal & checkout route protection
-  if (path.startsWith('/account') || path === '/checkout') {
+  // Customer portal protection
+  if (path.startsWith('/account')) {
     if (!user) {
       const redirectUrl = new URL('/login', request.url)
       redirectUrl.searchParams.set('redirect', path + search)

@@ -6,6 +6,7 @@ import { NavbarWrapper } from '@/components/layout/NavbarWrapper'
 import { Footer } from '@/components/layout/Footer'
 import { Toaster } from '@/components/ui/sonner'
 import { PromoBannerWrapper } from '@/components/layout/PromoBannerWrapper'
+import { ThemeProvider } from '@/components/theme-provider'
 
 const outfit = Outfit({ 
   subsets: ['latin'],
@@ -19,8 +20,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${outfit.variable} font-sans antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
         <Suspense fallback={null}>
           <PromoBannerWrapper />
         </Suspense>
@@ -30,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="min-h-screen">{children}</main>
         <Footer />
         <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )

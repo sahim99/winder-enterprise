@@ -112,13 +112,14 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="bg-muted/10 min-h-screen pt-10 pb-20">
+    <div className="bg-muted/10 min-h-screen pt-10 pb-32 lg:pb-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold tracking-tight text-foreground mb-10">Checkout</h1>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start flex-col-reverse lg:flex-row">
           
-          <div className="lg:col-span-7 xl:col-span-8 space-y-8">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+          {/* Form */}
+          <div className="lg:col-span-7 xl:col-span-8 space-y-8 order-2 lg:order-1">
+            <form id="checkout-form" onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               
               {/* Step 1: Delivery Details */}
               <div className="bg-background rounded-3xl border border-border/50 p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
@@ -179,7 +180,8 @@ export default function CheckoutPage() {
 
                 {error && <div className="mt-6 rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700 font-medium">{error}</div>}
                 
-                <Button type="submit" size="lg" className="w-full h-14 mt-8 rounded-full font-bold text-lg shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-1 transition-all" disabled={loading}>
+                {/* Desktop Confirm Button (hidden on mobile) */}
+                <Button type="submit" form="checkout-form" size="lg" className="hidden lg:flex w-full h-14 mt-8 rounded-full font-bold text-lg shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-1 transition-all" disabled={loading}>
                   {loading ? 'Processing Order…' : 'Confirm Order'}
                 </Button>
               </div>
@@ -188,7 +190,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Order Summary Sidebar */}
-          <div className="lg:col-span-5 xl:col-span-4 sticky top-24">
+          <div className="lg:col-span-5 xl:col-span-4 sticky lg:top-24 order-1 lg:order-2">
             <div className="bg-background rounded-3xl border border-border/50 p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
               <h2 className="text-xl font-semibold text-foreground mb-6 pb-6 border-b border-border/40">Order summary</h2>
               <div className="space-y-6">
@@ -218,19 +220,19 @@ export default function CheckoutPage() {
                         </button>
                       </div>
                       <div className="flex items-center justify-between mt-2">
-                        <div className="flex items-center border border-border rounded-full h-8 px-1 bg-muted/20">
+                        <div className="flex items-center justify-between w-24 border border-border rounded-full h-8 px-1 bg-muted/20">
                           <button
                             onClick={() => updateQuantity(product.id, quantity - 1)}
-                            className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white hover:shadow-sm text-muted-foreground hover:text-foreground transition-all duration-200"
+                            className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white hover:shadow-sm text-muted-foreground hover:text-foreground transition-all duration-200 shrink-0"
                             aria-label="Decrease quantity"
                             type="button"
                           >
                             <Minus className="h-3 w-3" />
                           </button>
-                          <span className="w-6 text-center text-sm font-semibold text-foreground">{quantity}</span>
+                          <span className="text-center text-sm font-semibold text-foreground">{quantity}</span>
                           <button
                             onClick={() => updateQuantity(product.id, quantity + 1)}
-                            className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white hover:shadow-sm text-muted-foreground hover:text-foreground transition-all duration-200"
+                            className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white hover:shadow-sm text-muted-foreground hover:text-foreground transition-all duration-200 shrink-0"
                             aria-label="Increase quantity"
                             type="button"
                           >
@@ -252,6 +254,17 @@ export default function CheckoutPage() {
           </div>
           
         </div>
+      </div>
+      
+      {/* Mobile Sticky Bottom Action Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border/50 p-4 shadow-[0_-8px_30px_rgb(0,0,0,0.08)] z-50 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Total</p>
+          <p className="text-xl font-bold text-primary">{formatPrice(totalPrice())}</p>
+        </div>
+        <Button type="submit" form="checkout-form" size="lg" className="flex-1 h-14 rounded-full font-bold text-lg shadow-md" disabled={loading}>
+          {loading ? 'Processing…' : 'Confirm Order'}
+        </Button>
       </div>
     </div>
   )

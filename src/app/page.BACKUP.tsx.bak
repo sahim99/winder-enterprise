@@ -1,23 +1,11 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowRight, CheckCircle2, TrendingUp, Sparkles, Sofa, Bed, Tv } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ProductCard } from '@/components/products/ProductCard'
 import { createClient } from '@/lib/supabase/server'
 import { HomeHero } from '@/components/home/HomeHero'
-import { ProductMarquee } from '@/components/home/ProductMarquee'
-
-async function getNewArrivals() {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('products')
-    .select('*, categories(name, slug)')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-    .limit(8)
-  return data ?? []
-}
+import { LandingPage } from '@/components/home/LandingPage'
 
 async function getCategories() {
   const supabase = await createClient()
@@ -49,15 +37,24 @@ async function getCategoryShelf(categorySlugs: string[], limit = 4) {
 }
 
 export default async function HomePage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    const [trending, livingRoom] = await Promise.all([
+      getTrendingProducts(),
+      getCategoryShelf(['sofas', 'chairs', 'tables', 'office-chairs'], 4),
+    ])
+    return <LandingPage trending={trending} livingRoom={livingRoom} />
+  }
+
   const [
-    newArrivals,
     trending,
     livingRoom,
     bedroom,
     appliances,
     categories
   ] = await Promise.all([
-    getNewArrivals(),
     getTrendingProducts(),
     getCategoryShelf(['sofas', 'chairs', 'tables', 'office-chairs'], 4),
     getCategoryShelf(['beds', 'wardrobes', 'dining-sets'], 4),
@@ -66,30 +63,27 @@ export default async function HomePage() {
   ])
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-stone-50 via-amber-50/30 to-emerald-50/20">
+    <div className="flex flex-col min-h-screen bg-muted/10">
 
       {/* Flipkart-Style Sliding Hero Banner */}
       <HomeHero />
 
-      {/* Auto-Swapping New Arrivals Marquee */}
-      <ProductMarquee products={newArrivals} />
-
       {/* Trust bar */}
-      <section className="py-8 bg-transparent">
+      <section className="py-5 border-b bg-white shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 glass-card p-6 md:px-10">
-            <span className="text-xs uppercase tracking-widest font-bold text-gray-500">Guaranteed Assured shopping</span>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
+            <span className="text-xs uppercase tracking-widest font-bold text-gray-400">Guaranteed Assured shopping</span>
             <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
               {[
                 { label: "Cash on delivery", desc: "Pay at your doorstep" },
                 { label: "Quality guaranteed", desc: "100% inspected timber" },
                 { label: "West Bengal shipping", desc: "Free assembly in Jangipur" }
               ].map(item => (
-                <div key={item.label} className="flex items-center gap-3 text-left glass px-4 py-2 rounded-full">
+                <div key={item.label} className="flex items-center gap-2.5 text-left">
                   <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-gray-900 text-sm leading-tight">{item.label}</p>
-                    <p className="text-[10px] text-gray-500 font-medium leading-tight">{item.desc}</p>
+                    <p className="font-semibold text-gray-900 text-sm">{item.label}</p>
+                    <p className="text-[10px] text-gray-400 font-medium">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -99,13 +93,13 @@ export default async function HomePage() {
       </section>
 
       {/* Trending Products Zone */}
-      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex items-center justify-between mb-8 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-full text-primary"><TrendingUp className="h-5 w-5" /></div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">Trending Now</h2>
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex items-center justify-between mb-8 border-b pb-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-primary" />
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Trending Now</h2>
           </div>
-          <Link href="/products" className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 group glass px-4 py-2 rounded-full">
+          <Link href="/products" className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 group">
             View All <ArrowRight className="h-3 w-3 transform group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
@@ -127,17 +121,17 @@ export default async function HomePage() {
       <div className="space-y-16 pb-24">
         
         {/* Shelf 1: Living Room */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="glass-card p-6 md:p-10">
-            <div className="flex items-center justify-between mb-8 pb-4">
+        <section className="bg-white py-16 border-t border-b shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-8 border-b pb-4">
               <div>
                 <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
                   <Sofa className="h-3 w-3" /> Comfort Living
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">Flagship Living Room</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Flagship Living Room</h2>
                 <p className="text-xs text-gray-500 mt-1">Premium teak wood sofas, executive chairs, study desks, and center tables.</p>
               </div>
-              <Link href="/products?category=sofas" className="text-xs font-semibold text-primary hover:underline glass px-4 py-2 rounded-full hidden sm:inline-flex">
+              <Link href="/products?category=sofas" className="text-xs font-semibold text-primary hover:underline">
                 Explore sofas &rarr;
               </Link>
             </div>
@@ -156,19 +150,18 @@ export default async function HomePage() {
 
         {/* Shelf 2: Bedroom */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="glass-card p-6 md:p-10">
-            <div className="flex items-center justify-between mb-8 pb-4">
-              <div>
-                <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
-                  <Bed className="h-3 w-3" /> Restful Space
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">Royal Bedrooms</h2>
-                <p className="text-xs text-gray-500 mt-1">Solid mahogany beds, spacious wardrobes, dressers, and custom dining sets.</p>
-              </div>
-              <Link href="/products?category=beds" className="text-xs font-semibold text-primary hover:underline glass px-4 py-2 rounded-full hidden sm:inline-flex">
-                Explore beds &rarr;
-              </Link>
+          <div className="flex items-center justify-between mb-8 border-b pb-4">
+            <div>
+              <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
+                <Bed className="h-3 w-3" /> Restful Space
+              </span>
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900">Royal Bedrooms</h2>
+              <p className="text-xs text-gray-500 mt-1">Solid mahogany beds, spacious wardrobes, dressers, and custom dining sets.</p>
             </div>
+            <Link href="/products?category=beds" className="text-xs font-semibold text-primary hover:underline">
+              Explore beds &rarr;
+            </Link>
+          </div>
 
           {bedroom.length === 0 ? (
             <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
@@ -179,21 +172,20 @@ export default async function HomePage() {
               ))}
             </div>
           )}
-          </div>
         </section>
 
         {/* Shelf 3: Appliances */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="glass-card p-6 md:p-10">
-            <div className="flex items-center justify-between mb-8 pb-4">
+        <section className="bg-white py-16 border-t border-b shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between mb-8 border-b pb-4">
               <div>
                 <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
                   <Tv className="h-3 w-3" /> Modern Home
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">Smart Electronics & Appliances</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Smart Electronics & Appliances</h2>
                 <p className="text-xs text-gray-500 mt-1">Advanced televisions, high-cooling air conditioners, climate systems, and washing machines.</p>
               </div>
-              <Link href="/products?category=televisions" className="text-xs font-semibold text-primary hover:underline glass px-4 py-2 rounded-full hidden sm:inline-flex">
+              <Link href="/products?category=televisions" className="text-xs font-semibold text-primary hover:underline">
                 Explore appliances &rarr;
               </Link>
             </div>
@@ -211,40 +203,6 @@ export default async function HomePage() {
         </section>
 
       </div>
-
-      {/* Visit Our Store Strip */}
-      <section className="relative w-full py-16 md:py-24 bg-gray-950 dark:bg-[#0a0a0a] overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Image Left */}
-            <div className="relative aspect-video md:aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-white/5">
-              <Image 
-                 src="/winder-shop-v3.png"
-                 alt="Winder Enterprise Storefront"
-                 fill
-                 className="object-cover object-center"
-                 sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-            {/* Text Right */}
-            <div className="space-y-6 text-white md:pl-8">
-              <span className="inline-flex items-center text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
-                Since 2010
-              </span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">Visit Our Showroom</h2>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                Experience the craftsmanship firsthand. From premium timber selection to the final polish, Winder Enterprise has been defining modern living in Jangipur for over a decade. Come explore our exclusive collection of luxury furniture and smart home appliances.
-              </p>
-              <div className="pt-4">
-                <Link href="/#contact" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-gradient-to-r from-primary to-primary/80 shimmer text-white font-bold hover:shadow-[0_0_20px_rgba(var(--primary),0.5)] transition-all text-sm uppercase tracking-wider hover:scale-105 active:scale-95">
-                  Get Directions
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
     </div>
   )
 }

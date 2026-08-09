@@ -43,17 +43,11 @@ export function Footer() {
     return () => subscription.unsubscribe()
   }, [])
 
-  // Only show on the landing page
-  if (pathname !== '/') return null
-  
-  // Do not show if the user is logged in
-  if (isLoggedIn === true) return null
-
-  // Optionally, you can also return null while loading if you want to avoid a flash:
-  // if (isLoggedIn === null) return null
+  // Do not show on admin routes or auth routes where it might be distracting
+  if (pathname.startsWith('/admin') || pathname.startsWith('/login') || pathname.startsWith('/register')) return null
 
   return (
-    <footer className="bg-[#0a0a0a] text-white border-t border-white/10 pt-16 pb-8">
+    <footer className="glass-dark text-white pt-16 pb-8 relative z-10 mt-auto">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Top Section: Newsletter / Tagline */}
@@ -68,7 +62,7 @@ export function Footer() {
               placeholder="Enter your email address" 
               className="bg-white/5 border border-white/10 rounded-full px-4 h-10 text-sm w-full md:w-72 focus:outline-none focus:ring-1 focus:ring-white/30 transition-all placeholder:text-gray-500"
             />
-            <Button className="rounded-full h-10 px-6 font-semibold bg-white text-black hover:bg-gray-200 transition-colors w-full sm:w-auto">
+            <Button className="rounded-full h-10 px-6 font-semibold bg-white text-black hover:bg-gray-200 transition-colors w-full sm:w-auto shimmer">
               Subscribe
             </Button>
           </div>

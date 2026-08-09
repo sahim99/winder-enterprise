@@ -1,13 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { ShoppingCart, Menu, X, Search } from 'lucide-react'
+import { ShoppingCart, Menu, X, Search, Sparkles } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { useCartStore } from '@/store/cart'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,8 +35,18 @@ export function AppNavbar() {
   const [searchQuery, setSearchQuery] = useState(initialSearch)
   const debouncedSearch = useDebounce(searchQuery, 400)
   const [mounted, setMounted] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
   const totalItems = useCartStore(s => s.totalItems())
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Keep search input synced if URL changes externally
   useEffect(() => {
@@ -103,7 +115,12 @@ export function AppNavbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-background border-b border-border shadow-sm">
+      <header className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-300 border-b",
+        scrolled 
+          ? "bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-white/30 dark:border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.05)] dark:shadow-none" 
+          : "bg-white/60 dark:bg-gray-950/60 backdrop-blur-md border-transparent"
+      )}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between gap-4 md:gap-8">
             <Link href="/" className="flex-shrink-0 text-xl md:text-2xl font-bold tracking-tighter text-foreground hover:text-primary transition-colors flex items-center gap-1.5">
@@ -114,6 +131,9 @@ export function AppNavbar() {
             <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-muted-foreground flex-shrink-0">
               <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
               <Link href="/products" className="hover:text-foreground transition-colors">Products</Link>
+              <Link href="/showroom" className="hover:text-primary text-primary/80 transition-colors flex items-center gap-1">
+                <Sparkles className="h-3 w-3" /> 3D Showroom
+              </Link>
               <Link href="/offers" className="hover:text-foreground transition-colors">Offers</Link>
               <Link href="/account/wishlist" className="hover:text-foreground transition-colors">Wishlist</Link>
             </nav>
@@ -133,25 +153,48 @@ export function AppNavbar() {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-              {/* Profile Link & Sign Out */}
+              <ThemeToggle />
+              
+              {/* Cart Button (Moved to the left of Profile) */}
+              <Button
+                variant="outline"
+                size="icon"
+                className="relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95"
+                onClick={() => setCartOpen(true)}
+                aria-label="Open cart"
+              >
+                <ShoppingCart className="h-5 w-5 text-foreground" />
+                {mounted && totalItems > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground font-bold shadow-sm">
+                    {totalItems}
+                  </span>
+                )}
+              </Button>
+
+              {/* Profile Link & Sign Out (Moved to the right end) */}
               {user ? (
-                <div className="flex items-center gap-2">
-                  <Link
-                    href="/account"
-                    className="relative h-9 w-9 rounded-full bg-foreground text-background text-sm font-medium flex items-center justify-center cursor-pointer select-none hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                    aria-label="Account page"
-                  >
-                    {userInitial}
-                  </Link>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={handleSignOut} 
-                    className="hidden sm:inline-flex text-xs font-semibold text-muted-foreground hover:text-red-600 hover:bg-red-50/30 transition-colors h-9 px-3 rounded-full"
-                  >
-                    Sign out
-                  </Button>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="relative h-10 w-10 rounded-full bg-foreground text-background text-sm font-medium flex items-center justify-center cursor-pointer select-none hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                      aria-label="Account menu"
+                    >
+                      {userInitial}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 font-medium">
+                    <DropdownMenuItem asChild>
+                      <Link href="/account" className="cursor-pointer w-full">Customer Dashboard</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={handleSignOut} 
+                      className="text-red-600 cursor-pointer focus:text-red-700 focus:bg-red-50/50 dark:focus:bg-red-950/50"
+                    >
+                      Sign out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <div className="hidden sm:flex items-center gap-3">
                   <Link 
@@ -162,22 +205,6 @@ export function AppNavbar() {
                   </Link>
                 </div>
               )}
-
-              {/* Cart Button */}
-              <Button
-                variant="outline"
-                size="icon"
-                className="relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95"
-                onClick={() => setCartOpen(true)}
-                aria-label="Open cart"
-              >
-                <ShoppingCart className="h-5 w-5 text-foreground" />
-                {totalItems > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground font-bold shadow-sm">
-                    {totalItems}
-                  </span>
-                )}
-              </Button>
 
               <Button
                 variant="ghost"
@@ -208,6 +235,9 @@ export function AppNavbar() {
             <div className="flex flex-col gap-2 mt-4 border-t pt-3 border-border/40">
               <Link href="/" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-muted-foreground hover:text-foreground py-1">Home</Link>
               <Link href="/products" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-muted-foreground hover:text-foreground py-1">Products</Link>
+              <Link href="/showroom" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-primary/80 hover:text-primary py-1 flex items-center gap-1">
+                <Sparkles className="h-3 w-3" /> 3D Showroom
+              </Link>
               <Link href="/offers" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-muted-foreground hover:text-foreground py-1">Offers</Link>
               <Link href="/account/wishlist" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-muted-foreground hover:text-foreground py-1">Wishlist</Link>
             </div>

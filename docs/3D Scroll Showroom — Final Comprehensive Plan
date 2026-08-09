@@ -1,0 +1,249 @@
+# 🏪 3D Scroll Showroom — Final Comprehensive Plan
+
+> [!NOTE]
+> **Backup is DONE.** Current landing page is saved as:
+> - `LandingPage.BACKUP.tsx` ✅
+> - `page.BACKUP.tsx` ✅
+>
+> You can always restore by renaming these files back.
+
+---
+
+## Complete Gap Analysis (Code Audit Findings)
+
+| Area | Gap Found | Solution |
+|---|---|---|
+| **NavbarWrapper** | Hides navbar when logged out on `/` — the 3D landing page must be completely self-contained | ✅ 3D scene handles its own navigation overlay |
+| **Root Layout** | `<PromoBannerWrapper>` + global `<Footer>` render on ALL pages incl. `/` | ✅ Will suppress both on landing page via pathname check |
+| **page.tsx** | `LandingPage` only gets `trending` + `livingRoom` — no fashion/electronics/essentials data | ✅ Will add all 4 department product fetches for the 3D zones |
+| **ScrollControls** | Uses `pointer-events-none` on children — HTML overlays inside must be explicitly re-enabled | ✅ Handled with `events` prop |
+| **drei `<Html>`** | CORS + Cloudinary images may not render inside 3D canvas on some browsers | ✅ Use CSS `<Html>` overlay outside Canvas, keyed to 3D scroll position |
+| **Mobile WebGL** | Three.js + `ScrollControls` is heavy on mobile — needs full alternative render path | ✅ Separate mobile component with CSS scroll + parallax |
+| **product.images** | Is `string[]` array — must always use `images[0]` with null check | ✅ Handled |
+| **NavbarWrapper z-index** | AppNavbar at z-40 — 3D canvas must not block it | ✅ Canvas sits below z-40 |
+| **No `slug` on products** | Products need `slug` to link to detail page correctly | ✅ Already in type, used in panel |
+
+---
+
+## Architecture: Dual Render Path (Desktop 3D vs Mobile 2D)
+
+```mermaid
+flowchart TD
+    A["User Lands on /"] --> B{Device Check}
+    B -- "Desktop / Tablet\n(window.innerWidth > 768)" --> C["3D Scroll Experience\nThree.js + ScrollControls"]
+    B -- "Mobile Phone\n(window.innerWidth ≤ 768)" --> D["2D Parallax Experience\nCSS + IntersectionObserver"]
+
+    C --> C1["Shop exterior\nfull screen"]
+    C1 --> C2["Scroll → Camera flies forward"]
+    C2 --> C3["Glass doors open"]
+    C3 --> C4["Inside shop\n4 department zones"]
+    C4 --> C5["Product hotspots\nwith price tags"]
+
+    D --> D1["Shop exterior photo\nfill screen with parallax"]
+    D1 --> D2["Scroll → image zooms in\nwith CSS transform"]
+    D2 --> D3["Shop 'windows' expand\nin CSS (no Three.js)"]
+    D3 --> D4["Department sections\nslide in beautifully"]
+    D4 --> D5["Product cards with\nprice overlays"]
+```
+
+---
+
+## Desktop 3D — Camera Path Detail
+
+```
+Z-AXIS (depth) — scroll drives camera along this path:
+
+START (z=20) ─── Pavement, far outside ─────────────
+                 📷 Camera looks at shop front
+
+       (z=10) ─── Approaching, shop fills screen ──
+                 Atmospheric fog lifts
+
+       (z=3)  ─── Just outside glass doors ────────
+                 🚪 DOORS ANIMATE OPEN
+
+       (z=-1) ─── Crossing the threshold ──────────
+                 Golden interior light floods in
+
+       (z=-4) ─── Inside entrance lobby ────────────
+                 4 department signs glow
+
+NOW THE CAMERA FANS OUT LEFT-RIGHT:
+       
+  LEFT (-8, -6) ── 👗 FASHION ZONE
+  CENTER-L (-2, -8) ── 🛋️ FURNITURE ZONE  
+  CENTER-R (3, -8) ── 📺 ELECTRONICS ZONE
+  RIGHT (8, -6) ── 🏠 HOME ESSENTIALS ZONE
+```
+
+---
+
+## Mobile 2D — CSS Parallax Detail
+
+```
+SCROLL POSITION → CSS EFFECT:
+
+0%    ┌──────────────────────────────┐
+      │   Shop exterior photo        │ Full screen, slight parallax
+      │   "WINDER ENTERPRISE"        │ text fades in
+      │   "Scroll to explore ↓"      │ bouncing arrow
+      └──────────────────────────────┘
+
+25%   ┌──────────────────────────────┐
+      │   Photo scales up (CSS zoom) │ transform: scale(1 → 1.3)
+      │   Shop fills screen          │ + blur dissolves
+      └──────────────────────────────┘
+
+45%   ┌──────────────────────────────┐  
+      │   CSS "door" panels slide L/R│ Two white bars slide out
+      │   Department grid reveals    │ Cards slide up from bottom
+      └──────────────────────────────┘
+
+60%+  ┌──────────────────────────────┐
+      │  👗 Fashion dept cards        │ Horizontal scroll row
+      │  🛋️ Furniture dept cards      │ Horizontal scroll row  
+      │  📺 Electronics dept cards   │ Horizontal scroll row
+      │  🏠 Home dept cards          │ Horizontal scroll row
+      └──────────────────────────────┘
+```
+
+---
+
+## File Structure
+
+```
+src/components/home/
+├── LandingPage.BACKUP.tsx          ← BACKUP (do not touch)
+├── LandingPage.tsx                 ← MODIFIED: renders device branch
+│
+├── ScrollShowroom/                 ← NEW: 3D experience
+│   ├── index.tsx                   ← Main component (lazy loaded)
+│   ├── ShopExterior.tsx            ← Shop building 3D geometry
+│   ├── GlassDoors.tsx              ← Animated door meshes
+│   ├── DepartmentZone.tsx          ← One zone with products
+│   ├── ProductHotspot.tsx          ← Floating price tag + glow
+│   └── useCameraPath.ts            ← Camera curve + scroll logic
+│
+├── MobileShowroom/                 ← NEW: 2D mobile experience
+│   ├── index.tsx                   ← Main component
+│   ├── ParallaxHero.tsx            ← Scroll-scale hero section
+│   ├── DoorReveal.tsx              ← CSS animated doors
+│   └── DepartmentRow.tsx           ← Horizontal product rows
+│
+├── VirtualShowroom.tsx             ← existing (standalone modal)
+└── VirtualShowroomPanel.tsx        ← existing (product detail)
+```
+
+---
+
+## Updated `page.tsx` Data Fetching
+
+```mermaid
+flowchart LR
+    A["page.tsx (server)"] --> B["Fetch trending (4 products)"]
+    A --> C["Fetch fashion zone (4 products)"]
+    A --> D["Fetch furniture zone (4 products)"]
+    A --> E["Fetch electronics zone (4 products)"]
+    A --> F["Fetch home essentials zone (4 products)"]
+    B & C & D & E & F --> G["LandingPage component"]
+    G --> H{isMobile?}
+    H -- No --> I["3D ScrollShowroom\n(lazy loaded, SSR off)"]
+    H -- Yes --> J["2D MobileShowroom\n(CSS only, no WebGL)"]
+```
+
+---
+
+## 3D Scene — Full Component Tree
+
+```mermaid
+flowchart TD
+    A["Canvas (R3F)"] --> B["ScrollControls\n(pages=5, damping=0.2)"]
+    B --> C["Scroll (useScroll)"]
+    C --> D["Camera path\n(CatmullRomCurve3)"]
+    D --> E["ShopExterior\n(photo plane + box walls)"]
+    D --> F["GlassDoors\n(rotationY animated 0→-PI/2)"]
+    D --> G["Zone 1: Fashion\n(x=-8)"]
+    D --> H["Zone 2: Furniture\n(x=-2)"]
+    D --> I["Zone 3: Electronics\n(x=3)"]
+    D --> J["Zone 4: Home Essentials\n(x=8)"]
+    G & H & I & J --> K["ProductHotspot × 4\n(Billboard + Html)"]
+    K --> L["onClick → selectedProduct state"]
+    L --> M["ProductDetailDrawer\n(HTML overlay, outside Canvas)"]
+```
+
+---
+
+## The Glass Door Animation
+
+```
+Closed (scroll < 0.3):        Open (scroll > 0.4):
+┌──────┬──────┐               ┌──────          ──────┐
+│      │      │               │        (open)        │
+│ LEFT │RIGHT │  →→→          │                      │
+│ DOOR │ DOOR │               │ LEFT ←         → RIGHT│
+│      │      │               │DOOR              DOOR │
+└──────┴──────┘               └──────          ──────┘
+
+Animation: meshRef.rotation.y interpolates
+  Left door:   0 → -Math.PI / 2   (swings left)
+  Right door:  0 → +Math.PI / 2   (swings right)
+  Triggered when scroll.offset crosses 0.3
+  Duration: ~0.1 scroll units (smooth)
+```
+
+---
+
+## What Stays From Current LandingPage
+
+The creative text content is KEPT and made more cinematic:
+
+| Current Text | New Creative Version |
+|---|---|
+| "Style For Everyone." | **"Style For Everyone."** (kept, animated letter-by-letter) |
+| "Serving our community since 2010." | **"Est. 2010 · Jangipur, West Bengal"** (subtle badge) |
+| "Experience premium handcrafted quality..." | **"Where timber meets timeless."** (more poetic) |
+| Stats bar (15+, 500+, 100%, COD) | KEPT but animated with counter roll-up |
+| Sign Up & Shop / Virtual Tour buttons | Replaced by **"Scroll to Enter ↓"** animated prompt |
+
+---
+
+## Performance Strategy
+
+| Concern | Solution |
+|---|---|
+| 3D bundle size (~280KB) | `next/dynamic` + `ssr: false` — loads only on demand |
+| Mobile GPU | 3D completely skipped on mobile (CSS only path) |
+| Texture loading | Use low-res shop image for 3D scene background |
+| Frame rate | `dpr={[1, 1.5]}` cap on Canvas, disable shadows on mid/low devices |
+| LCP (Largest Contentful Paint) | Shop exterior image preloaded with `<link rel="preload">` |
+
+---
+
+## Answers to Your Questions
+
+> **Q1: Replace current hero? Keep the text?**
+> ✅ Yes — ALL current text is preserved and made MORE CREATIVE (see table above). The 3D scrolling IS the new hero.
+
+> **Q2: Use Winder Enterprise-v3.png?**  
+> ✅ Yes. This image will be the very first thing users see when they land. It will be copied to `/public/winder-shop-v3.png` for local serving.
+
+> **Q3: Mobile alternative?**
+> ✅ A completely separate 2D CSS parallax path for mobiles — no Three.js, no WebGL, fully smooth.
+
+> **Q4: Backup?**
+> ✅ ALREADY DONE before I build anything.
+
+---
+
+## Build Order
+
+1. Copy shop image to `/public`
+2. Update `page.tsx` — add all 4 department fetches
+3. Build `ScrollShowroom/` — the 3D experience (desktop)
+4. Build `MobileShowroom/` — the CSS parallax (mobile)  
+5. Update `LandingPage.tsx` — device detection + branch render
+6. Update `globals.css` — add new keyframes for door animation
+7. Test on desktop + mobile
+
+> [!IMPORTANT]
+> **Click Proceed to start building!** Everything will be strictly local — no GitHub push until you confirm it's perfect.

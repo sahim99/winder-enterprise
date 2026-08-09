@@ -1,12 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import Link from 'next/link'
-import { Search, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
-import { Input } from '@/components/ui/input'
+import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { createClient } from '@/lib/supabase/client'
 
 const SLIDES = [
   {
@@ -31,20 +29,6 @@ const SLIDES = [
 
 export function HomeHero() {
   const [active, setActive] = useState(0)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [user, setUser] = useState<any>(null)
-  const router = useRouter()
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-    })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -52,12 +36,6 @@ export function HomeHero() {
     }, 6000)
     return () => clearInterval(timer)
   }, [])
-
-  function handleSearchSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!searchQuery.trim()) return
-    router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`)
-  }
 
   function prevSlide() {
     setActive((prev) => (prev - 1 + SLIDES.length) % SLIDES.length)
@@ -68,19 +46,7 @@ export function HomeHero() {
   }
 
   return (
-    <section className="relative w-full h-[calc(100vh-4rem)] bg-gray-900 overflow-hidden flex items-center justify-center">
-      
-      {/* Floating Login Button (Only visible if logged out) */}
-      {!user && (
-        <div className="absolute top-6 right-6 z-30 flex items-center gap-4">
-          <Link 
-            href="/login" 
-            className="inline-flex items-center justify-center h-10 px-6 rounded-full bg-white text-gray-900 font-bold hover:bg-white/95 active:scale-95 transition-all text-xs uppercase tracking-wider shadow-lg"
-          >
-            Sign In / Login
-          </Link>
-        </div>
-      )}
+    <section className="relative w-full h-[50vh] min-h-[400px] max-h-[600px] bg-gray-900 overflow-hidden flex items-center justify-center">
 
       {/* Background Slides */}
       {SLIDES.map((slide, idx) => (
@@ -90,10 +56,14 @@ export function HomeHero() {
             idx === active ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}
         >
-          <div className="absolute inset-0 bg-gray-950/70 z-10" />
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${slide.image})` }}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
+          <Image 
+             src={slide.image}
+             alt={slide.title}
+             fill
+             className="object-cover"
+             sizes="100vw"
+             priority={idx === 0}
           />
         </div>
       ))}
@@ -117,28 +87,12 @@ export function HomeHero() {
           </p>
         </div>
 
-        {/* Central Search Bar */}
-        <form 
-          onSubmit={handleSearchSubmit} 
-          className="max-w-2xl mx-auto flex items-center bg-white/10 backdrop-blur-md rounded-full p-2 border border-white/20 shadow-2xl focus-within:bg-white focus-within:text-gray-900 focus-within:border-primary transition-all duration-300 group"
-        >
-          <div className="flex-1 flex items-center pl-3">
-            <Search className="h-5 w-5 text-white/60 group-focus-within:text-primary transition-colors" />
-            <input 
-              type="text"
-              placeholder="Search wood beds, teak sofas, televisions, washing machines..."
-              className="w-full bg-transparent border-none outline-none pl-3 text-sm text-white placeholder-white/60 group-focus-within:text-gray-900 group-focus-within:placeholder-gray-400"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button 
-            type="submit" 
-            className="rounded-full px-6 h-11 text-xs font-bold uppercase shadow-md group-focus-within:bg-primary group-focus-within:text-white"
-          >
-            Find Product
-          </Button>
-        </form>
+        {/* CTA Button */}
+        <div className="pt-4">
+          <Link href="/products" className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all text-sm uppercase tracking-wider shadow-xl hover:scale-105 active:scale-95">
+            Shop Now
+          </Link>
+        </div>
 
       </div>
 

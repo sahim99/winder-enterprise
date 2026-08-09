@@ -28,14 +28,6 @@ export function NavbarWrapper() {
   if (pathname?.startsWith('/admin')) return null
   if (pathname === '/login' || pathname === '/register') return null
 
-  // On the homepage:
-  if (pathname === '/') {
-    // If not logged in, DO NOT render any navbar (single landing page experience)
-    if (!user) return null
-    // If logged in, show the full e-commerce navbar
-    return <AppNavbar />
-  }
-
   // All other pages show the App Navbar
   return <AppNavbar />
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Minus, Plus, X, ShoppingBag } from 'lucide-react'
@@ -16,10 +17,24 @@ interface CartDrawerProps {
 
 export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, totalPrice } = useCartStore()
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="flex flex-col w-full sm:max-w-md">
+      <SheetContent 
+        side={isMobile ? "bottom" : "right"} 
+        className={cn(
+          "flex flex-col p-4 sm:p-6", 
+          isMobile ? "h-[90vh] rounded-t-2xl" : "w-full sm:max-w-md"
+        )}
+      >
         <SheetHeader>
           <SheetTitle>Your cart ({items.length})</SheetTitle>
         </SheetHeader>
@@ -60,18 +75,18 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                       </button>
                     </div>
                     <div className="flex items-center justify-between mt-2">
-                      <div className="flex items-center border border-border rounded-full h-8 px-1 bg-muted/20">
+                      <div className="flex items-center justify-between w-24 border border-border rounded-full h-8 px-1 bg-muted/20">
                         <button
                           onClick={() => updateQuantity(product.id, quantity - 1)}
-                          className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white hover:shadow-sm text-muted-foreground hover:text-foreground transition-all duration-200"
+                          className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white hover:shadow-sm text-muted-foreground hover:text-foreground transition-all duration-200 shrink-0"
                           aria-label="Decrease quantity"
                         >
                           <Minus className="h-3 w-3" />
                         </button>
-                        <span className="w-6 text-center text-sm font-semibold text-foreground">{quantity}</span>
+                        <span className="text-center text-sm font-semibold text-foreground">{quantity}</span>
                         <button
                           onClick={() => updateQuantity(product.id, quantity + 1)}
-                          className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white hover:shadow-sm text-muted-foreground hover:text-foreground transition-all duration-200"
+                          className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white hover:shadow-sm text-muted-foreground hover:text-foreground transition-all duration-200 shrink-0"
                           aria-label="Increase quantity"
                         >
                           <Plus className="h-3 w-3" />
