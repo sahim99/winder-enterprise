@@ -45,7 +45,11 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
         if (res.ok) {
           const data = await res.json()
           let count = 0
-          data.threads?.forEach((t: any) => { count += t.unreadCount || 0 })
+          data.threads?.forEach((t: any) => {
+            if (t.unreadCount && t.unreadCount > 0) {
+              count += 1
+            }
+          })
           setUnreadCount(count)
         }
       } catch (e) {

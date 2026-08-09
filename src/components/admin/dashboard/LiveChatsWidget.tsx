@@ -16,7 +16,11 @@ export function LiveChatsWidget() {
         if (res.ok) {
           const data = await res.json()
           let count = 0
-          data.threads?.forEach((t: any) => { count += t.unreadCount || 0 })
+          data.threads?.forEach((t: any) => {
+            if (t.unreadCount && t.unreadCount > 0) {
+              count += 1
+            }
+          })
           setUnreadCount(count)
         }
       } catch (e) {
@@ -56,7 +60,7 @@ export function LiveChatsWidget() {
             </div>
             <p className="text-sm font-bold text-foreground">New Messages!</p>
             <p className="text-[10px] text-muted-foreground mt-1 text-center px-4">
-              You have {unreadCount} unread message{unreadCount !== 1 ? 's' : ''} waiting.
+              You have {unreadCount} customer{unreadCount !== 1 ? 's' : ''} waiting for a reply.
             </p>
             <Link href="/admin/messages">
               <Button size="sm" className="mt-4 text-[10px] font-bold rounded-full px-4 h-7 bg-red-500 hover:bg-red-600 text-white">
