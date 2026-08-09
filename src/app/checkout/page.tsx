@@ -41,7 +41,10 @@ export default function CheckoutPage() {
   useEffect(() => {
     const supabase = createClient()
     supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) return
+      if (!user) {
+        router.push('/login?redirect=/checkout')
+        return
+      }
       setAuthChecked(true)
 
       // Auto-fill from profile + saved address
