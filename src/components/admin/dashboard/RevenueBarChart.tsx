@@ -21,27 +21,25 @@ export function RevenueBarChart({ data, totalPeriodRevenue }: RevenueBarChartPro
   const maxRevenue = Math.max(...data.map(d => d.revenue), 1000)
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-baseline justify-between">
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
         <div>
-          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">7-Day Sales Trajectory</span>
-          <p className="text-2xl font-extrabold text-foreground mt-0.5">{formatPrice(totalPeriodRevenue)}</p>
+          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">7-Day Sales Trajectory</span>
+          <p className="text-xl font-extrabold text-foreground">{formatPrice(totalPeriodRevenue)}</p>
         </div>
         {hoveredIdx !== null ? (
-          <div className="text-right bg-muted/60 px-3 py-1.5 rounded-xl border border-border/40 animate-in fade-in-0 duration-150">
-            <p className="text-xs font-bold text-foreground">{data[hoveredIdx].dayLabel} ({data[hoveredIdx].fullDate})</p>
-            <p className="text-xs text-primary font-extrabold">
-              {formatPrice(data[hoveredIdx].revenue)} · {data[hoveredIdx].ordersCount} {data[hoveredIdx].ordersCount === 1 ? 'order' : 'orders'}
-            </p>
+          <div className="text-right bg-muted/60 px-2.5 py-1 rounded-lg border border-border/40 animate-in fade-in-0 duration-100">
+            <span className="text-[11px] font-bold text-foreground mr-1.5">{data[hoveredIdx].dayLabel} ({data[hoveredIdx].fullDate}):</span>
+            <span className="text-xs text-primary font-black">
+              {formatPrice(data[hoveredIdx].revenue)} ({data[hoveredIdx].ordersCount})
+            </span>
           </div>
-        ) : (
-          <span className="text-xs text-muted-foreground font-medium">Hover bars for daily details</span>
-        )}
+        ) : null}
       </div>
 
       {/* SVG Chart */}
-      <div className="relative h-44 w-full pt-4">
-        <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${data.length * 60} 140`} preserveAspectRatio="none">
+      <div className="relative h-32 w-full pt-1">
+        <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${data.length * 60} 110`} preserveAspectRatio="none">
           <defs>
             <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--color-primary, #6366f1)" stopOpacity="0.9" />
@@ -54,15 +52,15 @@ export function RevenueBarChart({ data, totalPeriodRevenue }: RevenueBarChartPro
           </defs>
 
           {/* Grid lines */}
-          <line x1="0" y1="20" x2={data.length * 60} y2="20" stroke="currentColor" className="text-border/40" strokeDasharray="3 3" strokeWidth="1" />
-          <line x1="0" y1="65" x2={data.length * 60} y2="65" stroke="currentColor" className="text-border/40" strokeDasharray="3 3" strokeWidth="1" />
-          <line x1="0" y1="110" x2={data.length * 60} y2="110" stroke="currentColor" className="text-border/60" strokeWidth="1" />
+          <line x1="0" y1="15" x2={data.length * 60} y2="15" stroke="currentColor" className="text-border/30" strokeDasharray="2 2" strokeWidth="1" />
+          <line x1="0" y1="50" x2={data.length * 60} y2="50" stroke="currentColor" className="text-border/30" strokeDasharray="2 2" strokeWidth="1" />
+          <line x1="0" y1="85" x2={data.length * 60} y2="85" stroke="currentColor" className="text-border/50" strokeWidth="1" />
 
           {data.map((item, i) => {
             const barWidth = 32
             const x = i * 60 + 14
-            const barHeight = Math.max((item.revenue / maxRevenue) * 90, item.ordersCount > 0 ? 8 : 4)
-            const y = 110 - barHeight
+            const barHeight = Math.max((item.revenue / maxRevenue) * 70, item.ordersCount > 0 ? 6 : 3)
+            const y = 85 - barHeight
             const isHovered = hoveredIdx === i
 
             return (
@@ -77,7 +75,7 @@ export function RevenueBarChart({ data, totalPeriodRevenue }: RevenueBarChartPro
                   x={i * 60} 
                   y="0" 
                   width="60" 
-                  height="140" 
+                  height="110" 
                   fill="transparent" 
                 />
 
@@ -85,10 +83,10 @@ export function RevenueBarChart({ data, totalPeriodRevenue }: RevenueBarChartPro
                 {isHovered && (
                   <rect
                     x={i * 60 + 4}
-                    y="10"
+                    y="5"
                     width="52"
-                    height="100"
-                    rx="8"
+                    height="80"
+                    rx="6"
                     className="fill-primary/10"
                   />
                 )}
@@ -99,7 +97,7 @@ export function RevenueBarChart({ data, totalPeriodRevenue }: RevenueBarChartPro
                   y={y}
                   width={barWidth}
                   height={barHeight}
-                  rx="6"
+                  rx="4"
                   fill={isHovered ? 'url(#barHoverGradient)' : 'url(#barGradient)'}
                   className="transition-all duration-300"
                 />
@@ -107,10 +105,10 @@ export function RevenueBarChart({ data, totalPeriodRevenue }: RevenueBarChartPro
                 {/* Day Label */}
                 <text
                   x={x + barWidth / 2}
-                  y="128"
+                  y="100"
                   textAnchor="middle"
-                  className={`text-[11px] font-semibold transition-colors ${
-                    isHovered ? 'fill-primary font-bold' : 'fill-muted-foreground'
+                  className={`text-[10px] font-bold transition-colors ${
+                    isHovered ? 'fill-primary font-black' : 'fill-muted-foreground'
                   }`}
                 >
                   {item.dayLabel}

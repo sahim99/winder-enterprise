@@ -24,25 +24,25 @@ export function KpiCard({
   colorBg = 'bg-primary/10 text-primary',
 }: KpiCardProps) {
   return (
-    <Card className="border border-border/50 bg-card rounded-2xl shadow-xs hover:shadow-md transition-all">
-      <CardContent className="p-4 sm:p-5">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider truncate">
+    <Card className="border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs hover:border-primary/30 transition-all">
+      <CardContent className="p-3 sm:p-3.5">
+        <div className="flex items-center justify-between gap-1.5">
+          <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider truncate">
             {label}
           </span>
-          <div className={cn("p-2 rounded-xl shrink-0", colorBg)}>
-            <Icon className="h-4 w-4" />
+          <div className={cn("p-1.5 rounded-lg shrink-0", colorBg)}>
+            <Icon className="h-3.5 w-3.5" />
           </div>
         </div>
 
-        <div className="mt-3 flex items-baseline justify-between gap-2">
-          <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground">
+        <div className="mt-1.5 flex items-baseline justify-between gap-1">
+          <p className="text-lg sm:text-xl font-extrabold tracking-tight text-foreground truncate">
             {value}
           </p>
           {trend && (
             <span
               className={cn(
-                "text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0",
+                "text-[10px] font-bold px-1.5 py-0.2 rounded-full shrink-0",
                 trendPositive
                   ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
                   : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
@@ -54,7 +54,7 @@ export function KpiCard({
         </div>
 
         {sublabel && (
-          <p className="text-[11px] text-muted-foreground mt-1 truncate">
+          <p className="text-[10px] text-muted-foreground mt-0.5 truncate font-medium">
             {sublabel}
           </p>
         )}

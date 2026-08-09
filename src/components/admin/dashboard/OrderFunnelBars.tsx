@@ -39,36 +39,36 @@ const STATUS_CONFIG = {
 
 export function OrderFunnelBars({ pipeline, totalOrders }: OrderFunnelBarsProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-2.5">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fulfillment Pipeline</span>
-        <span className="text-xs font-bold text-foreground">{totalOrders} Total Orders</span>
+        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Fulfillment Pipeline</span>
+        <span className="text-[11px] font-bold text-foreground">{totalOrders} Orders</span>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {pipeline.map((item) => {
           const config = STATUS_CONFIG[item.status]
           const Icon = config.icon
           const percentage = totalOrders > 0 ? Math.round((item.count / totalOrders) * 100) : 0
 
           return (
-            <div key={item.status} className="space-y-1.5">
+            <div key={item.status} className="space-y-1">
               <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 min-w-0">
                   <span className={`p-1 rounded-md border ${config.badge}`}>
-                    <Icon className="h-3 w-3" />
+                    <Icon className="h-2.5 w-2.5" />
                   </span>
-                  <span className="font-semibold text-foreground">{item.label}</span>
-                  <span className="text-muted-foreground">({item.count})</span>
+                  <span className="font-bold text-foreground text-[11px] truncate">{item.label}</span>
+                  <span className="text-muted-foreground text-[10px]">({item.count})</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-bold text-foreground">{formatPrice(item.totalRevenue)}</span>
-                  <span className="text-muted-foreground font-mono text-[11px] w-8 text-right">{percentage}%</span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="font-bold text-foreground text-[11px]">{formatPrice(item.totalRevenue)}</span>
+                  <span className="text-muted-foreground font-mono text-[10px] w-7 text-right">{percentage}%</span>
                 </div>
               </div>
 
               {/* Progress bar */}
-              <div className="w-full bg-muted/60 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-muted/60 h-1.5 rounded-full overflow-hidden">
                 <div
                   className={`h-full ${config.color} rounded-full transition-all duration-500`}
                   style={{ width: `${Math.max(percentage, item.count > 0 ? 4 : 0)}%` }}

@@ -65,10 +65,10 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
         />
       )}
 
-      {/* Sidebar: Desktop permanent & Mobile slide-out drawer */}
+      {/* Sidebar: Desktop permanent sticky & Mobile slide-out drawer */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border/50 flex flex-col shadow-lg transition-transform duration-300 ease-in-out md:static md:translate-x-0 md:shadow-xs",
+          "fixed inset-y-0 left-0 z-50 w-56 lg:w-60 bg-card border-r border-border/50 flex flex-col shadow-lg transition-transform duration-300 ease-in-out md:sticky md:top-0 md:h-screen md:translate-x-0 md:shadow-none shrink-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

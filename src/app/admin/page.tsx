@@ -6,16 +6,11 @@ import {
   Users, 
   MessageSquare, 
   AlertTriangle, 
-  Package, 
   ArrowRight, 
   Plus, 
   Upload, 
   Printer, 
-  Phone,
-  Store,
-  Boxes,
-  Clock,
-  Sparkles
+  Boxes
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -54,7 +49,6 @@ async function getDashboardIntelligence() {
   const totalRevenue = orders.reduce((sum, o) => sum + Number(o.total || 0), 0)
   const totalOrders = orders.length
   const totalCustomers = profiles.length
-  const openTickets = tickets.filter(t => t.status !== 'resolved')
   const criticalLowStockProducts = products.filter(p => p.stock <= 3).sort((a, b) => a.stock - b.stock)
   
   // Total Warehouse asset value (Retail worth)
@@ -94,10 +88,10 @@ async function getDashboardIntelligence() {
   // 3. Fulfillment Pipeline Funnel
   const pipelineStatuses: Array<'pending' | 'processing' | 'shipped' | 'delivered'> = ['pending', 'processing', 'shipped', 'delivered']
   const pipelineLabels: Record<string, string> = {
-    pending: 'Pending Approval',
-    processing: 'Processing In Factory',
-    shipped: 'Shipped (In Transit)',
-    delivered: 'Delivered & Collected',
+    pending: 'Pending',
+    processing: 'Processing',
+    shipped: 'Shipped',
+    delivered: 'Delivered',
   }
 
   const pipeline: OrderPipelineStatus[] = pipelineStatuses.map(status => {
@@ -129,9 +123,8 @@ async function getDashboardIntelligence() {
   orders.forEach(order => {
     if (Array.isArray(order.items)) {
       order.items.forEach((item: any) => {
-        // Try finding category via product match
         const matchedProduct = products.find(p => p.name === item.name || p.id === item.id)
-        const catName = matchedProduct?.categories?.name || 'General Furnishings'
+        const catName = matchedProduct?.categories?.name || 'Furnishings'
 
         if (!categoryRevenueMap[catName]) {
           categoryRevenueMap[catName] = { revenue: 0, units: 0 }
@@ -148,7 +141,6 @@ async function getDashboardIntelligence() {
     unitsSold: data.units,
   })).sort((a, b) => b.revenue - a.revenue)
 
-  // If no order items recorded yet, populate with category list as baseline
   if (categoryRevenueShare.length === 0 && categories.length > 0) {
     categories.slice(0, 4).forEach(c => {
       categoryRevenueShare.push({
@@ -163,7 +155,6 @@ async function getDashboardIntelligence() {
     totalRevenue,
     totalOrders,
     totalCustomers,
-    openTickets,
     criticalLowStockProducts,
     totalWarehouseAssetValue,
     totalWarehouseUnits,
@@ -175,7 +166,7 @@ async function getDashboardIntelligence() {
     categoryStockHealth,
     categoryRevenueShare,
     recentOrders: orders.slice(0, 5),
-    recentTickets: tickets.slice(0, 3),
+    recentTickets: tickets.filter(t => t.status !== 'resolved').slice(0, 3),
   }
 }
 
@@ -183,52 +174,46 @@ export default async function AdminDashboard() {
   const data = await getDashboardIntelligence()
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-4 max-w-7xl mx-auto">
       
-      {/* Executive Welcome & Actions Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card p-5 sm:p-6 rounded-2xl border border-border/50 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-              Business Intelligence Hub
-            </h1>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Live Store
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Real-time financial velocity, warehouse inventory health, and customer fulfillment tracking.
-          </p>
+      {/* Compact Top Bar */}
+      <div className="flex items-center justify-between gap-3 bg-card px-4 py-3 rounded-xl border border-border/50 shadow-xs">
+        <div className="flex items-center gap-2">
+          <h1 className="text-base sm:text-lg font-black tracking-tight text-foreground">
+            Overview
+          </h1>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Live
+          </span>
         </div>
 
-        {/* Quick Launch Buttons */}
-        <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex items-center gap-1.5">
           <Link href="/admin/products/new">
-            <Button size="sm" className="rounded-xl font-bold shadow-xs">
-              <Plus className="h-4 w-4 mr-1.5" /> Add Product
+            <Button size="sm" className="h-8 text-xs font-bold rounded-lg px-2.5 shadow-xs">
+              <Plus className="h-3.5 w-3.5 mr-1" /> Product
             </Button>
           </Link>
           <Link href="/admin/products/bulk">
-            <Button size="sm" variant="outline" className="rounded-xl border-border/60 font-bold">
-              <Upload className="h-4 w-4 mr-1.5" /> Bulk Upload
+            <Button size="sm" variant="outline" className="h-8 text-xs font-bold rounded-lg px-2.5 border-border/60">
+              <Upload className="h-3.5 w-3.5 mr-1" /> Bulk
             </Button>
           </Link>
           <Link href="/admin/billing">
-            <Button size="sm" variant="outline" className="rounded-xl border-border/60 font-bold">
-              <Printer className="h-4 w-4 mr-1.5" /> Invoices
+            <Button size="sm" variant="outline" className="h-8 text-xs font-bold rounded-lg px-2.5 border-border/60">
+              <Printer className="h-3.5 w-3.5 mr-1" /> Invoices
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* Row 1: Executive KPI Metrics (5 Cards Grid) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+      {/* Row 1: High Density 5-KPI Bar */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
         <KpiCard
           label="Gross Revenue"
           value={formatPrice(data.totalRevenue)}
           sublabel={`₹${data.todayRevenue.toLocaleString('en-IN')} today`}
-          trend={`${data.todayOrders} new today`}
+          trend={`${data.todayOrders} today`}
           trendPositive={true}
           icon={TrendingUp}
           colorBg="bg-blue-500/10 text-blue-600 dark:text-blue-400"
@@ -244,99 +229,94 @@ export default async function AdminDashboard() {
         <KpiCard
           label="Warehouse Value"
           value={formatPrice(data.totalWarehouseAssetValue)}
-          sublabel={`${data.totalWarehouseUnits} total units in stock`}
-          trend="Asset Value"
+          sublabel={`${data.totalWarehouseUnits} units live`}
+          trend="Inventory"
           icon={Boxes}
           colorBg="bg-purple-500/10 text-purple-600 dark:text-purple-400"
         />
         <KpiCard
-          label="Active Customers"
+          label="Customers"
           value={data.totalCustomers}
-          sublabel="Registered client profiles"
-          trend="Growth"
+          sublabel="Registered profiles"
+          trend="Active"
           icon={Users}
           colorBg="bg-cyan-500/10 text-cyan-600 dark:text-cyan-400"
         />
         <KpiCard
-          label="Urgent Restocks"
+          label="Low Stock"
           value={data.criticalLowStockProducts.length}
-          sublabel={data.criticalLowStockProducts.length > 0 ? "Items with ≤ 3 stock" : "Inventory healthy"}
-          trend={data.criticalLowStockProducts.length > 0 ? "Action Req." : "Optimal"}
+          sublabel={data.criticalLowStockProducts.length > 0 ? "≤ 3 stock items" : "All optimal"}
+          trend={data.criticalLowStockProducts.length > 0 ? "Urgent" : "Good"}
           trendPositive={data.criticalLowStockProducts.length === 0}
           icon={AlertTriangle}
           colorBg={data.criticalLowStockProducts.length > 0 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"}
         />
       </div>
 
-      {/* Row 2: Visual Charts & Analytics (2 Column Grid) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Row 2: Visual Charts & Pipelines (7 / 5 Grid) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
         
         {/* Left: 7-Day Revenue & Volume Trajectory */}
-        <Card className="lg:col-span-7 border border-border/50 bg-card rounded-2xl shadow-xs p-5 sm:p-6">
+        <Card className="lg:col-span-7 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs p-4">
           <RevenueBarChart data={data.last7Days} totalPeriodRevenue={data.total7DayRevenue} />
         </Card>
 
         {/* Right: Fulfillment Pipeline Funnel */}
-        <Card className="lg:col-span-5 border border-border/50 bg-card rounded-2xl shadow-xs p-5 sm:p-6">
+        <Card className="lg:col-span-5 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs p-4">
           <OrderFunnelBars pipeline={data.pipeline} totalOrders={data.totalOrders} />
         </Card>
       </div>
 
-      {/* Row 3: Category Health & Revenue Share (2 Column Grid) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Row 3: Category Telemetry (6 / 6 Grid) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
         
         {/* Category Stock Health */}
-        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-2xl shadow-xs p-5 sm:p-6">
+        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs p-4">
           <StockHealthBars categories={data.categoryStockHealth} totalWarehouseUnits={data.totalWarehouseUnits} />
         </Card>
 
         {/* Category Revenue Distribution */}
-        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-2xl shadow-xs p-5 sm:p-6">
+        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs p-4">
           <CategoryRevenueBars categories={data.categoryRevenueShare} totalRevenue={data.totalRevenue} />
         </Card>
       </div>
 
-      {/* Row 4: Critical Low Stock Alert Board & Open Support Tickets (2 Columns) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Row 4: Action Boards (Low Stock & Live Transactions) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
         
         {/* Critical Low Stock Action Board */}
-        <Card className="lg:col-span-7 border border-border/50 bg-card rounded-2xl shadow-xs overflow-hidden">
-          <CardHeader className="p-5 border-b border-border/40 flex flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                <AlertTriangle className="h-4 w-4" />
-              </div>
-              <div>
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground">Critical Inventory Restock Alerts</CardTitle>
-                <p className="text-xs text-muted-foreground mt-0.5">High priority items requiring immediate reorder.</p>
-              </div>
+        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden">
+          <CardHeader className="px-4 py-3 border-b border-border/40 flex flex-row items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+              <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Restock Alerts</CardTitle>
             </div>
-            <Link href="/admin/products" className="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1">
-              All Products <ArrowRight className="h-3 w-3" />
+            <Link href="/admin/products" className="text-[11px] font-bold text-primary hover:underline inline-flex items-center gap-0.5">
+              All <ArrowRight className="h-3 w-3" />
             </Link>
           </CardHeader>
           <CardContent className="p-0">
             {data.criticalLowStockProducts.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">
-                <p className="text-xs font-medium">All products are well-stocked. Zero critical shortages.</p>
+              <div className="p-4 text-center text-muted-foreground">
+                <p className="text-xs">Zero stock shortages.</p>
               </div>
             ) : (
               <div className="divide-y divide-border/40">
-                {data.criticalLowStockProducts.slice(0, 5).map((prod: any) => (
-                  <div key={prod.id} className="p-4 sm:px-6 flex items-center justify-between gap-3 hover:bg-muted/30 transition-colors">
+                {data.criticalLowStockProducts.slice(0, 4).map((prod: any) => (
+                  <div key={prod.id} className="px-4 py-2.5 flex items-center justify-between gap-2 hover:bg-muted/30 transition-colors">
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-foreground truncate">{prod.name}</p>
-                      <p className="text-xs text-muted-foreground">{prod.categories?.name ?? 'General'} · {formatPrice(prod.price)}</p>
+                      <p className="text-xs font-bold text-foreground truncate">{prod.name}</p>
+                      <p className="text-[10px] text-muted-foreground">{formatPrice(prod.price)}</p>
                     </div>
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className={`text-xs font-extrabold px-2.5 py-1 rounded-full ${
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
                         prod.stock === 0 ? 'bg-red-500/15 text-red-600 dark:text-red-400' : 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
                       }`}>
-                        {prod.stock === 0 ? 'Out of Stock' : `${prod.stock} left`}
+                        {prod.stock === 0 ? '0 Stock' : `${prod.stock} left`}
                       </span>
                       <Link href={`/admin/products/${prod.id}/edit`}>
-                        <Button size="sm" variant="outline" className="h-7 text-xs rounded-lg px-2.5 font-bold border-border/60">
-                          Restock
+                        <Button size="sm" variant="outline" className="h-6 text-[10px] rounded-md px-2 font-bold border-border/60">
+                          Edit
                         </Button>
                       </Link>
                     </div>
@@ -347,58 +327,52 @@ export default async function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* Support Tickets Triage */}
-        <Card className="lg:col-span-5 border border-border/50 bg-card rounded-2xl shadow-xs overflow-hidden">
-          <CardHeader className="p-5 border-b border-border/40 flex flex-row items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
-                <MessageSquare className="h-4 w-4" />
-              </div>
-              <div>
-                <CardTitle className="text-sm sm:text-base font-bold text-foreground">Customer Support Triage</CardTitle>
-                <p className="text-xs text-muted-foreground mt-0.5">{data.openTickets.length} Open Inquiries</p>
-              </div>
+        {/* Live Customer Activity */}
+        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden">
+          <CardHeader className="px-4 py-3 border-b border-border/40 flex flex-row items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <ShoppingBag className="h-3.5 w-3.5 text-primary" />
+              <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Recent Orders</CardTitle>
             </div>
-            <Link href="/admin/tickets" className="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1">
-              View All <ArrowRight className="h-3 w-3" />
+            <Link href="/admin/orders" className="text-[11px] font-bold text-primary hover:underline inline-flex items-center gap-0.5">
+              All <ArrowRight className="h-3 w-3" />
             </Link>
           </CardHeader>
           <CardContent className="p-0">
-            {data.recentTickets.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">
-                <p className="text-xs font-medium">No open tickets. Customer satisfaction is 100%.</p>
-              </div>
+            {data.recentOrders.length === 0 ? (
+              <p className="text-xs text-muted-foreground py-6 text-center">No orders recorded.</p>
             ) : (
               <div className="divide-y divide-border/40">
-                {data.recentTickets.map((ticket: any) => {
-                  const phone = ticket.profiles?.phone
+                {data.recentOrders.slice(0, 4).map((order: any) => {
+                  const phone = order.phone
                   const whatsappUrl = phone ? `https://wa.me/91${phone.replace(/[^0-9]/g, '')}` : null
 
                   return (
-                    <div key={ticket.id} className="p-4 sm:px-5 flex items-start justify-between gap-3 hover:bg-muted/30 transition-colors">
+                    <div key={order.id} className="px-4 py-2.5 flex items-center justify-between gap-2 hover:bg-muted/30 transition-colors">
                       <div className="min-w-0">
-                        <p className="text-xs font-bold text-foreground truncate">{ticket.subject}</p>
-                        <p className="text-[11px] text-muted-foreground truncate">{ticket.profiles?.name || 'Customer'} · {ticket.description}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-xs font-bold text-foreground truncate">{order.customer_name}</p>
+                          {whatsappUrl && (
+                            <a
+                              href={whatsappUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[9px] text-emerald-600 dark:text-emerald-400 hover:underline font-bold uppercase"
+                            >
+                              WA
+                            </a>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground">{order.city} · {order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—'}</p>
                       </div>
-                      <div className="shrink-0 flex items-center gap-1.5">
-                        {whatsappUrl && (
-                          <a
-                            href={whatsappUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
-                            title="Chat on WhatsApp"
-                          >
-                            <Phone className="h-3 w-3" />
-                          </a>
-                        )}
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
-                          ticket.status === 'open' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' :
-                          ticket.status === 'in_progress' ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400' :
+                      <div className="text-right shrink-0">
+                        <p className="text-xs font-black text-foreground">{formatPrice(order.total)}</p>
+                        <span className={`inline-block text-[9px] px-1.5 py-0.2 rounded-full font-bold uppercase tracking-wider ${
+                          order.status === 'pending' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' :
+                          order.status === 'processing' ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400' :
+                          order.status === 'shipped' ? 'bg-purple-500/15 text-purple-600 dark:text-purple-400' :
                           'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
-                        }`}>
-                          {ticket.status}
-                        </span>
+                        }`}>{order.status}</span>
                       </div>
                     </div>
                   )
@@ -409,60 +383,6 @@ export default async function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Row 5: Recent Live Customer Activity Feed */}
-      <Card className="border border-border/50 bg-card rounded-2xl shadow-xs overflow-hidden">
-        <CardHeader className="p-5 border-b border-border/40 flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-base sm:text-lg font-bold text-foreground">Live Customer Transactions</CardTitle>
-            <p className="text-xs text-muted-foreground mt-0.5">Most recent orders placed across India.</p>
-          </div>
-          <Link href="/admin/orders" className="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1">
-            All Orders <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </CardHeader>
-        <CardContent className="p-0">
-          {data.recentOrders.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-12 text-center">No orders placed yet.</p>
-          ) : (
-            <div className="divide-y divide-border/40">
-              {data.recentOrders.map((order: any) => {
-                const phone = order.phone
-                const whatsappUrl = phone ? `https://wa.me/91${phone.replace(/[^0-9]/g, '')}` : null
-
-                return (
-                  <div key={order.id} className="p-4 sm:px-6 flex items-center justify-between gap-3 hover:bg-muted/30 transition-colors">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-foreground truncate">{order.customer_name}</p>
-                        {whatsappUrl && (
-                          <a
-                            href={whatsappUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[10px] text-emerald-600 dark:text-emerald-400 hover:underline font-bold uppercase tracking-wider"
-                          >
-                            WhatsApp
-                          </a>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground">{order.city}, {order.state} · {order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—'}</p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-sm font-extrabold text-foreground">{formatPrice(order.total)}</p>
-                      <span className={`inline-block text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mt-0.5 ${
-                        order.status === 'pending' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' :
-                        order.status === 'processing' ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400' :
-                        order.status === 'shipped' ? 'bg-purple-500/15 text-purple-600 dark:text-purple-400' :
-                        'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
-                      }`}>{order.status}</span>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </div>
   )
 }
