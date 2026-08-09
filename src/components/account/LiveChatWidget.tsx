@@ -145,7 +145,7 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
 
       {/* Chat Drawer/Window */}
       {isOpen && !showPhoneModal && (
-        <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[380px] h-[100dvh] sm:h-[600px] flex flex-col bg-card sm:rounded-2xl shadow-2xl border-t sm:border border-border/50 overflow-hidden animate-in slide-in-from-bottom-10">
+        <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-[60] w-full sm:w-[380px] h-[100dvh] sm:h-[600px] max-h-[calc(100dvh-5rem)] sm:max-h-[calc(100vh-6rem)] flex flex-col bg-card sm:rounded-2xl shadow-2xl border-t sm:border border-border/50 overflow-hidden animate-in slide-in-from-bottom-10">
           
           {/* Chat Header */}
           <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-4 flex items-center justify-between text-white shrink-0">

@@ -35,6 +35,28 @@ const navItems = [
 export function AdminNav({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  // Poll for unread messages
+  React.useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const res = await fetch('/api/messages?admin=true')
+        if (res.ok) {
+          const data = await res.json()
+          let count = 0
+          data.threads?.forEach((t: any) => { count += t.unreadCount || 0 })
+          setUnreadCount(count)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 10000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row bg-muted/20">
@@ -106,7 +128,7 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-[0.98]",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-[0.98] relative",
                   isActive
                     ? "bg-primary text-primary-foreground font-semibold shadow-xs"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -114,6 +136,11 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
               >
                 <Icon className="h-4 w-4 shrink-0" />
                 <span>{item.label}</span>
+                {item.label === 'Messages' && unreadCount > 0 && (
+                  <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-[0_0_10px_rgba(239,68,68,0.5)] animate-pulse">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
               </Link>
             )
           })}

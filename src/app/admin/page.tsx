@@ -21,6 +21,7 @@ import { RevenueBarChart, DailySalesData } from '@/components/admin/dashboard/Re
 import { OrderFunnelBars, OrderPipelineStatus } from '@/components/admin/dashboard/OrderFunnelBars'
 import { StockHealthBars, CategoryStockHealth } from '@/components/admin/dashboard/StockHealthBars'
 import { CategoryRevenueBars, CategoryRevenueShare } from '@/components/admin/dashboard/CategoryRevenueBars'
+import { LiveChatsWidget } from '@/components/admin/dashboard/LiveChatsWidget'
 
 async function getDashboardIntelligence() {
   const supabase = await createServiceClient()
@@ -384,29 +385,7 @@ export default async function AdminDashboard() {
         </Card>
 
         {/* Live Chats / Support */}
-        <Card className="border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden flex flex-col">
-          <CardHeader className="px-4 py-3 border-b border-border/40 flex flex-row items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <MessageSquare className="h-3.5 w-3.5 text-blue-500" />
-              <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Live Chats</CardTitle>
-            </div>
-            <Link href="/admin/messages" className="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
-              Open <ArrowRight className="h-3 w-3" />
-            </Link>
-          </CardHeader>
-          <CardContent className="p-0 flex-1 flex flex-col items-center justify-center bg-muted/10 min-h-[160px]">
-             <MessageSquare className="h-8 w-8 text-muted-foreground/30 mb-2" />
-             <p className="text-xs font-medium text-foreground">Live Customer Chat Active</p>
-             <p className="text-[10px] text-muted-foreground mt-1 text-center px-4">
-               Click Open to view real-time incoming messages and reply directly to customers.
-             </p>
-             <Link href="/admin/messages" className="mt-3">
-               <Button size="sm" className="h-7 text-[10px] font-bold rounded-lg px-3">
-                 Go to Messages
-               </Button>
-             </Link>
-          </CardContent>
-        </Card>
+        <LiveChatsWidget />
       </div>
 
     </div>
