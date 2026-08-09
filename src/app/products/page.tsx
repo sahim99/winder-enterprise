@@ -86,21 +86,21 @@ export default async function ProductsPage(props: PageProps) {
           {/* Product Grid */}
           <div className="flex-1 w-full min-w-0">
             {products.length === 0 ? (
-              <div className="text-center py-24 bg-background rounded-3xl border border-dashed border-border/60 p-8 space-y-3">
-                <h3 className="text-xl font-bold text-gray-900">Coming Soon!</h3>
+              <div className="text-center py-20 bg-background rounded-3xl border border-dashed border-border/60 p-6 sm:p-8 space-y-3">
+                <h3 className="text-xl font-bold text-foreground">Coming Soon!</h3>
                 <p className="text-muted-foreground text-sm max-w-md mx-auto">
                   {searchParams.search 
                     ? `The product "${searchParams.search}" is not currently in our catalog, but it's coming soon! Our team is preparing this item.` 
                     : 'We are expanding our product catalog. Check back shortly!'}
                 </p>
                 <div className="pt-2">
-                  <a href="/products" className="text-xs font-semibold bg-primary text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity">
+                  <a href="/products" className="text-xs font-semibold bg-primary text-primary-foreground px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity">
                     Browse All Products
                   </a>
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                 {products.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}

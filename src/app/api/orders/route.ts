@@ -27,12 +27,15 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: 'Invalid order data', details: parsed.error.flatten() }, { status: 400 })
     }
-    const supabase = await createServiceClient()
-
-    // Get user_id from auth if logged in
     const { createClient: createServerSupabase } = await import('@/lib/supabase/server')
     const authClient = await createServerSupabase()
-    const { data: { user } } = await authClient.auth.getUser()
+    const { data: { user }, error: authError } = await authClient.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized. Please log in to place an order.' }, { status: 401 })
+    }
+
+    const supabase = await createServiceClient()
 
     // Call the RPC function to insert order and decrement stock atomically
     const { data, error } = await supabase.rpc('place_order_and_decrement_stock', {
@@ -44,7 +47,7 @@ export async function POST(request: NextRequest) {
       p_state: parsed.data.state,
       p_items: parsed.data.items,
       p_total: parsed.data.total,
-      p_user_id: user?.id ?? null,
+      p_user_id: user.id,
     })
     if (error) throw error
 

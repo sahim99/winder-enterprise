@@ -113,11 +113,11 @@ export default async function HomePage() {
         </div>
         
         {trending.length === 0 ? (
-          <div className="text-center py-20 bg-white border border-dashed rounded-3xl text-gray-400 text-sm font-medium">
+          <div className="text-center py-16 bg-card border border-dashed border-border/60 rounded-3xl text-muted-foreground text-sm font-medium">
             New products are arriving shortly.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in-right">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {trending.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -126,28 +126,28 @@ export default async function HomePage() {
       </section>
 
       {/* Flagship Departments - Line-by-Line Shelves */}
-      <div className="space-y-16 pb-24">
+      <div className="space-y-10 sm:space-y-16 pb-24">
         
         {/* Shelf 1: Living Room */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="glass-card p-6 md:p-10">
-            <div className="flex items-center justify-between mb-8 pb-4">
+          <div className="rounded-3xl border border-border/50 bg-card/60 p-4 sm:p-8 shadow-xs">
+            <div className="flex items-center justify-between mb-6 pb-3 border-b border-border/40">
               <div>
                 <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
                   <Sofa className="h-3 w-3" /> Comfort Living
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Flagship Living Room</h2>
-                <p className="text-xs text-muted-foreground mt-1">Premium teak wood sofas, executive chairs, study desks, and center tables.</p>
+                <h2 className="text-xl sm:text-3xl font-bold tracking-tight text-foreground">Flagship Living Room</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Premium teak wood sofas, executive chairs, study desks, and center tables.</p>
               </div>
-              <Link href="/products?category=sofas" className="text-xs font-semibold text-primary hover:underline glass px-4 py-2 rounded-full hidden sm:inline-flex">
+              <Link href="/products?category=sofas" className="text-xs font-semibold text-primary hover:underline px-4 py-2 rounded-full border border-border/60 bg-background/80 hidden sm:inline-flex">
                 Explore sofas &rarr;
               </Link>
             </div>
 
             {livingRoom.length === 0 ? (
-              <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
+              <div className="text-center py-12 text-muted-foreground text-sm italic">Items restocking soon.</div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in-left">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                 {livingRoom.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -158,24 +158,24 @@ export default async function HomePage() {
 
         {/* Shelf 2: Bedroom */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="glass-card p-6 md:p-10">
-            <div className="flex items-center justify-between mb-8 pb-4">
+          <div className="rounded-3xl border border-border/50 bg-card/60 p-4 sm:p-8 shadow-xs">
+            <div className="flex items-center justify-between mb-6 pb-3 border-b border-border/40">
               <div>
                 <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
                   <Bed className="h-3 w-3" /> Master Suites
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Royal Bedrooms</h2>
-                <p className="text-xs text-muted-foreground mt-1">Solid wood king-size beds, modular wardrobes, and ergonomic dressers.</p>
+                <h2 className="text-xl sm:text-3xl font-bold tracking-tight text-foreground">Royal Bedrooms</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Solid wood king-size beds, modular wardrobes, and ergonomic dressers.</p>
               </div>
-              <Link href="/products?category=beds" className="text-xs font-semibold text-primary hover:underline glass px-4 py-2 rounded-full hidden sm:inline-flex">
+              <Link href="/products?category=beds" className="text-xs font-semibold text-primary hover:underline px-4 py-2 rounded-full border border-border/60 bg-background/80 hidden sm:inline-flex">
                 Explore beds &rarr;
               </Link>
             </div>
 
           {bedroom.length === 0 ? (
-            <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
+            <div className="text-center py-12 text-muted-foreground text-sm italic">Items restocking soon.</div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in-right">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
               {bedroom.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -186,24 +186,24 @@ export default async function HomePage() {
 
         {/* Shelf 3: Appliances */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="glass-card p-6 md:p-10">
-            <div className="flex items-center justify-between mb-8 pb-4">
+          <div className="rounded-3xl border border-border/50 bg-card/60 p-4 sm:p-8 shadow-xs">
+            <div className="flex items-center justify-between mb-6 pb-3 border-b border-border/40">
               <div>
                 <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
                   <Tv className="h-3 w-3" /> Digital Living
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Smart Electronics & Appliances</h2>
-                <p className="text-xs text-muted-foreground mt-1">High-definition 4K smart TVs, energy-efficient refrigerators, and audio setups.</p>
+                <h2 className="text-xl sm:text-3xl font-bold tracking-tight text-foreground">Smart Electronics & Appliances</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">High-definition 4K smart TVs, energy-efficient refrigerators, and audio setups.</p>
               </div>
-              <Link href="/products?category=televisions" className="text-xs font-semibold text-primary hover:underline glass px-4 py-2 rounded-full hidden sm:inline-flex">
+              <Link href="/products?category=televisions" className="text-xs font-semibold text-primary hover:underline px-4 py-2 rounded-full border border-border/60 bg-background/80 hidden sm:inline-flex">
                 Explore appliances &rarr;
               </Link>
             </div>
 
             {appliances.length === 0 ? (
-              <div className="text-center py-16 text-gray-400 text-sm italic">Items restocking soon.</div>
+              <div className="text-center py-12 text-muted-foreground text-sm italic">Items restocking soon.</div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-in-left">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                 {appliances.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}

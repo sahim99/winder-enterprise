@@ -16,7 +16,7 @@ export function ProductMarquee({ products }: { products: Product[] }) {
 
   const scroll = useCallback((direction: 'left' | 'right') => {
     if (!scrollRef.current) return
-    const cardWidth = 320 + 24 // width + gap
+    const cardWidth = window.innerWidth < 640 ? 182 : 240 // card width + gap
     const target = direction === 'left' ? -cardWidth : cardWidth
     
     // If we are near the end, reset scroll smoothly
@@ -45,7 +45,7 @@ export function ProductMarquee({ products }: { products: Product[] }) {
 
   return (
     <section 
-      className="w-full bg-background border-y border-border/40 py-4 sm:py-8 flex flex-col gap-3 sm:gap-5 relative select-none"
+      className="w-full bg-background border-y border-border/40 py-3 sm:py-6 flex flex-col gap-2.5 sm:gap-4 relative select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={() => setIsPaused(true)}
@@ -54,24 +54,24 @@ export function ProductMarquee({ products }: { products: Product[] }) {
       <div className="flex items-center justify-between max-w-7xl mx-auto w-full px-4 sm:px-6">
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary animate-pulse" />
-          <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-foreground uppercase">New Arrivals</h2>
+          <h2 className="text-base sm:text-2xl font-bold tracking-tight text-foreground uppercase">New Arrivals</h2>
         </div>
 
         {/* Header navigation arrows for quick access */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             onClick={() => scroll('left')}
-            className="h-10 w-10 rounded-full border border-border/80 bg-background/80 hover:bg-muted/80 backdrop-blur-md flex items-center justify-center text-foreground transition-transform active:scale-90 shadow-sm cursor-pointer"
+            className="h-8 w-8 sm:h-10 sm:w-10 rounded-full border border-border/80 bg-background/80 hover:bg-muted/80 backdrop-blur-md flex items-center justify-center text-foreground transition-transform active:scale-90 shadow-xs cursor-pointer"
             aria-label="Previous products"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
           <button
             onClick={() => scroll('right')}
-            className="h-10 w-10 rounded-full border border-border/80 bg-background/80 hover:bg-muted/80 backdrop-blur-md flex items-center justify-center text-foreground transition-transform active:scale-90 shadow-sm cursor-pointer"
+            className="h-8 w-8 sm:h-10 sm:w-10 rounded-full border border-border/80 bg-background/80 hover:bg-muted/80 backdrop-blur-md flex items-center justify-center text-foreground transition-transform active:scale-90 shadow-xs cursor-pointer"
             aria-label="Next products"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
       </div>
@@ -80,11 +80,11 @@ export function ProductMarquee({ products }: { products: Product[] }) {
         {/* Carousel track */}
         <div 
           ref={scrollRef}
-          className="flex w-full overflow-x-auto gap-6 px-4 sm:px-6 pb-4 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="flex w-full overflow-x-auto gap-3 sm:gap-5 px-4 sm:px-6 pb-2 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           {duplicatedProducts.map((product, idx) => (
-            <div key={`${product.id}-${idx}`} className="w-[280px] sm:w-[320px] flex-shrink-0 snap-start">
-              <ProductCard product={product} />
+            <div key={`${product.id}-${idx}`} className="w-[170px] sm:w-[220px] md:w-[260px] flex-shrink-0 snap-start">
+              <ProductCard product={product} variant="compact" />
             </div>
           ))}
         </div>

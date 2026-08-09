@@ -59,55 +59,55 @@ export default async function AccountPage() {
 
       {/* Quick Metrics Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Link href="/account/orders" className="bg-white border rounded-2xl p-5 hover:shadow-md transition-shadow flex items-center gap-4">
-          <div className="h-12 w-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0 text-blue-600">
+        <Link href="/account/orders" className="bg-card border border-border/50 rounded-2xl p-5 hover:shadow-md transition-shadow flex items-center gap-4">
+          <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0 text-blue-600 dark:text-blue-400">
             <ShoppingBag className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-xs text-gray-500 font-medium">My Orders</p>
-            <p className="text-xl font-bold text-gray-900 mt-0.5">{orderCount || 0}</p>
+            <p className="text-xs text-muted-foreground font-medium">My Orders</p>
+            <p className="text-xl font-bold text-foreground mt-0.5">{orderCount || 0}</p>
           </div>
         </Link>
 
-        <Link href="/account/wishlist" className="bg-white border rounded-2xl p-5 hover:shadow-md transition-shadow flex items-center gap-4">
-          <div className="h-12 w-12 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0 text-red-600">
+        <Link href="/account/wishlist" className="bg-card border border-border/50 rounded-2xl p-5 hover:shadow-md transition-shadow flex items-center gap-4">
+          <div className="h-12 w-12 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0 text-red-600 dark:text-red-400">
             <Heart className="h-6 w-6 fill-current" />
           </div>
           <div>
-            <p className="text-xs text-gray-500 font-medium">Saved Items</p>
-            <p className="text-xl font-bold text-gray-900 mt-0.5">{wishlistCount || 0}</p>
+            <p className="text-xs text-muted-foreground font-medium">Saved Items</p>
+            <p className="text-xl font-bold text-foreground mt-0.5">{wishlistCount || 0}</p>
           </div>
         </Link>
 
-        <Link href="/account/support" className="bg-white border rounded-2xl p-5 hover:shadow-md transition-shadow flex items-center gap-4">
-          <div className="h-12 w-12 rounded-full bg-yellow-50 flex items-center justify-center flex-shrink-0 text-yellow-600">
+        <Link href="/account/support" className="bg-card border border-border/50 rounded-2xl p-5 hover:shadow-md transition-shadow flex items-center gap-4">
+          <div className="h-12 w-12 rounded-full bg-yellow-500/10 flex items-center justify-center flex-shrink-0 text-yellow-600 dark:text-yellow-400">
             <MessageSquare className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-xs text-gray-500 font-medium">Active Tickets</p>
-            <p className="text-xl font-bold text-gray-900 mt-0.5">{activeTickets || 0}</p>
+            <p className="text-xs text-muted-foreground font-medium">Active Tickets</p>
+            <p className="text-xl font-bold text-foreground mt-0.5">{activeTickets || 0}</p>
           </div>
         </Link>
 
-        <Link href="/products" className="bg-white border rounded-2xl p-5 hover:shadow-md transition-shadow flex items-center gap-4">
-          <div className="h-12 w-12 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0 text-purple-600">
+        <Link href="/products" className="bg-card border border-border/50 rounded-2xl p-5 hover:shadow-md transition-shadow flex items-center gap-4">
+          <div className="h-12 w-12 rounded-full bg-purple-500/10 flex items-center justify-center flex-shrink-0 text-purple-600 dark:text-purple-400">
             <Compass className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-xs text-gray-500 font-medium">Explore Store</p>
-            <p className="text-sm font-semibold text-purple-600 mt-0.5">Browse products</p>
+            <p className="text-xs text-muted-foreground font-medium">Explore Store</p>
+            <p className="text-sm font-semibold text-primary mt-0.5">Browse products</p>
           </div>
         </Link>
       </div>
 
       {/* Offers & Coupons Carousel Section */}
       <div className="space-y-4">
-        <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-primary" /> Active Offers & Promotional Codes
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {promotions.map((promo, idx) => (
-            <div key={idx} className={`rounded-2xl border p-6 bg-gradient-to-br ${promo.color} text-white flex flex-col justify-between gap-6 shadow-sm hover:shadow-md transition-all`}>
+            <div key={idx} className={`rounded-2xl border border-white/10 p-6 bg-gradient-to-br ${promo.color} text-white flex flex-col justify-between gap-6 shadow-sm hover:shadow-md transition-all`}>
               <div className="space-y-2">
                 <h4 className="font-bold text-lg leading-snug">{promo.title}</h4>
                 <p className="text-xs text-white/80 leading-relaxed">{promo.description}</p>
@@ -126,26 +126,26 @@ export default async function AccountPage() {
       </div>
 
       {/* Account Settings Shortcut Cards */}
-      <div className="space-y-4 pt-4 border-t">
-        <h3 className="text-lg font-bold text-gray-900">Manage Account</h3>
+      <div className="space-y-4 pt-4 border-t border-border/40">
+        <h3 className="text-lg font-bold text-foreground">Manage Account</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link href="/account/profile" className="group p-6 rounded-2xl border bg-background shadow-sm hover:shadow-md transition-all flex items-start gap-4">
-            <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 text-purple-600 group-hover:scale-110 transition-transform">
+          <Link href="/account/profile" className="group p-6 rounded-2xl border border-border/50 bg-card shadow-xs hover:shadow-md transition-all flex items-start gap-4">
+            <div className="h-10 w-10 rounded-full bg-purple-500/10 flex items-center justify-center flex-shrink-0 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
               <User className="h-5 w-5" />
             </div>
             <div>
-              <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">Profile Details</h4>
-              <p className="text-xs text-gray-500 mt-1 leading-relaxed">Update contact number, fullname, and security credentials.</p>
+              <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">Profile Details</h4>
+              <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Update contact number, fullname, and security credentials.</p>
             </div>
           </Link>
 
-          <Link href="/account/address" className="group p-6 rounded-2xl border bg-background shadow-sm hover:shadow-md transition-all flex items-start gap-4">
-            <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 text-green-600 group-hover:scale-110 transition-transform">
+          <Link href="/account/address" className="group p-6 rounded-2xl border border-border/50 bg-card shadow-xs hover:shadow-md transition-all flex items-start gap-4">
+            <div className="h-10 w-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform">
               <MapPin className="h-5 w-5" />
             </div>
             <div>
-              <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">Delivery Address</h4>
-              <p className="text-xs text-gray-500 mt-1 leading-relaxed">Add, edit, or delete shipping destinations for faster checkout.</p>
+              <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">Delivery Address</h4>
+              <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Add, edit, or delete shipping destinations for faster checkout.</p>
             </div>
           </Link>
         </div>

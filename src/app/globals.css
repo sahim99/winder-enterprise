@@ -258,4 +258,15 @@
 .shimmer { 
   background-size: 200%; 
   animation: shimmer 3s linear infinite; 
+  animation-play-state: paused;
+}
+.shimmer:hover,
+.shimmer:focus-visible {
+  animation-play-state: running;
+}
+
+/* GPU Hardware Acceleration */
+.gpu-layer {
+  transform: translateZ(0);
+  will-change: transform, scroll-position;
 }

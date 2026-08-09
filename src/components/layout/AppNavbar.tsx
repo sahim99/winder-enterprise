@@ -16,8 +16,11 @@ import type { User as SupabaseUser } from '@supabase/supabase-js'
 import { useDebounce } from '@/hooks/use-debounce'
 import type { Product } from '@/types/supabase'
 
+import { MobileSearchModal } from '@/components/layout/MobileSearchModal'
+import { useWishlistStore } from '@/store/wishlist'
+
 export function AppNavbar() {
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [user, setUser] = useState<SupabaseUser | null>(null)
   const [userInitial, setUserInitial] = useState('')
@@ -28,7 +31,7 @@ export function AppNavbar() {
   
   const initialSearch = searchParams.get('search') || ''
   const [searchQuery, setSearchQuery] = useState(initialSearch)
-  const debouncedSearch = useDebounce(searchQuery, 300)
+  const debouncedSearch = useDebounce(searchQuery, 250)
   const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -54,7 +57,7 @@ export function AppNavbar() {
     setSearchQuery(searchParams.get('search') || '')
   }, [searchParams])
 
-  // Fetch live suggestions as user types
+  // Fetch live suggestions as user types - selecting only needed columns
   useEffect(() => {
     if (!debouncedSearch.trim()) {
       setSuggestions([])
@@ -69,7 +72,8 @@ export function AppNavbar() {
     
     supabase
       .from('products')
-      .select('*')
+      .select('id, name, slug, price, images, is_published')
+      .eq('is_published', true)
       .ilike('name', `%${debouncedSearch.trim()}%`)
       .limit(6)
       .then(({ data }) => {
@@ -104,6 +108,7 @@ export function AppNavbar() {
       if (user) {
         const name = user.user_metadata?.name || user.email || ''
         setUserInitial(name.charAt(0).toUpperCase())
+        useWishlistStore.getState().init()
       }
     })
 
@@ -113,6 +118,7 @@ export function AppNavbar() {
       if (u) {
         const name = u.user_metadata?.name || u.email || ''
         setUserInitial(name.charAt(0).toUpperCase())
+        useWishlistStore.getState().init()
       }
     })
 
@@ -241,7 +247,18 @@ export function AppNavbar() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
+              {/* Mobile Search Trigger Button */}
+              <Button
+                variant="outline"
+                size="icon"
+                className="md:hidden relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95 cursor-pointer"
+                onClick={() => setMobileSearchOpen(true)}
+                aria-label="Open mobile search"
+              >
+                <Search className="h-4 w-4 text-foreground" />
+              </Button>
+
               <ThemeToggle />
               
               {/* Cart Button */}
@@ -280,50 +297,11 @@ export function AppNavbar() {
               )}
             </div>
           </div>
-
-          {/* Mobile Search and Menu */}
-          <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? 'max-h-[400px] pb-4' : 'max-h-0'}`}>
-            <form onSubmit={handleSearch} className="relative mt-2">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                type="search" 
-                placeholder="Search products..." 
-                className="w-full pl-10 bg-muted/30 border-muted-foreground/20 rounded-full h-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </form>
-
-            {/* Mobile Nav Links */}
-            <div className="flex flex-col gap-2 mt-4 border-t pt-3 border-border/40">
-              <Link href="/" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-muted-foreground hover:text-foreground py-1">Home</Link>
-              <Link href="/products" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-muted-foreground hover:text-foreground py-1">Products</Link>
-              <Link href="/showroom" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-primary/80 hover:text-primary py-1 flex items-center gap-1">
-                <Sparkles className="h-3 w-3" /> 3D Showroom
-              </Link>
-              <Link href="/offers" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-muted-foreground hover:text-foreground py-1">Offers</Link>
-              <Link href="/account/wishlist" onClick={() => setMobileOpen(false)} className="text-sm font-semibold text-muted-foreground hover:text-foreground py-1">Wishlist</Link>
-            </div>
-
-            {!user && (
-               <div className="flex gap-2 mt-4">
-                 <Link 
-                   href={`/login?redirect=${currentUrl}`} 
-                   className={buttonVariants({ className: 'flex-1 rounded-full' })}
-                 >
-                   Login
-                 </Link>
-                 <Link 
-                   href={`/register?redirect=${currentUrl}`} 
-                   className={buttonVariants({ variant: 'outline', className: 'flex-1 rounded-full' })}
-                 >
-                   Register
-                 </Link>
-               </div>
-            )}
-          </div>
         </div>
       </header>
+
+      {/* Mobile Search Modal */}
+      <MobileSearchModal open={mobileSearchOpen} onClose={() => setMobileSearchOpen(false)} />
 
       {/* Cart Drawer */}
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
