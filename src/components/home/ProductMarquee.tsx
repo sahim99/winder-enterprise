@@ -1,75 +1,95 @@
 'use client'
 
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useCallback } from 'react'
 import type { Product } from '@/types/supabase'
 import { ProductCard } from '@/components/products/ProductCard'
 import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 export function ProductMarquee({ products }: { products: Product[] }) {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const [isHovered, setIsHovered] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
 
   if (!products || products.length === 0) return null
 
-  // Duplicate the array so the scroll can continue
-  const duplicatedProducts = [...products, ...products, ...products, ...products]
+  // Duplicate the array so there's plenty of scroll space
+  const duplicatedProducts = [...products, ...products, ...products]
+
+  const scroll = useCallback((direction: 'left' | 'right') => {
+    if (!scrollRef.current) return
+    const cardWidth = 320 + 24 // width + gap
+    const target = direction === 'left' ? -cardWidth : cardWidth
+    
+    // If we are near the end, reset scroll smoothly
+    if (
+      direction === 'right' &&
+      scrollRef.current.scrollLeft + scrollRef.current.clientWidth >= scrollRef.current.scrollWidth - 100
+    ) {
+      scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' })
+    } else if (direction === 'left' && scrollRef.current.scrollLeft <= 10) {
+      scrollRef.current.scrollTo({ left: scrollRef.current.scrollWidth / 2, behavior: 'smooth' })
+    } else {
+      scrollRef.current.scrollBy({ left: target, behavior: 'smooth' })
+    }
+  }, [])
 
   useEffect(() => {
-    // If the user hovers, we pause the auto-scroll so they can interact or use arrows
-    if (isHovered) return
+    if (isPaused) return
 
-    const interval = setInterval(() => {
-      if (scrollRef.current) {
-        scrollRef.current.scrollBy({ left: 1, behavior: 'auto' })
-        
-        // Loop back seamlessly if we reach the duplicated end
-        if (
-          scrollRef.current.scrollLeft >=
-          scrollRef.current.scrollWidth - scrollRef.current.clientWidth - 10
-        ) {
-          scrollRef.current.scrollLeft = 0
-        }
-      }
-    }, 40) // Smooth continuous scroll (slowed down)
+    // Auto-advance by 1 card every 3.5 seconds
+    const timer = setInterval(() => {
+      scroll('right')
+    }, 3500)
 
-    return () => clearInterval(interval)
-  }, [isHovered])
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = 340 // Approx width of one card + gap
-      scrollRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' })
-    }
-  }
+    return () => clearInterval(timer)
+  }, [isPaused, scroll])
 
   return (
-    <div 
-      className="w-full bg-background border-y border-border/30 py-12 flex flex-col gap-6 relative group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onTouchStart={() => setIsHovered(true)}
-      onTouchEnd={() => setIsHovered(false)}
+    <section 
+      className="w-full bg-background border-y border-border/40 py-12 flex flex-col gap-6 relative select-none"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
     >
-      <div className="flex items-center justify-center gap-2 px-4">
-        <Sparkles className="h-5 w-5 text-primary" />
-        <h2 className="text-xl font-bold tracking-tight text-foreground uppercase">New Arrivals</h2>
+      <div className="flex items-center justify-between max-w-7xl mx-auto w-full px-4 sm:px-6">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-primary animate-pulse" />
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground uppercase">New Arrivals</h2>
+        </div>
+
+        {/* Header navigation arrows for quick access */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => scroll('left')}
+            className="h-10 w-10 rounded-full border border-border/80 bg-background/80 hover:bg-muted/80 backdrop-blur-md flex items-center justify-center text-foreground transition-transform active:scale-90 shadow-sm cursor-pointer"
+            aria-label="Previous products"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            onClick={() => scroll('right')}
+            className="h-10 w-10 rounded-full border border-border/80 bg-background/80 hover:bg-muted/80 backdrop-blur-md flex items-center justify-center text-foreground transition-transform active:scale-90 shadow-sm cursor-pointer"
+            aria-label="Next products"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
       <div className="relative w-full overflow-hidden">
-        {/* Navigation Buttons */}
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full opacity-70 hover:opacity-100 transition-opacity duration-300 bg-background/90 backdrop-blur-xl border-border shadow-lg z-20 cursor-pointer flex"
+        {/* Floating Side Arrow - Left */}
+        <button 
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/95 border-2 border-border shadow-2xl backdrop-blur-xl flex items-center justify-center text-foreground z-30 hover:scale-110 active:scale-95 transition-all cursor-pointer"
           onClick={() => scroll('left')}
+          aria-label="Scroll left"
         >
-          <ChevronLeft className="h-6 w-6 text-foreground" />
-        </Button>
+          <ChevronLeft className="h-6 w-6 stroke-[2.5]" />
+        </button>
 
+        {/* Carousel track */}
         <div 
           ref={scrollRef}
-          className="flex w-full overflow-x-auto gap-6 px-6 pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory"
+          className="flex w-full overflow-x-auto gap-6 px-6 sm:px-12 pb-4 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           {duplicatedProducts.map((product, idx) => (
             <div key={`${product.id}-${idx}`} className="w-[280px] sm:w-[320px] flex-shrink-0 snap-start">
@@ -78,15 +98,15 @@ export function ProductMarquee({ products }: { products: Product[] }) {
           ))}
         </div>
 
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full opacity-70 hover:opacity-100 transition-opacity duration-300 bg-background/90 backdrop-blur-xl border-border shadow-lg z-20 cursor-pointer flex"
+        {/* Floating Side Arrow - Right */}
+        <button 
+          className="absolute right-3 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/95 border-2 border-border shadow-2xl backdrop-blur-xl flex items-center justify-center text-foreground z-30 hover:scale-110 active:scale-95 transition-all cursor-pointer"
           onClick={() => scroll('right')}
+          aria-label="Scroll right"
         >
-          <ChevronRight className="h-6 w-6 text-foreground" />
-        </Button>
+          <ChevronRight className="h-6 w-6 stroke-[2.5]" />
+        </button>
       </div>
-    </div>
+    </section>
   )
 }
