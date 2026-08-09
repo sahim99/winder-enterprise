@@ -9,6 +9,7 @@ type Message = {
   message: string
   sender_type: 'customer' | 'admin'
   created_at: string
+  is_read?: boolean
 }
 
 export function LiveChatWidget({ profile, userId }: { profile: any, userId: string }) {
@@ -88,7 +89,7 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: tempMsg.message, senderType: 'customer', phone })
       })
-      fetchMessages()
+      fetchMessages(isOpen)
     } catch (e) {
       console.error(e)
     } finally {
@@ -115,7 +116,7 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
         console.error('Failed to save phone', e)
       }
       
-      fetchMessages()
+      fetchMessages(isOpen)
     }
   }
 

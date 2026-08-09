@@ -18,6 +18,7 @@ type Message = {
   message: string
   sender_type: 'customer' | 'admin'
   created_at: string
+  is_read?: boolean
 }
 
 export default function AdminMessagesPage() {
