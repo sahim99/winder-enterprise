@@ -78,18 +78,18 @@ export default async function HomePage() {
       <section className="py-8 bg-transparent">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 glass-card p-6 md:px-10">
-            <span className="text-xs uppercase tracking-widest font-bold text-gray-500">Guaranteed Assured shopping</span>
+            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Guaranteed Assured shopping</span>
             <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
               {[
                 { label: "Cash on delivery", desc: "Pay at your doorstep" },
                 { label: "Quality guaranteed", desc: "100% inspected timber" },
                 { label: "West Bengal shipping", desc: "Free assembly in Jangipur" }
               ].map(item => (
-                <div key={item.label} className="flex items-center gap-3 text-left glass px-4 py-2 rounded-full">
+                <div key={item.label} className="flex items-center gap-3 text-left glass px-4 py-2 rounded-full border border-border/60">
                   <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-gray-900 text-sm leading-tight">{item.label}</p>
-                    <p className="text-[10px] text-gray-500 font-medium leading-tight">{item.desc}</p>
+                    <p className="font-semibold text-foreground text-sm leading-tight">{item.label}</p>
+                    <p className="text-[10px] text-muted-foreground font-medium leading-tight">{item.desc}</p>
                   </div>
                 </div>
               ))}
