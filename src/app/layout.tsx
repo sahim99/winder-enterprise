@@ -7,6 +7,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Toaster } from '@/components/ui/sonner'
 import { PromoBannerWrapper } from '@/components/layout/PromoBannerWrapper'
 import { ThemeProvider } from '@/components/theme-provider'
+import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 
 const outfit = Outfit({ 
   subsets: ['latin'],
@@ -29,7 +30,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={null}>
           <NavbarWrapper />
         </Suspense>
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen pb-16 md:pb-0">{children}</main>
+        <MobileBottomNav />
         <Footer />
         <Toaster />
         </ThemeProvider>

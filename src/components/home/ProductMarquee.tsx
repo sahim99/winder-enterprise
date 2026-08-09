@@ -45,16 +45,16 @@ export function ProductMarquee({ products }: { products: Product[] }) {
 
   return (
     <section 
-      className="w-full bg-background border-y border-border/40 py-12 flex flex-col gap-6 relative select-none"
+      className="w-full bg-background border-y border-border/40 py-4 sm:py-8 flex flex-col gap-3 sm:gap-5 relative select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={() => setIsPaused(true)}
       onTouchEnd={() => setIsPaused(false)}
     >
       <div className="flex items-center justify-between max-w-7xl mx-auto w-full px-4 sm:px-6">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-primary animate-pulse" />
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground uppercase">New Arrivals</h2>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary animate-pulse" />
+          <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-foreground uppercase">New Arrivals</h2>
         </div>
 
         {/* Header navigation arrows for quick access */}
