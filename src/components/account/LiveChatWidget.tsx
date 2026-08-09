@@ -28,8 +28,8 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
         const data = await res.json()
         setMessages(data.messages || [])
         // Only mark as read if the chat is actually open
-        if (markRead && profile?.id) {
-          fetch(`/api/messages?userId=${profile.id}&readerType=customer&_t=${Date.now()}`, { method: 'PATCH' })
+        if (markRead && userId) {
+          fetch(`/api/messages?userId=${userId}&readerType=customer&_t=${Date.now()}`, { method: 'PATCH' })
         }
       }
     } catch (e) {
