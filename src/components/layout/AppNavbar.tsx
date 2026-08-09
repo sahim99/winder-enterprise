@@ -174,18 +174,18 @@ export function AppNavbar() {
               {/* Profile Link & Sign Out (Moved to the right end) */}
               {user ? (
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                  <DropdownMenuTrigger render={
                     <button
                       className="relative h-10 w-10 rounded-full bg-foreground text-background text-sm font-medium flex items-center justify-center cursor-pointer select-none hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                       aria-label="Account menu"
                     >
                       {userInitial}
                     </button>
-                  </DropdownMenuTrigger>
+                  } />
                   <DropdownMenuContent align="end" className="w-48 font-medium">
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuItem render={
                       <Link href="/account" className="cursor-pointer w-full">Customer Dashboard</Link>
-                    </DropdownMenuItem>
+                    } />
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={handleSignOut} 
