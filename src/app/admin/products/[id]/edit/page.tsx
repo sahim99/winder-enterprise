@@ -3,7 +3,7 @@ import { createServiceClient } from '@/lib/supabase/server'
 import { ProductForm } from '@/components/admin/ProductForm'
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 async function getProduct(id: string) {
@@ -19,7 +19,8 @@ async function getCategories() {
 }
 
 export default async function EditProductPage({ params }: PageProps) {
-  const [product, categories] = await Promise.all([getProduct(params.id), getCategories()])
+  const { id } = await params
+  const [product, categories] = await Promise.all([getProduct(id), getCategories()])
   if (!product) notFound()
 
   const initialData = {
@@ -30,9 +31,14 @@ export default async function EditProductPage({ params }: PageProps) {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Edit product</h1>
-      <ProductForm categories={categories} initialData={initialData} mode="edit" />
+    <div className="space-y-6 max-w-4xl mx-auto">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">Edit Product</h1>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Update pricing, inventory, descriptions, and media.</p>
+      </div>
+      <div className="bg-card rounded-2xl border border-border/50 p-6 sm:p-8 shadow-xs">
+        <ProductForm categories={categories} initialData={initialData} mode="edit" />
+      </div>
     </div>
   )
 }

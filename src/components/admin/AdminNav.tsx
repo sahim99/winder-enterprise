@@ -18,6 +18,7 @@ import {
   Store
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 const navItems = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -49,6 +50,10 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
             <ShieldCheck className="h-4 w-4 text-primary" />
             <span>Admin Panel</span>
           </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
         </div>
       </header>
 
@@ -114,6 +119,11 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
 
         {/* Sidebar Footer */}
         <div className="p-3 border-t border-border/40 space-y-1">
+          <div className="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-muted-foreground bg-muted/30">
+            <span className="text-xs font-medium">Appearance</span>
+            <ThemeToggle />
+          </div>
+
           <Link
             href="/"
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"

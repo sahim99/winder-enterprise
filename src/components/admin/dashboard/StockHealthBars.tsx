@@ -1,0 +1,70 @@
+import React from 'react'
+import Link from 'next/link'
+import { ArrowRight, AlertTriangle } from 'lucide-react'
+
+export interface CategoryStockHealth {
+  categoryName: string
+  totalProducts: number
+  inStockUnits: number
+  lowStockCount: number
+}
+
+interface StockHealthBarsProps {
+  categories: CategoryStockHealth[]
+  totalWarehouseUnits: number
+}
+
+export function StockHealthBars({ categories, totalWarehouseUnits }: StockHealthBarsProps) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Inventory Health by Category</span>
+          <p className="text-xs text-muted-foreground mt-0.5">{totalWarehouseUnits} Units Live in Warehouse</p>
+        </div>
+        <Link href="/admin/products" className="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1">
+          Catalog <ArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
+
+      <div className="space-y-3">
+        {categories.length === 0 ? (
+          <p className="text-xs text-muted-foreground py-4 text-center">No categories found.</p>
+        ) : (
+          categories.map((cat) => {
+            const isCritical = cat.lowStockCount > 0
+            const percentage = totalWarehouseUnits > 0 ? Math.round((cat.inStockUnits / totalWarehouseUnits) * 100) : 0
+
+            return (
+              <div key={cat.categoryName} className="space-y-1">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 font-semibold text-foreground">
+                    <span>{cat.categoryName}</span>
+                    {isCritical && (
+                      <span className="inline-flex items-center gap-0.5 text-[10px] text-amber-500 font-bold bg-amber-500/10 px-1.5 py-0.2 rounded">
+                        <AlertTriangle className="h-2.5 w-2.5" /> {cat.lowStockCount} low
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground font-medium">{cat.inStockUnits} units</span>
+                    <span className="font-bold text-foreground font-mono text-[11px] w-8 text-right">{percentage}%</span>
+                  </div>
+                </div>
+
+                <div className="w-full bg-muted/60 h-2 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      isCritical ? 'bg-amber-500' : 'bg-primary'
+                    }`}
+                    style={{ width: `${Math.max(percentage, cat.inStockUnits > 0 ? 5 : 0)}%` }}
+                  />
+                </div>
+              </div>
+            )
+          })
+        )}
+      </div>
+    </div>
+  )
+}

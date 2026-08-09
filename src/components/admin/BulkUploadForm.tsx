@@ -148,44 +148,44 @@ export function BulkUploadForm({ categories }: BulkUploadFormProps) {
   }
 
   return (
-    <div className="space-y-8 max-w-4xl">
-      <div className="flex items-center gap-4">
-        <Link href="/admin/products" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <ArrowLeft className="h-5 w-5 text-gray-600" />
+    <div className="space-y-6 max-w-5xl mx-auto">
+      <div className="flex items-center gap-3">
+        <Link href="/admin/products" className="p-2 hover:bg-muted/50 rounded-xl transition-colors text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Bulk Catalog Uploader</h1>
-          <p className="text-sm text-gray-500 mt-1">Upload multiple photos to generate a batch of new products for a selected section.</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">Bulk Catalog Uploader</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Upload multiple photos to generate a batch of new products for a selected section.</p>
         </div>
       </div>
 
-      <form onSubmit={handleBulkUpload} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <form onSubmit={handleBulkUpload} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left Form: Details */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border p-6 space-y-6">
-          <h2 className="text-lg font-semibold text-gray-900 border-b pb-3">Catalog Details</h2>
+        <div className="lg:col-span-7 bg-card rounded-2xl border border-border/50 p-5 sm:p-6 space-y-5 shadow-xs">
+          <h2 className="text-base font-bold text-foreground border-b border-border/40 pb-3">Catalog Details</h2>
           
-          <div className="space-y-1">
-            <Label htmlFor="category">Target Section / Category</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="category" className="text-xs font-semibold text-foreground">Target Section / Category</Label>
             <Select 
               value={categoryId} 
               onValueChange={(val) => setCategoryId(val || '')}
               disabled={uploading}
             >
-              <SelectTrigger id="category">
+              <SelectTrigger id="category" className="bg-background border-border/60 rounded-xl">
                 <SelectValue placeholder="Choose where to list these items" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-card border-border">
                 {categories.map(cat => (
                   <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-xs text-gray-500 mt-1">Selecting Bed adds items to the Bed section, Refrigerators to Refrigerators section, etc.</p>
+            <p className="text-[11px] text-muted-foreground">Selecting Bed adds items to the Bed section, Sofas to Sofas section, etc.</p>
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="baseName">Base Product Name</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="baseName" className="text-xs font-semibold text-foreground">Base Product Name</Label>
             <Input 
               id="baseName" 
               value={baseName} 
@@ -193,12 +193,13 @@ export function BulkUploadForm({ categories }: BulkUploadFormProps) {
               placeholder="e.g. Luxury Handcrafted Bed" 
               required
               disabled={uploading}
+              className="bg-background border-border/60 rounded-xl"
             />
-            <p className="text-xs text-gray-500 mt-1">Products will be named "Base Name", "Base Name 2", etc.</p>
+            <p className="text-[11px] text-muted-foreground">Products will be named "Base Name", "Base Name 2", etc.</p>
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="description">Base Description</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="description" className="text-xs font-semibold text-foreground">Base Description</Label>
             <Textarea 
               id="description" 
               value={baseDescription} 
@@ -206,12 +207,13 @@ export function BulkUploadForm({ categories }: BulkUploadFormProps) {
               placeholder="Features, material details, dimensions..." 
               rows={4}
               disabled={uploading}
+              className="bg-background border-border/60 rounded-xl"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <Label htmlFor="price">Price (₹)</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="price" className="text-xs font-semibold text-foreground">Price (₹)</Label>
               <Input 
                 id="price" 
                 type="number" 
@@ -220,10 +222,11 @@ export function BulkUploadForm({ categories }: BulkUploadFormProps) {
                 min={0}
                 required
                 disabled={uploading}
+                className="bg-background border-border/60 rounded-xl"
               />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="stock">Initial Stock</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="stock" className="text-xs font-semibold text-foreground">Initial Stock</Label>
               <Input 
                 id="stock" 
                 type="number" 
@@ -232,20 +235,21 @@ export function BulkUploadForm({ categories }: BulkUploadFormProps) {
                 min={0}
                 required
                 disabled={uploading}
+                className="bg-background border-border/60 rounded-xl"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-3 border-t pt-4">
+          <div className="flex items-center gap-3 border-t border-border/40 pt-4">
             <input
               type="checkbox"
               id="is_published"
               checked={isPublished}
               onChange={e => setIsPublished(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              className="h-4 w-4 rounded border-border/80 text-primary focus:ring-primary"
               disabled={uploading}
             />
-            <Label htmlFor="is_published">Publish immediately (visible to customers)</Label>
+            <Label htmlFor="is_published" className="text-sm font-medium text-foreground cursor-pointer">Publish immediately (visible to customers)</Label>
           </div>
         </div>
 
@@ -253,18 +257,18 @@ export function BulkUploadForm({ categories }: BulkUploadFormProps) {
         <div className="lg:col-span-5 space-y-6">
           
           {/* File Picker & Previews */}
-          <div className="bg-white rounded-2xl border p-6 space-y-4">
-            <h2 className="text-lg font-semibold text-gray-900 border-b pb-3">Catalog Photos</h2>
+          <div className="bg-card rounded-2xl border border-border/50 p-5 sm:p-6 space-y-4 shadow-xs">
+            <h2 className="text-base font-bold text-foreground border-b border-border/40 pb-3">Catalog Photos</h2>
             
             {previews.length > 0 && (
-              <div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto p-1 border rounded-lg">
+              <div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto p-1 border border-border/50 rounded-xl">
                 {previews.map((preview, index) => (
-                  <div key={index} className="relative aspect-square border rounded-lg overflow-hidden group">
+                  <div key={index} className="relative aspect-square border border-border/40 rounded-lg overflow-hidden group">
                     <img src={preview} alt="Catalog preview" className="object-cover h-full w-full" />
                     <button
                       type="button"
                       onClick={() => removeFile(index)}
-                      className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                      className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer"
                       disabled={uploading}
                     >
                       <X className="h-4 w-4 text-white" />
@@ -274,10 +278,10 @@ export function BulkUploadForm({ categories }: BulkUploadFormProps) {
               </div>
             )}
 
-            <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-6 cursor-pointer hover:bg-gray-50 transition-colors">
-              <Upload className="h-8 w-8 text-gray-400 mb-2" />
-              <span className="text-sm font-semibold text-gray-600">Select catalog photos</span>
-              <span className="text-xs text-gray-400 mt-1">JPEG, PNG or WEBP. Upload multiple images.</span>
+            <label className="flex flex-col items-center justify-center border-2 border-dashed border-border/80 rounded-xl p-6 cursor-pointer hover:bg-muted/30 transition-colors">
+              <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+              <span className="text-sm font-semibold text-foreground">Select catalog photos</span>
+              <span className="text-xs text-muted-foreground mt-1">JPEG, PNG or WEBP. Upload multiple images.</span>
               <input 
                 type="file" 
                 accept="image/*" 
@@ -287,60 +291,68 @@ export function BulkUploadForm({ categories }: BulkUploadFormProps) {
                 disabled={uploading}
               />
             </label>
-            <p className="text-[11px] text-gray-400 text-center">Every image uploaded represents a distinct product generated with the left details.</p>
+            <p className="text-[11px] text-muted-foreground text-center">Every image uploaded represents a distinct product generated with the left details.</p>
           </div>
 
           {/* Progress / Status Panel */}
           {uploading && (
-            <div className="bg-white rounded-2xl border p-6 space-y-4 shadow-sm animate-pulse">
+            <div className="bg-card rounded-2xl border border-border/50 p-5 space-y-3 shadow-xs animate-pulse">
               <div className="flex items-center gap-3">
                 <Loader2 className="h-5 w-5 text-primary animate-spin" />
-                <span className="text-sm font-medium text-gray-900">{currentStep}</span>
+                <span className="text-sm font-medium text-foreground">{currentStep}</span>
               </div>
               
               {/* Progress Bar */}
-              <div className="w-full bg-gray-100 rounded-full h-2.5">
+              <div className="w-full bg-muted/60 rounded-full h-2">
                 <div 
-                  className="bg-primary h-2.5 rounded-full transition-all duration-300"
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <div className="text-xs text-right text-gray-500">{progress}% complete</div>
+              <div className="text-xs text-right text-muted-foreground font-mono">{progress}% complete</div>
             </div>
           )}
 
           {/* Success summary */}
           {completedProducts.length > 0 && (
-            <div className="bg-green-50/50 border border-green-200 rounded-2xl p-6 space-y-4">
-              <div className="flex items-center gap-2 text-green-700 font-semibold">
-                <CheckCircle2 className="h-5 w-5" />
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5 space-y-3">
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
+                <CheckCircle2 className="h-5 w-5 shrink-0" />
                 <span>Uploaded Products ({completedProducts.length})</span>
               </div>
-              <ul className="text-xs text-green-800 space-y-1.5 max-h-40 overflow-y-auto pl-1">
+              <ul className="text-xs text-emerald-700 dark:text-emerald-300 space-y-1.5 max-h-40 overflow-y-auto pl-1">
                 {completedProducts.map((name, i) => (
                   <li key={i} className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 bg-green-500 rounded-full" />
-                    {name}
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    <span>{name}</span>
                   </li>
                 ))}
               </ul>
+              <div className="pt-2 border-t border-emerald-500/20 flex gap-3">
+                <Link href="/admin/products" className="text-xs font-bold text-emerald-600 dark:text-emerald-400 underline">
+                  View in Product Catalog →
+                </Link>
+              </div>
             </div>
           )}
 
+          {/* Submit Action */}
           <Button 
             type="submit" 
-            className="w-full h-12 rounded-xl text-base shadow-sm"
+            className="w-full py-6 text-base font-bold rounded-xl shadow-md"
             disabled={uploading || files.length === 0}
           >
             {uploading ? (
-              <><Loader2 className="h-5 w-5 animate-spin mr-2" />Processing Batch…</>
+              <span className="flex items-center gap-2">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                Creating {files.length} Products...
+              </span>
             ) : (
               `Start Catalog Upload (${files.length} items)`
             )}
           </Button>
 
         </div>
-
       </form>
     </div>
   )

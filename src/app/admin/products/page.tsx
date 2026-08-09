@@ -19,73 +19,78 @@ export default async function AdminProductsPage() {
   const products = await getProducts()
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Products ({products.length})</h1>
-        <div className="flex items-center gap-3">
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">Products ({products.length})</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Manage your furniture catalog, pricing, and live inventory.</p>
+        </div>
+        <div className="flex items-center gap-2.5 flex-wrap">
           <Link href="/admin/products/bulk">
-            <Button variant="outline">
-              <Plus className="h-4 w-4 mr-2" /> Bulk Catalog Upload
+            <Button variant="outline" className="rounded-xl border-border/60">
+              <Plus className="h-4 w-4 mr-1.5" /> Bulk Catalog
             </Button>
           </Link>
           <Link href="/admin/products/new">
-            <Button>
-              <Plus className="h-4 w-4 mr-2" /> Add product
+            <Button className="rounded-xl">
+              <Plus className="h-4 w-4 mr-1.5" /> Add Product
             </Button>
           </Link>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Product</th>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Category</th>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Price</th>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Stock</th>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Status</th>
-              <th className="text-right px-6 py-3 font-medium text-gray-600">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {products.length === 0 ? (
+      <div className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-xs">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 border-b border-border/40">
               <tr>
-                <td colSpan={6} className="text-center py-12 text-gray-500">
-                  No products yet. <Link href="/admin/products/new" className="text-gray-900 underline">Add your first product.</Link>
-                </td>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Product</th>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Category</th>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Price</th>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Stock</th>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Status</th>
+                <th className="text-right px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Actions</th>
               </tr>
-            ) : (
-              products.map((product: any) => (
-                <tr key={product.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium text-gray-900">{product.name}</td>
-                  <td className="px-6 py-4 text-gray-600">{product.categories?.name ?? '—'}</td>
-                  <td className="px-6 py-4 text-gray-900">{formatPrice(product.price)}</td>
-                  <td className="px-6 py-4">
-                    <span className={product.stock === 0 ? 'text-red-600 font-medium' : product.stock <= 3 ? 'text-orange-600 font-medium' : 'text-gray-900'}>
-                      {product.stock}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <Badge variant={product.is_published ? 'default' : 'secondary'}>
-                      {product.is_published ? 'Published' : 'Draft'}
-                    </Badge>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <Link href={`/admin/products/${product.id}/edit`}>
-                        <Button variant="ghost" size="sm">
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </Link>
-                      <DeleteProductButton productId={product.id} productName={product.name} />
-                    </div>
+            </thead>
+            <tbody className="divide-y divide-border/40">
+              {products.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="text-center py-12 text-muted-foreground">
+                    No products yet. <Link href="/admin/products/new" className="text-primary underline font-medium">Add your first product.</Link>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                products.map((product: any) => (
+                  <tr key={product.id} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-foreground">{product.name}</td>
+                    <td className="px-6 py-4 text-muted-foreground">{product.categories?.name ?? '—'}</td>
+                    <td className="px-6 py-4 font-bold text-foreground">{formatPrice(product.price)}</td>
+                    <td className="px-6 py-4">
+                      <span className={product.stock === 0 ? 'text-red-500 font-bold' : product.stock <= 3 ? 'text-amber-500 font-bold' : 'text-foreground font-medium'}>
+                        {product.stock}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Badge variant={product.is_published ? 'default' : 'secondary'} className="rounded-full text-[11px]">
+                        {product.is_published ? 'Published' : 'Draft'}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Link href={`/admin/products/${product.id}/edit`}>
+                          <Button variant="ghost" size="sm" className="rounded-lg h-8 w-8 p-0">
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <DeleteProductButton productId={product.id} productName={product.name} />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )

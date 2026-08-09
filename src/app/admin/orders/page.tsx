@@ -30,61 +30,68 @@ export default async function AdminOrdersPage() {
   const orders = await getOrders()
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Orders ({orders.length})</h1>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">Orders ({orders.length})</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Track live customer orders, shipping status, and generate delivery invoices.</p>
+        </div>
+      </div>
 
       <div className="space-y-4">
         {orders.length === 0 ? (
-          <div className="text-center py-20 text-gray-500 bg-white rounded-xl border">
+          <div className="text-center py-20 text-muted-foreground bg-card rounded-2xl border border-border/50">
             <p>No orders yet.</p>
           </div>
         ) : (
           orders.map((order: any) => (
-            <div key={order.id} className="bg-white rounded-xl border overflow-hidden">
-              <div className="flex items-start justify-between p-6 border-b">
+            <div key={order.id} className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-xs">
+              <div className="flex flex-col md:flex-row md:items-start justify-between p-5 sm:p-6 border-b border-border/40 gap-4">
                 <div>
-                  <p className="font-mono text-xs text-gray-500 mb-1">#{order.id.slice(0, 8).toUpperCase()}</p>
-                  <p className="font-semibold text-gray-900">{order.customer_name}</p>
-                  <div className="flex items-center gap-3 text-sm text-gray-600">
+                  <p className="font-mono text-xs text-muted-foreground mb-1">#{order.id.slice(0, 8).toUpperCase()}</p>
+                  <p className="font-bold text-foreground text-base">{order.customer_name}</p>
+                  <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1 flex-wrap">
                     <span>{order.phone}</span>
-                    <span className="text-gray-300">|</span>
+                    <span className="text-border">|</span>
                     <a 
                       href={`https://wa.me/91${order.phone.replace(/[^0-9]/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-green-600 hover:text-green-700 font-bold uppercase tracking-wider"
+                      className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-bold uppercase tracking-wider"
                     >
                       WhatsApp
                     </a>
                     <a 
                       href={`tel:${order.phone}`}
-                      className="text-xs text-blue-600 hover:text-blue-700 font-bold uppercase tracking-wider"
+                      className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-bold uppercase tracking-wider"
                     >
                       Call
                     </a>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">{order.address}, {order.city}, {order.state} — {order.pin_code}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-2">{order.address}, {order.city}, {order.state} — {order.pin_code}</p>
                 </div>
-                <div className="text-right space-y-2">
-                  <p className="text-lg font-bold text-gray-900">{formatPrice(order.total)}</p>
-                  <p className="text-xs text-gray-500">{new Date(order.created_at).toLocaleString('en-IN')}</p>
-                  <OrderStatusUpdater orderId={order.id} currentStatus={order.status} />
+                <div className="text-left md:text-right space-y-2 shrink-0 border-t md:border-t-0 pt-3 md:pt-0 border-border/40">
+                  <p className="text-xl font-extrabold text-foreground">{formatPrice(order.total)}</p>
+                  <p className="text-xs text-muted-foreground">{new Date(order.created_at).toLocaleString('en-IN')}</p>
+                  <div className="flex md:justify-end">
+                    <OrderStatusUpdater orderId={order.id} currentStatus={order.status} />
+                  </div>
                   <Link 
                     href={`/admin/billing/invoice/${order.id}`} 
                     target="_blank" 
-                    className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 font-bold block mt-1"
+                    className="inline-flex items-center gap-1 text-xs text-primary hover:underline font-bold mt-1"
                   >
-                    View Invoice
+                    View & Print Invoice →
                   </Link>
                 </div>
               </div>
-              <div className="p-6">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Items ordered</p>
+              <div className="p-5 sm:p-6 bg-muted/20">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Items Ordered</p>
                 <div className="space-y-2">
                   {(order.items as any[]).map((item, i) => (
-                    <div key={i} className="flex justify-between text-sm">
-                      <span className="text-gray-700">{item.name} <span className="text-gray-400">×{item.quantity}</span></span>
-                      <span className="font-medium text-gray-900">{formatPrice(item.price * item.quantity)}</span>
+                    <div key={i} className="flex justify-between text-sm py-1 border-b border-border/20 last:border-0">
+                      <span className="text-foreground font-medium">{item.name} <span className="text-muted-foreground">×{item.quantity}</span></span>
+                      <span className="font-bold text-foreground">{formatPrice(item.price * item.quantity)}</span>
                     </div>
                   ))}
                 </div>

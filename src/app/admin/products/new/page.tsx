@@ -10,9 +10,14 @@ async function getCategories() {
 export default async function NewProductPage() {
   const categories = await getCategories()
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Add product</h1>
-      <ProductForm categories={categories} mode="new" />
+    <div className="space-y-6 max-w-4xl mx-auto">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">Add New Product</h1>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Create and publish a new item into the Winder catalog.</p>
+      </div>
+      <div className="bg-card rounded-2xl border border-border/50 p-6 sm:p-8 shadow-xs">
+        <ProductForm categories={categories} mode="new" />
+      </div>
     </div>
   )
 }

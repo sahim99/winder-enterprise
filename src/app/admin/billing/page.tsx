@@ -32,29 +32,31 @@ export default async function AdminBillingPage() {
     .reduce((sum, order) => sum + Number(order.total), 0)
 
   const stats = [
-    { label: 'Total Revenue', value: totalRevenue, icon: TrendingUp, color: 'text-blue-600', format: true },
-    { label: 'Collected (Delivered)', value: completedCollection, icon: CheckCircle, color: 'text-green-600', format: true },
-    { label: 'Pending (In Transit)', value: pendingCollection, icon: Clock, color: 'text-yellow-600', format: true },
-    { label: 'Total Invoices', value: orders.length, icon: CreditCard, color: 'text-purple-600', format: false },
+    { label: 'Total Revenue', value: totalRevenue, icon: TrendingUp, bg: 'bg-blue-500/10 text-blue-600 dark:text-blue-400', format: true },
+    { label: 'Collected (Delivered)', value: completedCollection, icon: CheckCircle, bg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400', format: true },
+    { label: 'Pending (In Transit)', value: pendingCollection, icon: Clock, bg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400', format: true },
+    { label: 'Total Invoices', value: orders.length, icon: CreditCard, bg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400', format: false },
   ]
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="space-y-6 max-w-7xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Billing & Invoices</h1>
-        <p className="text-sm text-gray-500 mt-1">Track payments, collection statuses, and generate customer receipts.</p>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">Billing & Invoices</h1>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Track payments, collection statuses, and generate customer receipts.</p>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {stats.map(stat => (
-          <Card key={stat.label}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">{stat.label}</CardTitle>
-              <stat.icon className={`h-5 w-5 ${stat.color}`} />
+          <Card key={stat.label} className="border border-border/50 bg-card rounded-2xl shadow-xs">
+            <CardHeader className="flex flex-row items-center justify-between p-4 sm:p-5 pb-1 sm:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground truncate">{stat.label}</CardTitle>
+              <div className={`p-2 rounded-xl ${stat.bg} shrink-0`}>
+                <stat.icon className="h-4 w-4" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-gray-900">
+            <CardContent className="p-4 sm:p-5 pt-0 sm:pt-0">
+              <p className="text-xl sm:text-2xl font-bold text-foreground mt-1">
                 {stat.format ? formatPrice(stat.value) : stat.value}
               </p>
             </CardContent>
@@ -63,73 +65,75 @@ export default async function AdminBillingPage() {
       </div>
 
       {/* Invoice List */}
-      <div className="bg-white rounded-xl border overflow-hidden shadow-sm">
-        <div className="px-6 py-4 border-b bg-gray-50/50">
-          <h2 className="font-semibold text-gray-900 text-base">All Transactions</h2>
+      <div className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-xs">
+        <div className="px-6 py-4 border-b border-border/40 bg-muted/20">
+          <h2 className="font-bold text-foreground text-sm uppercase tracking-wider">All Transactions</h2>
         </div>
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Invoice Ref</th>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Customer</th>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Date</th>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Payment Type</th>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Collection Status</th>
-              <th className="text-left px-6 py-3 font-medium text-gray-600">Amount</th>
-              <th className="text-right px-6 py-3 font-medium text-gray-600">Print</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {orders.length === 0 ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 border-b border-border/40">
               <tr>
-                <td colSpan={7} className="text-center py-12 text-gray-500">
-                  No billing transactions found.
-                </td>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Invoice Ref</th>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Customer</th>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Date</th>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Payment Type</th>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Collection Status</th>
+                <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Amount</th>
+                <th className="text-right px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Print</th>
               </tr>
-            ) : (
-              orders.map((order: any) => (
-                <tr key={order.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-mono font-medium text-gray-900">
-                    #{order.id.slice(0, 8).toUpperCase()}
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="font-medium text-gray-900">{order.customer_name}</p>
-                    <p className="text-xs text-gray-500">{order.city}, {order.state}</p>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">
-                    {order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
-                      COD (Cash on Delivery)
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${
-                      order.status === 'delivered' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {order.status === 'delivered' ? 'Collected' : 'Pending'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 font-bold text-gray-900">
-                    {formatPrice(order.total)}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <Link 
-                      href={`/admin/billing/invoice/${order.id}`}
-                      target="_blank"
-                      className="inline-flex items-center gap-1 text-primary hover:text-primary/80 font-semibold"
-                    >
-                      <Printer className="h-4 w-4" /> Invoice
-                    </Link>
+            </thead>
+            <tbody className="divide-y divide-border/40">
+              {orders.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-12 text-muted-foreground">
+                    No billing transactions found.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                orders.map((order: any) => (
+                  <tr key={order.id} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-6 py-4 font-mono font-semibold text-foreground text-xs">
+                      #{order.id.slice(0, 8).toUpperCase()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="font-semibold text-foreground">{order.customer_name}</p>
+                      <p className="text-xs text-muted-foreground">{order.city}, {order.state}</p>
+                    </td>
+                    <td className="px-6 py-4 text-muted-foreground text-xs">
+                      {order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                    </td>
+                    <td className="px-6 py-4 text-muted-foreground">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-muted text-muted-foreground">
+                        COD
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${
+                        order.status === 'delivered' 
+                          ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' 
+                          : 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
+                      }`}>
+                        {order.status === 'delivered' ? 'Collected' : 'Pending'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 font-bold text-foreground">
+                      {formatPrice(order.total)}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <Link 
+                        href={`/admin/billing/invoice/${order.id}`}
+                        target="_blank"
+                        className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
+                      >
+                        <Printer className="h-4 w-4" /> Invoice
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
