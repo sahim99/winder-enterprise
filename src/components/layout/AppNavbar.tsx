@@ -24,6 +24,7 @@ export function AppNavbar() {
   const [cartOpen, setCartOpen] = useState(false)
   const [user, setUser] = useState<SupabaseUser | null>(null)
   const [userInitial, setUserInitial] = useState('')
+  const [authLoading, setAuthLoading] = useState(true)
   
   const searchParams = useSearchParams()
   const pathname = usePathname()
@@ -103,13 +104,15 @@ export function AppNavbar() {
   useEffect(() => {
     const supabase = createClient()
 
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      setUser(user)
-      if (user) {
-        const name = user.user_metadata?.name || user.email || ''
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const u = session?.user ?? null
+      setUser(u)
+      if (u) {
+        const name = u.user_metadata?.name || u.email || ''
         setUserInitial(name.charAt(0).toUpperCase())
         useWishlistStore.getState().init()
       }
+      setAuthLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -120,6 +123,7 @@ export function AppNavbar() {
         setUserInitial(name.charAt(0).toUpperCase())
         useWishlistStore.getState().init()
       }
+      setAuthLoading(false)
     })
 
     return () => subscription.unsubscribe()
@@ -278,7 +282,11 @@ export function AppNavbar() {
               </Button>
 
               {/* Profile Link (Direct Link to Customer Dashboard) */}
-              {user ? (
+              {authLoading ? (
+                <div className="relative h-10 w-10 rounded-full bg-muted/50 animate-pulse border border-border/40 flex items-center justify-center">
+                  <Loader2 className="h-4 w-4 text-muted-foreground animate-spin" />
+                </div>
+              ) : user ? (
                 <Link
                   href="/account"
                   className="relative h-10 w-10 rounded-full bg-foreground text-background text-sm font-medium flex items-center justify-center cursor-pointer select-none hover:opacity-90 hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 shadow-sm"
