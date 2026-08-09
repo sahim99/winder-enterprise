@@ -1,25 +1,20 @@
 'use client'
 
 import Link from 'next/link'
-import { ShoppingCart, Menu, X, Search, Sparkles } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import Image from 'next/image'
+import { ShoppingCart, Menu, X, Search, Sparkles, Loader2, ArrowRight } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { useCartStore } from '@/store/cart'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
+import { cn, formatPrice } from '@/lib/utils'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { createClient } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import { useDebounce } from '@/hooks/use-debounce'
+import type { Product } from '@/types/supabase'
 
 export function AppNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -33,9 +28,15 @@ export function AppNavbar() {
   
   const initialSearch = searchParams.get('search') || ''
   const [searchQuery, setSearchQuery] = useState(initialSearch)
-  const debouncedSearch = useDebounce(searchQuery, 400)
+  const debouncedSearch = useDebounce(searchQuery, 300)
   const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+
+  // Auto-suggestions state
+  const [suggestions, setSuggestions] = useState<Product[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const searchContainerRef = useRef<HTMLDivElement>(null)
 
   const totalItems = useCartStore(s => s.totalItems())
 
@@ -53,27 +54,47 @@ export function AppNavbar() {
     setSearchQuery(searchParams.get('search') || '')
   }, [searchParams])
 
-  // Live search effect
+  // Fetch live suggestions as user types
   useEffect(() => {
-    if (!mounted) {
-      setMounted(true)
+    if (!debouncedSearch.trim()) {
+      setSuggestions([])
+      setShowSuggestions(false)
+      setIsSearching(false)
       return
     }
+
+    let active = true
+    setIsSearching(true)
+    const supabase = createClient()
     
-    // Create new URLSearchParams based on current params
-    const params = new URLSearchParams(searchParams.toString())
-    
-    if (debouncedSearch.trim()) {
-      params.set('search', debouncedSearch.trim())
-    } else {
-      params.delete('search')
-    }
-    
-    // Only push if we are on /products or if we are actively searching
-    if (pathname === '/products' || debouncedSearch.trim() !== '') {
-      router.push(`/products?${params.toString()}`)
+    supabase
+      .from('products')
+      .select('*')
+      .ilike('name', `%${debouncedSearch.trim()}%`)
+      .limit(6)
+      .then(({ data }) => {
+        if (active) {
+          setSuggestions((data as Product[]) || [])
+          setIsSearching(false)
+          setShowSuggestions(true)
+        }
+      })
+
+    return () => {
+      active = false
     }
   }, [debouncedSearch])
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   useEffect(() => {
     const supabase = createClient()
@@ -98,16 +119,18 @@ export function AppNavbar() {
     return () => subscription.unsubscribe()
   }, [])
 
-  async function handleSignOut() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    setUser(null)
-    window.location.href = '/'
-  }
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
-    // The useEffect will handle the routing naturally, but this prevents form submission reload
+    setShowSuggestions(false)
+    if (searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`)
+    } else {
+      router.push('/products')
+    }
   }
 
   // Build the login redirect URL
@@ -138,28 +161,94 @@ export function AppNavbar() {
               <Link href="/account/wishlist" className="hover:text-foreground transition-colors">Wishlist</Link>
             </nav>
 
-            {/* Global Search Bar */}
-            <div className="flex-1 max-w-2xl hidden md:block">
+            {/* Global Search Bar with Live Auto-Suggestions */}
+            <div ref={searchContainerRef} className="flex-1 max-w-2xl hidden md:block relative">
               <form onSubmit={handleSearch} className="relative group">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors pointer-events-none" />
                 <Input 
                   type="search" 
                   placeholder="Search furniture, electronics..." 
-                  className="w-full pl-10 bg-muted/30 border-muted-foreground/20 focus-visible:ring-primary/30 h-10 rounded-full"
+                  className="w-full pl-10 pr-10 bg-muted/40 hover:bg-muted/60 focus:bg-background border-muted-foreground/20 focus-visible:ring-primary/40 h-10 rounded-full transition-all"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => {
+                    if (searchQuery.trim().length > 0) setShowSuggestions(true)
+                  }}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value)
+                    if (e.target.value.trim().length > 0) setShowSuggestions(true)
+                  }}
                 />
+                {isSearching && (
+                  <Loader2 className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground animate-spin pointer-events-none" />
+                )}
               </form>
+
+              {/* Auto-Suggestions Dropdown */}
+              {showSuggestions && searchQuery.trim().length > 0 && (
+                <div className="absolute left-0 right-0 top-full mt-2 bg-background/95 dark:bg-gray-900/95 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-2xl overflow-hidden z-50 animate-in fade-in-0 zoom-in-95 duration-150">
+                  {suggestions.length > 0 ? (
+                    <div className="p-2 space-y-1">
+                      <div className="px-3 py-1.5 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                        Product Suggestions
+                      </div>
+                      {suggestions.map((product) => (
+                        <Link
+                          key={product.id}
+                          href={`/products/${product.slug || product.id}`}
+                          onClick={() => setShowSuggestions(false)}
+                          className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/60 dark:hover:bg-muted/30 transition-colors group"
+                        >
+                          <div className="relative h-11 w-11 rounded-lg bg-muted/40 border border-border/40 overflow-hidden flex-shrink-0">
+                            {product.images && product.images[0] ? (
+                              <Image 
+                                src={product.images[0]} 
+                                alt={product.name} 
+                                fill 
+                                className="object-cover group-hover:scale-105 transition-transform" 
+                                sizes="44px"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">Img</div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
+                              {product.name}
+                            </p>
+                            <p className="text-xs font-semibold text-primary">
+                              {formatPrice(product.price)}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+
+                      {/* View All Results Footer */}
+                      <Link
+                        href={`/products?search=${encodeURIComponent(searchQuery.trim())}`}
+                        onClick={() => setShowSuggestions(false)}
+                        className="flex items-center justify-between px-3 py-2.5 mt-1 border-t border-border/40 text-xs font-semibold text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                      >
+                        <span>View all results for &quot;{searchQuery}&quot;</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
+                  ) : !isSearching ? (
+                    <div className="p-6 text-center text-sm text-muted-foreground">
+                      No products found for &quot;<span className="font-semibold text-foreground">{searchQuery}</span>&quot;
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
               <ThemeToggle />
               
-              {/* Cart Button (Moved to the left of Profile) */}
+              {/* Cart Button */}
               <Button
                 variant="outline"
                 size="icon"
-                className="relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95"
+                className="relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95 cursor-pointer"
                 onClick={() => setCartOpen(true)}
                 aria-label="Open cart"
               >
@@ -205,7 +294,7 @@ export function AppNavbar() {
           </div>
 
           {/* Mobile Search and Menu */}
-          <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? 'max-h-[300px] pb-4' : 'max-h-0'}`}>
+          <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileOpen ? 'max-h-[400px] pb-4' : 'max-h-0'}`}>
             <form onSubmit={handleSearch} className="relative mt-2">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
@@ -248,6 +337,7 @@ export function AppNavbar() {
         </div>
       </header>
 
+      {/* Cart Drawer */}
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   )
