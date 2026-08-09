@@ -14,7 +14,7 @@ type Message = {
 export function LiveChatWidget({ profile, userId }: { profile: any, userId: string }) {
   const [isOpen, setIsOpen] = useState(false)
   const [showPhoneModal, setShowPhoneModal] = useState(false)
-  const [phone, setPhone] = useState(profile?.phone || '')
+  const [phone, setPhone] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -35,8 +35,17 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
   }
 
   useEffect(() => {
+    if (profile?.phone) {
+      setPhone(profile.phone)
+    } else {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('winder_customer_phone') : null
+      if (stored) setPhone(stored)
+    }
+  }, [profile])
+
+  useEffect(() => {
     if (isOpen) {
-      if (!profile?.phone && !phone) {
+      if (!phone) {
         setShowPhoneModal(true)
       } else {
         fetchMessages()
@@ -44,7 +53,7 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
         return () => clearInterval(interval)
       }
     }
-  }, [isOpen, profile?.phone])
+  }, [isOpen, phone])
 
   useEffect(() => {
     if (isOpen) {
@@ -85,6 +94,9 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
     e.preventDefault()
     if (phone.length >= 10) {
       setShowPhoneModal(false)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('winder_customer_phone', phone)
+      }
       
       // Save phone to backend immediately
       try {
