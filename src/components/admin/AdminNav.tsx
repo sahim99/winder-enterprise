@@ -50,13 +50,6 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
             <span>Admin Panel</span>
           </div>
         </div>
-
-        <Link
-          href="/"
-          className="flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-foreground px-2.5 py-1 rounded-full bg-muted/40"
-        >
-          <Store className="h-3.5 w-3.5" /> Store
-        </Link>
       </header>
 
       {/* Mobile Backdrop */}
@@ -129,7 +122,13 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
             Back to Store
           </Link>
 
-          <form action="/api/admin/logout" method="POST">
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault()
+              await fetch('/api/admin/logout', { method: 'POST' })
+              window.location.href = '/admin/login'
+            }}
+          >
             <button
               type="submit"
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 w-full transition-colors cursor-pointer"

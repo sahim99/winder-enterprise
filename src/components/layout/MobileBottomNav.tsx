@@ -70,6 +70,11 @@ export function MobileBottomNav() {
     { label: 'Wishlist', href: '/account/wishlist', icon: Heart },
   ]
 
+  // Hide on admin routes and auth pages
+  if (pathname?.startsWith('/admin') || pathname === '/login' || pathname === '/register') {
+    return null
+  }
+
   return (
     <div
       className={cn(
