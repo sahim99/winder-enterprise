@@ -21,7 +21,7 @@ export function ProductMarquee({ products }: { products: Product[] }) {
 
     const interval = setInterval(() => {
       if (scrollRef.current) {
-        scrollRef.current.scrollBy({ left: 1.5, behavior: 'auto' })
+        scrollRef.current.scrollBy({ left: 1, behavior: 'auto' })
         
         // Loop back seamlessly if we reach the duplicated end
         if (
@@ -31,7 +31,7 @@ export function ProductMarquee({ products }: { products: Product[] }) {
           scrollRef.current.scrollLeft = 0
         }
       }
-    }, 20) // Smooth continuous scroll
+    }, 40) // Smooth continuous scroll (slowed down)
 
     return () => clearInterval(interval)
   }, [isHovered])
@@ -61,7 +61,7 @@ export function ProductMarquee({ products }: { products: Product[] }) {
         <Button 
           variant="outline" 
           size="icon" 
-          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-background/80 backdrop-blur-xl border-border shadow-lg z-20 cursor-pointer hidden sm:flex"
+          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full opacity-70 hover:opacity-100 transition-opacity duration-300 bg-background/90 backdrop-blur-xl border-border shadow-lg z-20 cursor-pointer flex"
           onClick={() => scroll('left')}
         >
           <ChevronLeft className="h-6 w-6 text-foreground" />
@@ -81,7 +81,7 @@ export function ProductMarquee({ products }: { products: Product[] }) {
         <Button 
           variant="outline" 
           size="icon" 
-          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-background/80 backdrop-blur-xl border-border shadow-lg z-20 cursor-pointer hidden sm:flex"
+          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full opacity-70 hover:opacity-100 transition-opacity duration-300 bg-background/90 backdrop-blur-xl border-border shadow-lg z-20 cursor-pointer flex"
           onClick={() => scroll('right')}
         >
           <ChevronRight className="h-6 w-6 text-foreground" />
