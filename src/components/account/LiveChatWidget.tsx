@@ -22,12 +22,12 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch('/api/messages')
+      const res = await fetch(`/api/messages?_t=${Date.now()}`)
       if (res.ok) {
         const data = await res.json()
         setMessages(data.messages || [])
         // mark as read
-        fetch(`/api/messages?userId=${userId}&readerType=customer`, { method: 'PATCH' })
+        fetch(`/api/messages?userId=${userId}&readerType=customer&_t=${Date.now()}`, { method: 'PATCH' })
       }
     } catch (e) {
       console.error(e)

@@ -41,7 +41,7 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     const fetchUnread = async () => {
       try {
-        const res = await fetch('/api/messages?admin=true')
+        const res = await fetch(`/api/messages?admin=true&_t=${Date.now()}`)
         if (res.ok) {
           const data = await res.json()
           let count = 0
