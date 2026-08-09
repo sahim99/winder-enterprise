@@ -241,7 +241,7 @@ export function AppNavbar() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
               <ThemeToggle />
               
               {/* Cart Button */}
@@ -271,25 +271,13 @@ export function AppNavbar() {
                   {userInitial}
                 </Link>
               ) : (
-                <div className="hidden sm:flex items-center gap-3">
-                  <Link 
-                    href={`/login?redirect=${currentUrl}`}
-                    className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'font-medium' })}
-                  >
-                    Login
-                  </Link>
-                </div>
+                <Link 
+                  href={`/login?redirect=${currentUrl}`}
+                  className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'font-medium rounded-full' })}
+                >
+                  Login
+                </Link>
               )}
-
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden rounded-full hover:bg-muted/50 h-10 w-10"
-                onClick={() => setMobileOpen(!mobileOpen)}
-                aria-label="Toggle menu"
-              >
-                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </Button>
             </div>
           </div>
 

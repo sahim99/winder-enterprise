@@ -68,7 +68,6 @@ export function MobileBottomNav() {
     { label: 'Products', href: '/products', icon: Compass },
     { label: '3D Room', href: '/showroom', icon: Sparkles, highlight: true },
     { label: 'Wishlist', href: '/account/wishlist', icon: Heart },
-    { label: 'Account', href: isLoggedIn ? '/account' : '/login', icon: User },
   ]
 
   return (

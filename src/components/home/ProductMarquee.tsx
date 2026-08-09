@@ -77,19 +77,10 @@ export function ProductMarquee({ products }: { products: Product[] }) {
       </div>
 
       <div className="relative w-full overflow-hidden">
-        {/* Floating Side Arrow - Left */}
-        <button 
-          className="absolute left-3 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/95 border-2 border-border shadow-2xl backdrop-blur-xl flex items-center justify-center text-foreground z-30 hover:scale-110 active:scale-95 transition-all cursor-pointer"
-          onClick={() => scroll('left')}
-          aria-label="Scroll left"
-        >
-          <ChevronLeft className="h-6 w-6 stroke-[2.5]" />
-        </button>
-
         {/* Carousel track */}
         <div 
           ref={scrollRef}
-          className="flex w-full overflow-x-auto gap-6 px-6 sm:px-12 pb-4 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="flex w-full overflow-x-auto gap-6 px-4 sm:px-6 pb-4 scroll-smooth snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           {duplicatedProducts.map((product, idx) => (
             <div key={`${product.id}-${idx}`} className="w-[280px] sm:w-[320px] flex-shrink-0 snap-start">
@@ -97,15 +88,6 @@ export function ProductMarquee({ products }: { products: Product[] }) {
             </div>
           ))}
         </div>
-
-        {/* Floating Side Arrow - Right */}
-        <button 
-          className="absolute right-3 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-background/95 border-2 border-border shadow-2xl backdrop-blur-xl flex items-center justify-center text-foreground z-30 hover:scale-110 active:scale-95 transition-all cursor-pointer"
-          onClick={() => scroll('right')}
-          aria-label="Scroll right"
-        >
-          <ChevronRight className="h-6 w-6 stroke-[2.5]" />
-        </button>
       </div>
     </section>
   )
