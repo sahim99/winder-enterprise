@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Package, User, MapPin, Heart, MessageSquare, ShoppingBag, Sparkles, Compass } from 'lucide-react'
 import { RecentlyViewed } from '@/components/products/RecentlyViewed'
 import { formatPrice } from '@/lib/utils'
-import { LiveChatWidget } from '@/components/account/LiveChatWidget'
 
 export default async function AccountPage() {
   const supabase = await createClient()
@@ -56,11 +55,6 @@ export default async function AccountPage() {
             <p className="text-gray-300 max-w-xl leading-relaxed text-sm">
               Track your shipping status, submit support tickets, manage delivery addresses, and browse personalized furniture or appliance catalogs.
             </p>
-          </div>
-          
-          {/* Live Chat Entry Point */}
-          <div className="shrink-0">
-            <LiveChatWidget profile={profile} userId={user.id} />
           </div>
         </div>
       </div>

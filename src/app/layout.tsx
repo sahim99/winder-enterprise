@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { PromoBannerWrapper } from '@/components/layout/PromoBannerWrapper'
 import { ThemeProvider } from '@/components/theme-provider'
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
+import { GlobalChatWrapper } from '@/components/account/GlobalChatWrapper'
 
 const outfit = Outfit({ 
   subsets: ['latin'],
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="min-h-screen pb-16 md:pb-0">{children}</main>
         <MobileBottomNav />
         <Footer />
+        <GlobalChatWrapper />
         <Toaster />
         </ThemeProvider>
       </body>
