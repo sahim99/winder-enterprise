@@ -170,7 +170,7 @@ export default function AdminMessagesPage() {
       </div>
 
       {/* Right Pane: Chat Thread */}
-      <div className="flex-1 bg-card border border-border/50 rounded-2xl flex flex-col overflow-hidden shadow-xs relative">
+      <div className="flex-1 min-w-0 bg-card border border-border/50 rounded-2xl flex flex-col overflow-hidden shadow-xs relative">
         {!activeUserId ? (
           <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
             <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
