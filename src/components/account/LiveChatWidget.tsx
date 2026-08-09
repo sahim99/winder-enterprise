@@ -20,14 +20,16 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (markRead: boolean) => {
     try {
       const res = await fetch(`/api/messages?_t=${Date.now()}`)
       if (res.ok) {
         const data = await res.json()
         setMessages(data.messages || [])
-        // mark as read
-        fetch(`/api/messages?userId=${userId}&readerType=customer&_t=${Date.now()}`, { method: 'PATCH' })
+        // Only mark as read if the chat is actually open
+        if (markRead && profile?.id) {
+          fetch(`/api/messages?userId=${profile.id}&readerType=customer&_t=${Date.now()}`, { method: 'PATCH' })
+        }
       }
     } catch (e) {
       console.error(e)
@@ -43,15 +45,19 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
     }
   }, [profile])
 
+  // Open phone modal if they click chat but haven't provided phone
   useEffect(() => {
-    if (isOpen) {
-      if (!phone) {
-        setShowPhoneModal(true)
-      } else {
-        fetchMessages()
-        const interval = setInterval(fetchMessages, 5000)
-        return () => clearInterval(interval)
-      }
+    if (isOpen && !phone) {
+      setShowPhoneModal(true)
+    }
+  }, [isOpen, phone])
+
+  // Poll for messages whether open or closed so we can show the unread badge
+  useEffect(() => {
+    if (phone) {
+      fetchMessages(isOpen)
+      const interval = setInterval(() => fetchMessages(isOpen), 5000)
+      return () => clearInterval(interval)
     }
   }, [isOpen, phone])
 
@@ -113,16 +119,25 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
     }
   }
 
+  const unreadCount = messages.filter(m => m.sender_type === 'admin' && !m.is_read).length
+
   return (
     <>
       {/* Contact Seller Button */}
-      <Button 
-        onClick={() => setIsOpen(true)}
-        className="mt-4 sm:mt-0 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 shadow-none font-bold rounded-xl"
-      >
-        <MessageCircle className="h-4 w-4 mr-2" />
-        Contact Seller
-      </Button>
+      <div className="relative inline-block">
+        <Button 
+          onClick={() => setIsOpen(true)}
+          className="mt-4 sm:mt-0 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 shadow-none font-bold rounded-xl"
+        >
+          <MessageCircle className="h-4 w-4 mr-2" />
+          Contact Seller
+        </Button>
+        {unreadCount > 0 && !isOpen && (
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center shadow-[0_0_10px_rgba(239,68,68,0.5)] animate-pulse z-10">
+            {unreadCount > 99 ? '99+' : unreadCount}
+          </span>
+        )}
+      </div>
 
       {/* Phone Modal */}
       {isOpen && showPhoneModal && (

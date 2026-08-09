@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { MessageCircle, Search, Send, User, Phone, MapPin, Loader2, CheckCircle2 } from 'lucide-react'
+import { MessageCircle, Search, Send, User, Phone, MapPin, Loader2, Check, CheckCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 type ChatThread = {
@@ -221,7 +221,9 @@ export default function AdminMessagesPage() {
                         <p className="text-[14px] leading-relaxed">{msg.message}</p>
                         <span className={`text-[10px] mt-1 flex items-center gap-1 ${isAdmin ? 'justify-end text-primary-foreground/70' : 'text-muted-foreground'}`}>
                           {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          {isAdmin && <CheckCircle2 className="h-3 w-3" />}
+                          {isAdmin && (
+                            msg.is_read ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />
+                          )}
                         </span>
                       </div>
                     </div>
