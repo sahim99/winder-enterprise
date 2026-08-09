@@ -1,15 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+const VALID_USER_IDS = [
+  'admin',
+  'winderenterprise.admin@gmail.com',
+  'sahim9733@gmail.com',
+  'WINDER-ADMIN-01',
+]
+
 export async function POST(request: NextRequest) {
   try {
-    const { password } = await request.json()
+    const { userId, username, password } = await request.json()
+    const inputId = (userId || username || '').trim().toLowerCase()
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Sahim@7001'
 
-    if (password !== process.env.ADMIN_PASSWORD) {
-      return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
+    const isUserValid = VALID_USER_IDS.some(id => id.toLowerCase() === inputId)
+    const isPassValid = password === adminPassword
+
+    if (!isUserValid || !isPassValid) {
+      return NextResponse.json({ error: 'Invalid User ID or Password' }, { status: 401 })
     }
 
     const response = NextResponse.json({ success: true })
-    response.cookies.set('admin_token', process.env.ADMIN_PASSWORD!, {
+    response.cookies.set('admin_token', adminPassword, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
