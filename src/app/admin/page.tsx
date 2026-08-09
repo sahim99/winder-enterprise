@@ -166,6 +166,7 @@ async function getDashboardIntelligence() {
     categoryStockHealth,
     categoryRevenueShare,
     recentOrders: orders.slice(0, 5),
+    allOrders: orders,
     recentTickets: tickets.filter(t => t.status !== 'resolved').slice(0, 3),
   }
 }
@@ -263,7 +264,7 @@ export default async function AdminDashboard() {
 
         {/* Right: Fulfillment Pipeline Funnel */}
         <Card className="lg:col-span-5 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs p-4">
-          <OrderFunnelBars pipeline={data.pipeline} totalOrders={data.totalOrders} />
+          <OrderFunnelBars pipeline={data.pipeline} totalOrders={data.totalOrders} orders={data.allOrders} />
         </Card>
       </div>
 
@@ -281,17 +282,17 @@ export default async function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Row 4: Action Boards (Low Stock & Live Transactions) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
+      {/* Row 4: Action Boards (Low Stock, Orders, Live Chats) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
         
         {/* Critical Low Stock Action Board */}
-        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden">
+        <Card className="border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden">
           <CardHeader className="px-4 py-3 border-b border-border/40 flex flex-row items-center justify-between">
             <div className="flex items-center gap-1.5">
               <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
-              <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Restock Alerts</CardTitle>
+              <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Restock</CardTitle>
             </div>
-            <Link href="/admin/products" className="text-[11px] font-bold text-primary hover:underline inline-flex items-center gap-0.5">
+            <Link href="/admin/products" className="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
               All <ArrowRight className="h-3 w-3" />
             </Link>
           </CardHeader>
@@ -305,17 +306,17 @@ export default async function AdminDashboard() {
                 {data.criticalLowStockProducts.slice(0, 4).map((prod: any) => (
                   <div key={prod.id} className="px-4 py-2.5 flex items-center justify-between gap-2 hover:bg-muted/30 transition-colors">
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-foreground truncate">{prod.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{formatPrice(prod.price)}</p>
+                      <p className="text-[11px] font-bold text-foreground truncate">{prod.name}</p>
+                      <p className="text-[9px] text-muted-foreground">{formatPrice(prod.price)}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                      <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ${
                         prod.stock === 0 ? 'bg-red-500/15 text-red-600 dark:text-red-400' : 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
                       }`}>
                         {prod.stock === 0 ? '0 Stock' : `${prod.stock} left`}
                       </span>
                       <Link href={`/admin/products/${prod.id}/edit`}>
-                        <Button size="sm" variant="outline" className="h-6 text-[10px] rounded-md px-2 font-bold border-border/60">
+                        <Button size="sm" variant="outline" className="h-5 text-[9px] rounded px-1.5 font-bold border-border/60">
                           Edit
                         </Button>
                       </Link>
@@ -328,19 +329,19 @@ export default async function AdminDashboard() {
         </Card>
 
         {/* Live Customer Activity */}
-        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden">
+        <Card className="border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden">
           <CardHeader className="px-4 py-3 border-b border-border/40 flex flex-row items-center justify-between">
             <div className="flex items-center gap-1.5">
               <ShoppingBag className="h-3.5 w-3.5 text-primary" />
-              <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Recent Orders</CardTitle>
+              <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Orders</CardTitle>
             </div>
-            <Link href="/admin/orders" className="text-[11px] font-bold text-primary hover:underline inline-flex items-center gap-0.5">
+            <Link href="/admin/orders" className="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
               All <ArrowRight className="h-3 w-3" />
             </Link>
           </CardHeader>
           <CardContent className="p-0">
             {data.recentOrders.length === 0 ? (
-              <p className="text-xs text-muted-foreground py-6 text-center">No orders recorded.</p>
+              <p className="text-[11px] text-muted-foreground py-6 text-center">No orders recorded.</p>
             ) : (
               <div className="divide-y divide-border/40">
                 {data.recentOrders.slice(0, 4).map((order: any) => {
@@ -351,23 +352,23 @@ export default async function AdminDashboard() {
                     <div key={order.id} className="px-4 py-2.5 flex items-center justify-between gap-2 hover:bg-muted/30 transition-colors">
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <p className="text-xs font-bold text-foreground truncate">{order.customer_name}</p>
+                          <p className="text-[11px] font-bold text-foreground truncate">{order.customer_name}</p>
                           {whatsappUrl && (
                             <a
                               href={whatsappUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[9px] text-emerald-600 dark:text-emerald-400 hover:underline font-bold uppercase"
+                              className="text-[8px] text-emerald-600 dark:text-emerald-400 hover:underline font-bold uppercase bg-emerald-500/10 px-1 rounded"
                             >
                               WA
                             </a>
                           )}
                         </div>
-                        <p className="text-[10px] text-muted-foreground">{order.city} · {order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—'}</p>
+                        <p className="text-[9px] text-muted-foreground">{order.city} · {order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—'}</p>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-xs font-black text-foreground">{formatPrice(order.total)}</p>
-                        <span className={`inline-block text-[9px] px-1.5 py-0.2 rounded-full font-bold uppercase tracking-wider ${
+                        <p className="text-[11px] font-black text-foreground">{formatPrice(order.total)}</p>
+                        <span className={`inline-block text-[8px] px-1.5 py-0.2 rounded-full font-bold uppercase tracking-wider ${
                           order.status === 'pending' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' :
                           order.status === 'processing' ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400' :
                           order.status === 'shipped' ? 'bg-purple-500/15 text-purple-600 dark:text-purple-400' :
@@ -379,6 +380,31 @@ export default async function AdminDashboard() {
                 })}
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Live Chats / Support */}
+        <Card className="border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden flex flex-col">
+          <CardHeader className="px-4 py-3 border-b border-border/40 flex flex-row items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <MessageSquare className="h-3.5 w-3.5 text-blue-500" />
+              <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Live Chats</CardTitle>
+            </div>
+            <Link href="/admin/messages" className="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
+              Open <ArrowRight className="h-3 w-3" />
+            </Link>
+          </CardHeader>
+          <CardContent className="p-0 flex-1 flex flex-col items-center justify-center bg-muted/10 min-h-[160px]">
+             <MessageSquare className="h-8 w-8 text-muted-foreground/30 mb-2" />
+             <p className="text-xs font-medium text-foreground">Live Customer Chat Active</p>
+             <p className="text-[10px] text-muted-foreground mt-1 text-center px-4">
+               Click Open to view real-time incoming messages and reply directly to customers.
+             </p>
+             <Link href="/admin/messages" className="mt-3">
+               <Button size="sm" className="h-7 text-[10px] font-bold rounded-lg px-3">
+                 Go to Messages
+               </Button>
+             </Link>
           </CardContent>
         </Card>
       </div>

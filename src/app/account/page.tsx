@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Package, User, MapPin, Heart, MessageSquare, ShoppingBag, Sparkles, Compass } from 'lucide-react'
 import { RecentlyViewed } from '@/components/products/RecentlyViewed'
 import { formatPrice } from '@/lib/utils'
+import { LiveChatWidget } from '@/components/account/LiveChatWidget'
 
 export default async function AccountPage() {
   const supabase = await createClient()
@@ -44,16 +45,23 @@ export default async function AccountPage() {
       {/* Welcome Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-gray-900 to-gray-800 p-8 text-white shadow-lg">
         <div className="absolute right-0 bottom-0 top-0 w-1/3 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent hidden md:block" />
-        <div className="relative z-10 space-y-3">
-          <span className="inline-flex items-center gap-1 text-xs font-semibold bg-primary/20 text-primary-foreground border border-primary/20 px-3 py-1 rounded-full uppercase tracking-wider">
-            <Sparkles className="h-3 w-3 animate-spin" /> Customer Dashboard
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            Welcome back, {profile?.name || user.email?.split('@')[0]}!
-          </h2>
-          <p className="text-gray-300 max-w-xl leading-relaxed text-sm">
-            Track your shipping status, submit support tickets, manage delivery addresses, and browse personalized furniture or appliance catalogs.
-          </p>
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div className="space-y-3">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold bg-primary/20 text-primary-foreground border border-primary/20 px-3 py-1 rounded-full uppercase tracking-wider">
+              <Sparkles className="h-3 w-3 animate-spin" /> Customer Dashboard
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+              Welcome back, {profile?.name || user.email?.split('@')[0]}!
+            </h2>
+            <p className="text-gray-300 max-w-xl leading-relaxed text-sm">
+              Track your shipping status, submit support tickets, manage delivery addresses, and browse personalized furniture or appliance catalogs.
+            </p>
+          </div>
+          
+          {/* Live Chat Entry Point */}
+          <div className="shrink-0">
+            <LiveChatWidget profile={profile} userId={user.id} />
+          </div>
         </div>
       </div>
 
