@@ -102,8 +102,10 @@ export default async function HomePage() {
       <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center justify-between mb-8 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-full text-primary"><TrendingUp className="h-5 w-5" /></div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">Trending Now</h2>
+            <div className="p-2.5 bg-primary/15 dark:bg-primary/25 rounded-xl text-primary flex items-center justify-center shadow-sm">
+              <TrendingUp className="h-5 w-5" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Trending Now</h2>
           </div>
           <Link href="/products" className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 group glass px-4 py-2 rounded-full">
             View All <ArrowRight className="h-3 w-3 transform group-hover:translate-x-0.5 transition-transform" />
@@ -134,8 +136,8 @@ export default async function HomePage() {
                 <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
                   <Sofa className="h-3 w-3" /> Comfort Living
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">Flagship Living Room</h2>
-                <p className="text-xs text-gray-500 mt-1">Premium teak wood sofas, executive chairs, study desks, and center tables.</p>
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Flagship Living Room</h2>
+                <p className="text-xs text-muted-foreground mt-1">Premium teak wood sofas, executive chairs, study desks, and center tables.</p>
               </div>
               <Link href="/products?category=sofas" className="text-xs font-semibold text-primary hover:underline glass px-4 py-2 rounded-full hidden sm:inline-flex">
                 Explore sofas &rarr;
@@ -160,10 +162,10 @@ export default async function HomePage() {
             <div className="flex items-center justify-between mb-8 pb-4">
               <div>
                 <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
-                  <Bed className="h-3 w-3" /> Restful Space
+                  <Bed className="h-3 w-3" /> Master Suites
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">Royal Bedrooms</h2>
-                <p className="text-xs text-gray-500 mt-1">Solid mahogany beds, spacious wardrobes, dressers, and custom dining sets.</p>
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Royal Bedrooms</h2>
+                <p className="text-xs text-muted-foreground mt-1">Solid wood king-size beds, modular wardrobes, and ergonomic dressers.</p>
               </div>
               <Link href="/products?category=beds" className="text-xs font-semibold text-primary hover:underline glass px-4 py-2 rounded-full hidden sm:inline-flex">
                 Explore beds &rarr;
@@ -188,10 +190,10 @@ export default async function HomePage() {
             <div className="flex items-center justify-between mb-8 pb-4">
               <div>
                 <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-widest text-primary mb-1">
-                  <Tv className="h-3 w-3" /> Modern Home
+                  <Tv className="h-3 w-3" /> Digital Living
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight gradient-text">Smart Electronics & Appliances</h2>
-                <p className="text-xs text-gray-500 mt-1">Advanced televisions, high-cooling air conditioners, climate systems, and washing machines.</p>
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Smart Electronics & Appliances</h2>
+                <p className="text-xs text-muted-foreground mt-1">High-definition 4K smart TVs, energy-efficient refrigerators, and audio setups.</p>
               </div>
               <Link href="/products?category=televisions" className="text-xs font-semibold text-primary hover:underline glass px-4 py-2 rounded-full hidden sm:inline-flex">
                 Explore appliances &rarr;
