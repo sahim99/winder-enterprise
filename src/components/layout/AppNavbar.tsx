@@ -171,30 +171,16 @@ export function AppNavbar() {
                 )}
               </Button>
 
-              {/* Profile Link & Sign Out (Moved to the right end) */}
+              {/* Profile Link (Direct Link to Customer Dashboard) */}
               {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger render={
-                    <button
-                      className="relative h-10 w-10 rounded-full bg-foreground text-background text-sm font-medium flex items-center justify-center cursor-pointer select-none hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                      aria-label="Account menu"
-                    >
-                      {userInitial}
-                    </button>
-                  } />
-                  <DropdownMenuContent align="end" className="w-48 font-medium">
-                    <DropdownMenuItem render={
-                      <Link href="/account" className="cursor-pointer w-full">Customer Dashboard</Link>
-                    } />
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem 
-                      onClick={handleSignOut} 
-                      className="text-red-600 cursor-pointer focus:text-red-700 focus:bg-red-50/50 dark:focus:bg-red-950/50"
-                    >
-                      Sign out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Link
+                  href="/account"
+                  className="relative h-10 w-10 rounded-full bg-foreground text-background text-sm font-medium flex items-center justify-center cursor-pointer select-none hover:opacity-90 hover:scale-105 active:scale-95 transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 shadow-sm"
+                  aria-label="Customer Dashboard"
+                  title="Customer Dashboard"
+                >
+                  {userInitial}
+                </Link>
               ) : (
                 <div className="hidden sm:flex items-center gap-3">
                   <Link 
