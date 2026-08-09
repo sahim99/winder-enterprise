@@ -143,6 +143,11 @@ export async function POST(req: NextRequest) {
           .eq('id', user.id)
       }
       
+      // If there's no message (e.g. just saving the phone number), return early
+      if (!message) {
+        return NextResponse.json({ success: true, phoneSaved: true })
+      }
+      
       const { data, error } = await supabaseAdmin
         .from('chat_messages' as any)
         .insert({

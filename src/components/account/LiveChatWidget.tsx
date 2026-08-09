@@ -81,10 +81,22 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId: stri
     }
   }
 
-  const submitPhone = (e: React.FormEvent) => {
+  const submitPhone = async (e: React.FormEvent) => {
     e.preventDefault()
     if (phone.length >= 10) {
       setShowPhoneModal(false)
+      
+      // Save phone to backend immediately
+      try {
+        await fetch('/api/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ senderType: 'customer', phone })
+        })
+      } catch (e) {
+        console.error('Failed to save phone', e)
+      }
+      
       fetchMessages()
     }
   }
