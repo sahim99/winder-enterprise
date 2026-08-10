@@ -153,8 +153,13 @@ export async function POST(req: NextRequest) {
       if (body.phone) {
         await supabaseAdmin
           .from('profiles')
-          .update({ phone: body.phone })
-          .eq('id', user.id)
+          .upsert({ 
+            id: user.id, 
+            phone: body.phone, 
+            name: user.user_metadata?.name || user.email?.split('@')[0] || 'Customer',
+            email: user.email,
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'id' })
       }
 
       // Phone-only save (no message)

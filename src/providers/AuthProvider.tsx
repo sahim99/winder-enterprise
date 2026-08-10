@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const currentUser = session?.user ?? null
         setUser(currentUser)
         if (currentUser) {
-          await fetchProfile(currentUser.id)
+          fetchProfile(currentUser.id).catch(console.error)
         }
       } catch (err) {
         console.error('Auth initialization error:', err)
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const currentUser = session?.user ?? null
       setUser(currentUser)
       if (currentUser) {
-        await fetchProfile(currentUser.id)
+        fetchProfile(currentUser.id).catch(console.error)
       } else {
         setProfile(null)
       }
