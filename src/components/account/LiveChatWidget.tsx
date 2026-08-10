@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { MessageCircle, X, Send, Phone, ArrowRight, Loader2 } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 
 type Message = {
@@ -14,6 +15,7 @@ type Message = {
 import type { Profile } from '@/types/supabase'
 
 export function LiveChatWidget({ profile, userId }: { profile: Profile | null, userId?: string }) {
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [showPhoneModal, setShowPhoneModal] = useState(false)
   const [phone, setPhone] = useState('')
