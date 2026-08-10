@@ -60,17 +60,19 @@ export default function AdminMessagesPage() {
   }
 
   useEffect(() => {
-    fetchThreads()
+    setTimeout(() => fetchThreads(), 0)
     const interval = setInterval(fetchThreads, 10000)
     return () => clearInterval(interval)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     if (activeUserId) {
-      fetchMessages(activeUserId)
+      setTimeout(() => fetchMessages(activeUserId), 0)
       const interval = setInterval(() => fetchMessages(activeUserId), 5000)
       return () => clearInterval(interval)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeUserId])
 
   useEffect(() => {
@@ -85,7 +87,8 @@ export default function AdminMessagesPage() {
       id: Math.random().toString(),
       message: input.trim(),
       sender_type: 'admin',
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      is_read: false
     }
 
     setMessages(prev => [...prev, tempMsg])
@@ -124,7 +127,7 @@ export default function AdminMessagesPage() {
     <div className="flex flex-col md:flex-row h-[calc(100vh-6rem)] gap-4">
       
       {/* Left Pane: Thread List */}
-      <div className="w-full md:w-1/3 lg:w-1/4 bg-card border border-border/50 rounded-2xl flex flex-col overflow-hidden shadow-xs">
+      <div className="w-full md:w-1/3 lg:w-1/4 glass-card flex flex-col overflow-hidden shadow-xs">
         <div className="p-4 border-b border-border/40 shrink-0">
           <h2 className="text-lg font-black text-foreground mb-3 flex items-center gap-2">
             <MessageCircle className="h-5 w-5 text-primary" /> Active Chats
@@ -177,7 +180,7 @@ export default function AdminMessagesPage() {
       </div>
 
       {/* Right Pane: Chat Thread */}
-      <div className="flex-1 min-w-0 bg-card border border-border/50 rounded-2xl flex flex-col overflow-hidden shadow-xs relative">
+      <div className="flex-1 min-w-0 glass-card flex flex-col overflow-hidden shadow-xs relative">
         {!activeUserId ? (
           <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
             <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
@@ -235,7 +238,7 @@ export default function AdminMessagesPage() {
             </div>
 
             {/* Input Form */}
-            <div className="p-4 bg-card border-t border-border/40 shrink-0">
+            <div className="p-4 bg-transparent border-t border-white/10 dark:border-white/5 shrink-0">
               <div className="flex gap-2 mb-3">
                 <button onClick={() => setInput("Hi! How can we help you today?")} className="text-xs bg-muted/50 border border-border/50 px-3 py-1.5 rounded-full hover:bg-muted font-medium transition-colors">
                   Greeting

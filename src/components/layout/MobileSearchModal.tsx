@@ -36,20 +36,24 @@ export function MobileSearchModal({ open, onClose }: MobileSearchModalProps) {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 100)
     } else {
-      setQuery('')
-      setSuggestions([])
+      setTimeout(() => {
+        setQuery('')
+        setSuggestions([])
+      }, 0)
     }
   }, [open])
 
   useEffect(() => {
     if (!debouncedQuery.trim()) {
-      setSuggestions([])
-      setIsSearching(false)
+      setTimeout(() => {
+        setSuggestions([])
+        setIsSearching(false)
+      }, 0)
       return
     }
 
     let active = true
-    setIsSearching(true)
+    setTimeout(() => setIsSearching(true), 0)
     const supabase = createClient()
 
     supabase

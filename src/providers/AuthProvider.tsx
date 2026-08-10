@@ -3,10 +3,11 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
+import type { Profile } from '@/types/supabase'
 
 type AuthContextType = {
   user: User | null
-  profile: any | null
+  profile: Profile | null
   loading: boolean
   signOut: () => Promise<void>
 }
@@ -20,7 +21,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [profile, setProfile] = useState<any | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

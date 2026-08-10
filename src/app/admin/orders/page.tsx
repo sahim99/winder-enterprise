@@ -40,12 +40,12 @@ export default async function AdminOrdersPage() {
 
       <div className="space-y-4">
         {orders.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground bg-card rounded-2xl border border-border/50">
+          <div className="text-center py-20 text-muted-foreground glass-card">
             <p>No orders yet.</p>
           </div>
         ) : (
           orders.map((order: any) => (
-            <div key={order.id} className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-xs">
+            <div key={order.id} className="glass-card overflow-hidden shadow-xs">
               <div className="flex flex-col md:flex-row md:items-start justify-between p-5 sm:p-6 border-b border-border/40 gap-4">
                 <div>
                   <p className="font-mono text-xs text-muted-foreground mb-1">#{order.id.slice(0, 8).toUpperCase()}</p>

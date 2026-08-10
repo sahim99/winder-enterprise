@@ -15,7 +15,7 @@ export default async function NewProductPage() {
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">Add New Product</h1>
         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Create and publish a new item into the Winder catalog.</p>
       </div>
-      <div className="bg-card rounded-2xl border border-border/50 p-6 sm:p-8 shadow-xs">
+      <div className="glass-card p-6 sm:p-8 shadow-xs">
         <ProductForm categories={categories} mode="new" />
       </div>
     </div>

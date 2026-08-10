@@ -45,9 +45,9 @@ export async function GET(req: NextRequest) {
         if (pError) throw pError
 
         const threads = new Map()
-        messages?.forEach((msg: any) => {
+        messages?.forEach((msg: { user_id: string; message: string; created_at: string; is_read: boolean; sender_type: string }) => {
           if (!threads.has(msg.user_id)) {
-            const profile = profiles?.find((p: any) => p.id === msg.user_id)
+            const profile = profiles?.find((p: { id: string; name: string; phone: string | null }) => p.id === msg.user_id)
             threads.set(msg.user_id, {
               userId: msg.user_id,
               customerName: profile?.name || 'Unknown',
@@ -92,9 +92,9 @@ export async function GET(req: NextRequest) {
       if (error) throw error
       return NextResponse.json({ messages: data })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Messages GET error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 })
   }
 }
 
@@ -179,9 +179,9 @@ export async function POST(req: NextRequest) {
       }
       return NextResponse.json({ message: data })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Messages POST error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 })
   }
 }
 
@@ -205,8 +205,8 @@ export async function PATCH(req: NextRequest) {
 
     if (error) throw error
     return NextResponse.json({ success: true })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Messages PATCH error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 })
   }
 }

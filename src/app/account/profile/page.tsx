@@ -1,45 +1,31 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, startTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { useAuth } from '@/providers/AuthProvider'
 
 export default function ProfilePage() {
+  const { user, profile, loading } = useAuth()
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [isDeveloper, setIsDeveloper] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) return
-      setEmail(user.email || '')
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('name, phone, role')
-        .eq('id', user.id)
-        .single()
-
-      if (profile) {
+    if (profile) {
+      startTransition(() => {
         setName(profile.name || '')
         setPhone(profile.phone || '')
-        setIsDeveloper(profile.role === 'developer')
-      }
-      setLoaded(true)
-    })
-  }, [])
+      })
+    }
+  }, [profile])
 
   async function handleSave() {
     setSaving(true)
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
     const { error } = await supabase
@@ -55,9 +41,16 @@ export default function ProfilePage() {
     setSaving(false)
   }
 
-  if (!loaded) {
+  if (loading) {
     return <p className="text-muted-foreground py-8">Loading profile…</p>
   }
+
+  if (!user) {
+    return <p className="text-muted-foreground py-8">Please login to view your profile.</p>
+  }
+
+  const isDeveloper = profile?.role === 'developer'
+  const email = user.email || ''
 
   return (
     <div className="space-y-6">

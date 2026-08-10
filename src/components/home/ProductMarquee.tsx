@@ -9,11 +9,6 @@ export function ProductMarquee({ products }: { products: Product[] }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isPaused, setIsPaused] = useState(false)
 
-  if (!products || products.length === 0) return null
-
-  // Duplicate the array so there's plenty of scroll space
-  const duplicatedProducts = [...products, ...products, ...products]
-
   const scroll = useCallback((direction: 'left' | 'right') => {
     if (!scrollRef.current) return
     const cardWidth = window.innerWidth < 640 ? 182 : 240 // card width + gap
@@ -42,6 +37,11 @@ export function ProductMarquee({ products }: { products: Product[] }) {
 
     return () => clearInterval(timer)
   }, [isPaused, scroll])
+
+  if (!products || products.length === 0) return null
+
+  // Duplicate the array so there's plenty of scroll space
+  const duplicatedProducts = [...products, ...products, ...products]
 
   return (
     <section 

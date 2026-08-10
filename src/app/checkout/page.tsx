@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -80,7 +81,7 @@ export default function CheckoutPage() {
     return (
       <div className="mx-auto max-w-7xl px-4 py-20 text-center">
         <p className="text-gray-500 mb-4">Your cart is empty.</p>
-        <a href="/products" className={buttonVariants()}>Shop now</a>
+        <Link href="/products" className={buttonVariants()}>Shop now</Link>
       </div>
     )
   }

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import { ProductCard } from '@/components/products/ProductCard'
@@ -94,9 +95,9 @@ export default async function ProductsPage(props: PageProps) {
                     : 'We are expanding our product catalog. Check back shortly!'}
                 </p>
                 <div className="pt-2">
-                  <a href="/products" className="text-xs font-semibold bg-primary text-primary-foreground px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity">
+                  <Link href="/products" className="text-xs font-semibold bg-primary text-primary-foreground px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity">
                     Browse All Products
-                  </a>
+                  </Link>
                 </div>
               </div>
             ) : (

@@ -17,12 +17,16 @@ type CartStore = {
   clearCart: () => void
   totalItems: () => number
   totalPrice: () => number
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
 }
 
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
+      isOpen: false,
+      setIsOpen: (open) => set({ isOpen: open }),
 
       addItem: (product, quantity = 1) => {
         set(state => {

@@ -34,8 +34,8 @@ export function LiveChatsWidget() {
   }, [])
 
   return (
-    <Card className="border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden flex flex-col h-full">
-      <CardHeader className="px-4 py-3 border-b border-border/40 flex flex-row items-center justify-between">
+    <Card className="glass-card overflow-hidden h-[400px] flex flex-col">
+      <CardHeader className="px-4 py-3 border-b border-white/10 dark:border-white/5 flex flex-row items-center justify-between shrink-0">
         <div className="flex items-center gap-1.5">
           <MessageSquare className="h-3.5 w-3.5 text-blue-500" />
           <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Live Chats</CardTitle>

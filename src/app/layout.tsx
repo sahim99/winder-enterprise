@@ -3,12 +3,10 @@ import type { Metadata } from 'next'
 import { Outfit } from 'next/font/google'
 import './globals.css'
 import { NavbarWrapper } from '@/components/layout/NavbarWrapper'
-import { Footer } from '@/components/layout/Footer'
 import { Toaster } from '@/components/ui/sonner'
 import { PromoBannerWrapper } from '@/components/layout/PromoBannerWrapper'
 import { ThemeProvider } from '@/components/theme-provider'
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
-import { GlobalChatWrapper } from '@/components/account/GlobalChatWrapper'
 import { AuthProvider } from '@/providers/AuthProvider'
 
 const outfit = Outfit({ 
@@ -35,8 +33,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </Suspense>
           <main className="min-h-screen pb-16 md:pb-0">{children}</main>
           <MobileBottomNav />
-          <Footer />
-          <GlobalChatWrapper />
           <Toaster />
         </AuthProvider>
         </ThemeProvider>

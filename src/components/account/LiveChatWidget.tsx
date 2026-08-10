@@ -11,8 +11,9 @@ type Message = {
   created_at: string
   is_read?: boolean
 }
+import type { Profile } from '@/types/supabase'
 
-export function LiveChatWidget({ profile, userId }: { profile: any, userId?: string }) {
+export function LiveChatWidget({ profile, userId }: { profile: Profile | null, userId?: string }) {
   const [isOpen, setIsOpen] = useState(false)
   const [showPhoneModal, setShowPhoneModal] = useState(false)
   const [phone, setPhone] = useState('')
@@ -47,27 +48,28 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId?: str
 
   useEffect(() => {
     if (profile?.phone) {
-      setPhone(profile.phone)
+      setTimeout(() => setPhone(profile.phone), 0)
     } else {
       const stored = typeof window !== 'undefined' ? localStorage.getItem('winder_customer_phone') : null
-      if (stored) setPhone(stored)
+      if (stored) setTimeout(() => setPhone(stored), 0)
     }
   }, [profile])
 
   // Open phone modal if they click chat but haven't provided phone
   useEffect(() => {
     if (isOpen && !phone) {
-      setShowPhoneModal(true)
+      setTimeout(() => setShowPhoneModal(true), 0)
     }
   }, [isOpen, phone])
 
   // Poll for messages whether open or closed so we can show the unread badge
   useEffect(() => {
     if (phone && userId) {
-      fetchMessages(isOpen)
+      setTimeout(() => fetchMessages(isOpen), 0)
       const interval = setInterval(() => fetchMessages(isOpen), 5000)
       return () => clearInterval(interval)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phone, isOpen, userId])
 
   useEffect(() => {
@@ -75,6 +77,12 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId?: str
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
   }, [messages, isOpen])
+
+  useEffect(() => {
+    const handleOpenChat = () => setIsOpen(true)
+    window.addEventListener('open-winder-chat', handleOpenChat)
+    return () => window.removeEventListener('open-winder-chat', handleOpenChat)
+  }, [])
 
   const handleSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault()
@@ -84,7 +92,8 @@ export function LiveChatWidget({ profile, userId }: { profile: any, userId?: str
       id: Math.random().toString(),
       message: input.trim(),
       sender_type: 'customer',
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      is_read: false
     }
 
     setMessages(prev => [...prev, tempMsg])

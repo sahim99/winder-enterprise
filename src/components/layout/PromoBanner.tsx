@@ -11,7 +11,7 @@ export function PromoBanner() {
     if (typeof window !== 'undefined') {
       const dismissed = sessionStorage.getItem('winder_promo_dismissed')
       if (dismissed) {
-        setVisible(false)
+        setTimeout(() => setVisible(false), 0)
       }
     }
   }, [])

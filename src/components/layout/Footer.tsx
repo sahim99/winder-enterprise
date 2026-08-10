@@ -5,8 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Lock, Mail, Phone, MapPin, ArrowRight, ShieldCheck, Truck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useState } from 'react'
 
 const shopLinks = [
   { label: 'Sofas & Seating', slug: 'sofas' },
@@ -28,20 +27,6 @@ const customerLinks = [
 
 export function Footer() {
   const pathname = usePathname()
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setIsLoggedIn(!!user)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(!!session)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
 
   // Do not show on admin routes or auth routes where it might be distracting
   if (pathname.startsWith('/admin') || pathname.startsWith('/login') || pathname.startsWith('/register')) return null

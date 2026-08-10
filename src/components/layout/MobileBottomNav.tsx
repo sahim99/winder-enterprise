@@ -5,29 +5,20 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, Compass, Sparkles, Heart, User, ShoppingBag } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/providers/AuthProvider'
 import { useCartStore } from '@/store/cart'
 
 export function MobileBottomNav() {
   const pathname = usePathname()
   const [visible, setVisible] = useState(true)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const { user } = useAuth()
+  const isLoggedIn = !!user
   const [mounted, setMounted] = useState(false)
   const hideTimerRef = useRef<NodeJS.Timeout | null>(null)
   const totalItems = useCartStore(s => s.totalItems())
 
   useEffect(() => {
-    setMounted(true)
-    const supabase = createClient()
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setIsLoggedIn(!!user)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setIsLoggedIn(!!session?.user)
-    })
-
-    return () => subscription.unsubscribe()
+    setTimeout(() => setMounted(true), 0)
   }, [])
 
   useEffect(() => {
@@ -112,6 +103,21 @@ export function MobileBottomNav() {
             </Link>
           )
         })}
+
+        <button
+          onClick={() => useCartStore.getState().setIsOpen(true)}
+          className="flex flex-col items-center justify-center min-w-[56px] py-1 px-2 rounded-full transition-all duration-200 active:scale-90 text-muted-foreground hover:text-foreground hover:bg-muted/50 relative"
+        >
+          <div className="relative">
+            <ShoppingBag className="h-5 w-5 shrink-0" />
+            {mounted && totalItems > 0 && (
+              <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] text-primary-foreground font-bold shadow-sm">
+                {totalItems}
+              </span>
+            )}
+          </div>
+          <span className="text-[10px] font-medium tracking-tight mt-0.5">Cart</span>
+        </button>
       </nav>
     </div>
   )

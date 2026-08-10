@@ -179,7 +179,7 @@ export default async function AdminDashboard() {
     <div className="space-y-4 max-w-7xl mx-auto">
       
       {/* Compact Top Bar */}
-      <div className="flex items-center justify-between gap-3 bg-card px-4 py-3 rounded-xl border border-border/50 shadow-xs">
+      <div className="flex items-center justify-between gap-3 glass-card px-4 py-3 shadow-xs">
         <div className="flex items-center gap-2">
           <h1 className="text-base sm:text-lg font-black tracking-tight text-foreground">
             Overview
@@ -259,12 +259,12 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
         
         {/* Left: 7-Day Revenue & Volume Trajectory */}
-        <Card className="lg:col-span-7 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs p-4">
+        <Card className="lg:col-span-7 glass-card p-4">
           <RevenueBarChart data={data.last7Days} totalPeriodRevenue={data.total7DayRevenue} />
         </Card>
 
         {/* Right: Fulfillment Pipeline Funnel */}
-        <Card className="lg:col-span-5 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs p-4">
+        <Card className="lg:col-span-5 glass-card p-4">
           <OrderFunnelBars pipeline={data.pipeline} totalOrders={data.totalOrders} orders={data.allOrders} />
         </Card>
       </div>
@@ -273,12 +273,12 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
         
         {/* Category Stock Health */}
-        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs p-4">
+        <Card className="lg:col-span-6 glass-card p-4">
           <StockHealthBars categories={data.categoryStockHealth} totalWarehouseUnits={data.totalWarehouseUnits} />
         </Card>
 
         {/* Category Revenue Distribution */}
-        <Card className="lg:col-span-6 border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs p-4">
+        <Card className="lg:col-span-6 glass-card p-4">
           <CategoryRevenueBars categories={data.categoryRevenueShare} totalRevenue={data.totalRevenue} />
         </Card>
       </div>
@@ -287,8 +287,8 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
         
         {/* Critical Low Stock Action Board */}
-        <Card className="border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden">
-          <CardHeader className="px-4 py-3 border-b border-border/40 flex flex-row items-center justify-between">
+        <Card className="glass-card overflow-hidden">
+          <CardHeader className="px-4 py-3 border-b border-white/10 dark:border-white/5 flex flex-row items-center justify-between">
             <div className="flex items-center gap-1.5">
               <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
               <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Restock</CardTitle>
@@ -329,9 +329,9 @@ export default async function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* Live Customer Activity */}
-        <Card className="border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs overflow-hidden">
-          <CardHeader className="px-4 py-3 border-b border-border/40 flex flex-row items-center justify-between">
+        {/* Recent Pending Orders Action Board */}
+        <Card className="glass-card overflow-hidden">
+          <CardHeader className="px-4 py-3 border-b border-white/10 dark:border-white/5 flex flex-row items-center justify-between">
             <div className="flex items-center gap-1.5">
               <ShoppingBag className="h-3.5 w-3.5 text-primary" />
               <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">Orders</CardTitle>

@@ -28,7 +28,7 @@ export default async function AdminTicketsPage() {
 
       <div className="space-y-4">
         {tickets.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground bg-card rounded-2xl border border-border/50">
+          <div className="text-center py-20 text-muted-foreground glass-card">
             <MessageSquare className="h-10 w-10 text-muted-foreground/40 mx-auto mb-3" />
             <p>No support tickets submitted yet.</p>
           </div>
@@ -43,7 +43,7 @@ export default async function AdminTicketsPage() {
               : null
 
             return (
-              <div key={ticket.id} className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-xs hover:shadow-md transition-shadow">
+              <div key={ticket.id} className="glass-card overflow-hidden shadow-xs hover:shadow-md transition-shadow">
                 <div className="flex flex-col md:flex-row md:items-start justify-between p-5 sm:p-6 gap-6 border-b border-border/40">
                   <div className="space-y-3 flex-1">
                     <div className="flex items-center gap-3">

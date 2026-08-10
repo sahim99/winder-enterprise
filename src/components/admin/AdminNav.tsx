@@ -63,9 +63,15 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row bg-muted/20">
+    <div className="flex min-h-screen flex-col md:flex-row bg-background relative">
+      {/* Background decoration */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/5 blur-3xl opacity-50" />
+        <div className="absolute top-[60%] -right-[10%] w-[40%] h-[40%] rounded-full bg-blue-500/5 blur-3xl opacity-50" />
+      </div>
+
       {/* Mobile Top Header */}
-      <header className="md:hidden sticky top-0 z-40 flex h-14 items-center justify-between px-4 bg-card border-b border-border/50 shadow-xs">
+      <header className="md:hidden sticky top-0 z-40 flex h-14 items-center justify-between px-4 bg-background/60 backdrop-blur-2xl border-b border-border/40 shadow-sm">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -96,7 +102,7 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
       {/* Sidebar: Desktop permanent sticky & Mobile slide-out drawer */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-56 lg:w-60 bg-card border-r border-border/50 flex flex-col shadow-lg transition-transform duration-300 ease-in-out md:sticky md:top-0 md:h-screen md:translate-x-0 md:shadow-none shrink-0",
+          "fixed inset-y-0 left-0 z-50 w-56 lg:w-60 bg-background/60 backdrop-blur-2xl border-r border-border/40 flex flex-col shadow-2xl transition-transform duration-300 ease-in-out md:sticky md:top-0 md:h-screen md:translate-x-0 md:shadow-none shrink-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -133,9 +139,9 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
                 onClick={() => setMobileOpen(false)}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all active:scale-[0.98] relative",
-                  isActive
-                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  isActive 
+                    ? "bg-primary text-primary-foreground font-semibold shadow-md shadow-primary/20" 
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground font-medium"
                 )}
               >
                 <Icon className="h-4 w-4 shrink-0" />
@@ -184,8 +190,10 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-x-hidden p-4 sm:p-6 md:p-8">
-        {children}
+      <main className="flex-1 w-full min-w-0 flex flex-col min-h-screen overflow-x-hidden relative z-10">
+        <div className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-6">
+          {children}
+        </div>
       </main>
     </div>
   )

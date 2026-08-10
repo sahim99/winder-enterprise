@@ -24,7 +24,7 @@ export function RecentlyViewed() {
       try {
         const parsed = JSON.parse(cachedRaw)
         if (Array.isArray(parsed)) {
-          setItems(parsed)
+          setTimeout(() => setItems(parsed), 0)
         }
       } catch {}
     }

@@ -48,7 +48,7 @@ export default async function AdminBillingPage() {
       {/* Metrics Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {stats.map(stat => (
-          <Card key={stat.label} className="border border-border/50 bg-card rounded-2xl shadow-xs">
+          <Card key={stat.label} className="glass-card shadow-xs">
             <CardHeader className="flex flex-row items-center justify-between p-4 sm:p-5 pb-1 sm:pb-2">
               <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground truncate">{stat.label}</CardTitle>
               <div className={`p-2 rounded-xl ${stat.bg} shrink-0`}>
@@ -65,7 +65,7 @@ export default async function AdminBillingPage() {
       </div>
 
       {/* Invoice List */}
-      <div className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-xs">
+      <div className="glass-card overflow-hidden shadow-xs">
         <div className="px-6 py-4 border-b border-border/40 bg-muted/20">
           <h2 className="font-bold text-foreground text-sm uppercase tracking-wider">All Transactions</h2>
         </div>

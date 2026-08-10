@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { ShoppingCart, Menu, X, Search, Sparkles, Loader2, ArrowRight } from 'lucide-react'
+import { ShoppingCart, Menu, X, Search, Sparkles, Loader2, ArrowRight, MessageCircle } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { useCartStore } from '@/store/cart'
@@ -21,8 +21,11 @@ import { useWishlistStore } from '@/store/wishlist'
 import { useAuth } from '@/providers/AuthProvider'
 
 export function AppNavbar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
-  const [cartOpen, setCartOpen] = useState(false)
+  const totalItems = useCartStore((s) => s.totalItems())
+  const cartOpen = useCartStore((s) => s.isOpen)
+  const setCartOpen = useCartStore((s) => s.setIsOpen)
   const { user, profile, loading: authLoading } = useAuth()
   
   const userInitial = (profile?.name || user?.user_metadata?.name || user?.email || '').charAt(0).toUpperCase()
@@ -56,20 +59,22 @@ export function AppNavbar() {
 
   // Keep search input synced if URL changes externally
   useEffect(() => {
-    setSearchQuery(searchParams.get('search') || '')
+    setTimeout(() => setSearchQuery(searchParams.get('search') || ''), 0)
   }, [searchParams])
 
   // Fetch live suggestions as user types - selecting only needed columns
   useEffect(() => {
     if (!debouncedSearch.trim()) {
-      setSuggestions([])
-      setShowSuggestions(false)
-      setIsSearching(false)
+      setTimeout(() => {
+        setSuggestions([])
+        setShowSuggestions(false)
+        setIsSearching(false)
+      }, 0)
       return
     }
 
     let active = true
-    setIsSearching(true)
+    setTimeout(() => setIsSearching(true), 0)
     const supabase = createClient()
     
     async function fetchSuggestions() {
@@ -123,7 +128,7 @@ export function AppNavbar() {
   }, [user])
 
   useEffect(() => {
-    setMounted(true)
+    setTimeout(() => setMounted(true), 0)
   }, [])
 
   function handleSearch(e: React.FormEvent) {
@@ -149,9 +154,21 @@ export function AppNavbar() {
       )}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between gap-4 md:gap-8">
-            <Link href="/" className="flex-shrink-0 text-xl md:text-2xl font-bold tracking-tighter text-foreground hover:text-primary transition-colors flex items-center gap-1.5">
-              Winder <span className="font-light text-muted-foreground hidden sm:inline">Enterprise</span>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/" className="flex-shrink-0 text-xl md:text-2xl font-bold tracking-tighter text-foreground hover:text-primary transition-colors flex items-center gap-1.5">
+                Winder <span className="font-light text-muted-foreground hidden sm:inline">Enterprise</span>
+              </Link>
+              {/* Mobile Search Trigger Button (Moved next to logo) */}
+              <Button
+                variant="outline"
+                size="icon"
+                className="md:hidden relative rounded-full h-9 w-9 border-border/60 hover:bg-muted/50 transition-all active:scale-95 cursor-pointer ml-1"
+                onClick={() => setMobileSearchOpen(true)}
+                aria-label="Open mobile search"
+              >
+                <Search className="h-4 w-4 text-foreground" />
+              </Button>
+            </div>
 
             {/* Desktop Navigation Links */}
             <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-muted-foreground flex-shrink-0">
@@ -245,24 +262,24 @@ export function AppNavbar() {
             </div>
 
             <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
-              {/* Mobile Search Trigger Button */}
+              <ThemeToggle />
+              
+              {/* Mobile Chat Button */}
               <Button
                 variant="outline"
                 size="icon"
                 className="md:hidden relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95 cursor-pointer"
-                onClick={() => setMobileSearchOpen(true)}
-                aria-label="Open mobile search"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-winder-chat'))}
+                aria-label="Open chat"
               >
-                <Search className="h-4 w-4 text-foreground" />
+                <MessageCircle className="h-5 w-5 text-foreground" />
               </Button>
-
-              <ThemeToggle />
               
               {/* Cart Button */}
               <Button
                 variant="outline"
                 size="icon"
-                className="relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95 cursor-pointer"
+                className="hidden md:flex relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95 cursor-pointer"
                 onClick={() => setCartOpen(true)}
                 aria-label="Open cart"
               >

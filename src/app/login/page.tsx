@@ -47,7 +47,7 @@ function LoginFormContent() {
     // Call mark-developer after login
     await fetch('/api/auth/mark-developer', { method: 'POST' })
     
-    window.location.href = redirect
+    window.location.assign(redirect)
   }
 
   async function handleGoogleLogin() {

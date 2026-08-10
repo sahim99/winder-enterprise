@@ -5,6 +5,8 @@ import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ProductCard } from '@/components/products/ProductCard'
 import { createClient } from '@/lib/supabase/server'
+import { Footer } from '@/components/layout/Footer'
+import { GlobalChatWrapper } from '@/components/account/GlobalChatWrapper'
 import { HomeHero } from '@/components/home/HomeHero'
 import { ProductMarquee } from '@/components/home/ProductMarquee'
 
@@ -77,19 +79,19 @@ export default async function HomePage() {
       {/* Trust bar */}
       <section className="py-8 bg-transparent">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 glass-card p-6 md:px-10">
-            <span className="text-xs uppercase tracking-widest font-bold text-muted-foreground">Guaranteed Assured shopping</span>
-            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 glass-card p-4 md:p-6 md:px-10">
+            <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold text-muted-foreground whitespace-nowrap">Guaranteed Assured shopping</span>
+            <div className="flex items-center justify-start md:justify-center gap-3 md:gap-10 w-full overflow-x-auto pb-2 md:pb-0 scrollbar-hide snap-x flex-nowrap">
               {[
                 { label: "Cash on delivery", desc: "Pay at your doorstep" },
                 { label: "Quality guaranteed", desc: "100% inspected timber" },
                 { label: "West Bengal shipping", desc: "Free assembly in Jangipur" }
               ].map(item => (
-                <div key={item.label} className="flex items-center gap-3 text-left glass px-4 py-2 rounded-full border border-border/60">
-                  <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                <div key={item.label} className="flex items-center gap-3 text-left glass px-4 py-2 rounded-full border border-border/60 flex-shrink-0 snap-start">
+                  <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5 text-primary flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-foreground text-sm leading-tight">{item.label}</p>
-                    <p className="text-[10px] text-muted-foreground font-medium leading-tight">{item.desc}</p>
+                    <p className="font-semibold text-foreground text-[11px] md:text-sm leading-tight">{item.label}</p>
+                    <p className="text-[9px] md:text-[10px] text-muted-foreground font-medium leading-tight">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -247,6 +249,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <Footer />
+      <GlobalChatWrapper />
     </div>
   )
 }

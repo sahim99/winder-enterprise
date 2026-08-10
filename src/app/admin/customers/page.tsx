@@ -45,7 +45,7 @@ export default async function AdminCustomersPage() {
         <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Manage registered customer accounts and review lifetime purchasing behavior.</p>
       </div>
 
-      <div className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-xs">
+      <div className="glass-card overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-muted/40 border-b border-border/40">

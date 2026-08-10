@@ -24,7 +24,7 @@ export function KpiCard({
   colorBg = 'bg-primary/10 text-primary',
 }: KpiCardProps) {
   return (
-    <Card className="border border-border/50 bg-card rounded-xl sm:rounded-2xl shadow-xs hover:border-primary/30 transition-all">
+    <Card className="glass-card hover:border-primary/30 transition-all">
       <CardContent className="p-3 sm:p-3.5">
         <div className="flex items-center justify-between gap-1.5">
           <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider truncate">
