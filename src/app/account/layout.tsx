@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { signOut } from '@/app/actions/auth'
+import { useAuth } from '@/providers/AuthProvider'
 
 const accountLinks = [
   { label: 'Overview', href: '/account' },
@@ -18,6 +18,7 @@ const accountLinks = [
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const { signOut } = useAuth()
 
   async function handleSignOut() {
     await signOut()

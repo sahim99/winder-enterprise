@@ -18,13 +18,14 @@ import type { Product } from '@/types/supabase'
 
 import { MobileSearchModal } from '@/components/layout/MobileSearchModal'
 import { useWishlistStore } from '@/store/wishlist'
+import { useAuth } from '@/providers/AuthProvider'
 
 export function AppNavbar() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
-  const [user, setUser] = useState<SupabaseUser | null>(null)
-  const [userInitial, setUserInitial] = useState('')
-  const [authLoading, setAuthLoading] = useState(true)
+  const { user, profile, loading: authLoading } = useAuth()
+  
+  const userInitial = (profile?.name || user?.user_metadata?.name || user?.email || '').charAt(0).toUpperCase()
   
   const searchParams = useSearchParams()
   const pathname = usePathname()
@@ -116,33 +117,10 @@ export function AppNavbar() {
   }, [])
 
   useEffect(() => {
-    const supabase = createClient()
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      const u = session?.user ?? null
-      setUser(u)
-      if (u) {
-        const name = u.user_metadata?.name || u.email || ''
-        setUserInitial(name.charAt(0).toUpperCase())
-        useWishlistStore.getState().init().catch(console.error)
-      }
-    }).catch(console.error).finally(() => {
-      setAuthLoading(false)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      const u = session?.user ?? null
-      setUser(u)
-      if (u) {
-        const name = u.user_metadata?.name || u.email || ''
-        setUserInitial(name.charAt(0).toUpperCase())
-        useWishlistStore.getState().init().catch(console.error)
-      }
-      setAuthLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
+    if (user) {
+      useWishlistStore.getState().init().catch(console.error)
+    }
+  }, [user])
 
   useEffect(() => {
     setMounted(true)

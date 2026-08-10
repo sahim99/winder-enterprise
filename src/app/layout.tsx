@@ -9,6 +9,7 @@ import { PromoBannerWrapper } from '@/components/layout/PromoBannerWrapper'
 import { ThemeProvider } from '@/components/theme-provider'
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { GlobalChatWrapper } from '@/components/account/GlobalChatWrapper'
+import { AuthProvider } from '@/providers/AuthProvider'
 
 const outfit = Outfit({ 
   subsets: ['latin'],
@@ -25,17 +26,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={`${outfit.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-        <Suspense fallback={null}>
-          <PromoBannerWrapper />
-        </Suspense>
-        <Suspense fallback={null}>
-          <NavbarWrapper />
-        </Suspense>
-        <main className="min-h-screen pb-16 md:pb-0">{children}</main>
-        <MobileBottomNav />
-        <Footer />
-        <GlobalChatWrapper />
-        <Toaster />
+        <AuthProvider>
+          <Suspense fallback={null}>
+            <PromoBannerWrapper />
+          </Suspense>
+          <Suspense fallback={null}>
+            <NavbarWrapper />
+          </Suspense>
+          <main className="min-h-screen pb-16 md:pb-0">{children}</main>
+          <MobileBottomNav />
+          <Footer />
+          <GlobalChatWrapper />
+          <Toaster />
+        </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
