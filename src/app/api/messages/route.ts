@@ -156,9 +156,7 @@ export async function POST(req: NextRequest) {
           .upsert({ 
             id: user.id, 
             phone: body.phone, 
-            name: user.user_metadata?.name || user.email?.split('@')[0] || 'Customer',
-            email: user.email,
-            updated_at: new Date().toISOString()
+            name: user.user_metadata?.name || user.email?.split('@')[0] || 'Customer'
           }, { onConflict: 'id' })
       }
 
