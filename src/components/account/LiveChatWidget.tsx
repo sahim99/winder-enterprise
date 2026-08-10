@@ -142,11 +142,12 @@ export function LiveChatWidget({ profile, userId }: { profile: Profile | null, u
   return (
     <>
       {/* Floating Chat Button */}
-      {pathname === '/' && (
+      {userId && pathname === '/' && (
         <div className="hidden md:block fixed bottom-8 right-8 z-50">
           <Button 
             onClick={handleOpenChat}
             className="relative h-14 w-14 rounded-full bg-primary/80 hover:bg-primary shadow-2xl backdrop-blur-md border border-white/20 text-primary-foreground flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+            size="icon"
           >
             <MessageCircle className="h-6 w-6" />
           </Button>

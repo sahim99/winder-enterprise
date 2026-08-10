@@ -264,15 +264,17 @@ export function AppNavbar() {
               <ThemeToggle />
               
               {/* Mobile Chat Button */}
-              <Button
-                variant="outline"
-                size="icon"
-                className="md:hidden relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95 cursor-pointer"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-winder-chat'))}
-                aria-label="Open chat"
-              >
-                <MessageCircle className="h-5 w-5 text-foreground" />
-              </Button>
+              {user && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="md:hidden relative rounded-full h-10 w-10 border-border/60 hover:bg-muted/50 transition-all active:scale-95 cursor-pointer"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-winder-chat'))}
+                  aria-label="Open chat"
+                >
+                  <MessageCircle className="h-5 w-5 text-foreground" />
+                </Button>
+              )}
               
               {/* Cart Button */}
               <Button
