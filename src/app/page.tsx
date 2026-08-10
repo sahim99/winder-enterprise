@@ -77,31 +77,48 @@ export default async function HomePage() {
       <ProductMarquee products={newArrivals} />
 
       {/* Trust bar */}
-      <section className="py-8 bg-transparent">
+      <section className="py-4 sm:py-6 bg-transparent">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 glass-card p-4 md:p-6 md:px-10">
-            <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold text-muted-foreground whitespace-nowrap">Guaranteed Assured shopping</span>
-            <div className="flex items-center justify-start md:justify-center gap-3 md:gap-10 w-full overflow-x-auto pb-2 md:pb-0 scrollbar-hide snap-x flex-nowrap">
-              {[
-                { label: "Cash on delivery", desc: "Pay at your doorstep" },
-                { label: "Quality guaranteed", desc: "100% inspected timber" },
-                { label: "West Bengal shipping", desc: "Free assembly in Jangipur" }
-              ].map(item => (
-                <div key={item.label} className="flex items-center gap-3 text-left glass px-4 py-2 rounded-full border border-border/60 flex-shrink-0 snap-start">
-                  <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5 text-primary flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-foreground text-[11px] md:text-sm leading-tight">{item.label}</p>
-                    <p className="text-[9px] md:text-[10px] text-muted-foreground font-medium leading-tight">{item.desc}</p>
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes marquee-trust {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+            .animate-marquee-trust {
+              animation: marquee-trust 20s linear infinite;
+            }
+            .animate-marquee-trust:hover {
+              animation-play-state: paused;
+            }
+          `}} />
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 glass-card p-4 md:p-6 md:px-10 overflow-hidden">
+            <span className="text-[10px] md:text-xs uppercase tracking-widest font-bold text-muted-foreground whitespace-nowrap shrink-0">Guaranteed Assured shopping</span>
+            <div className="flex w-full overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_40px,_black_calc(100%-40px),transparent_100%)]">
+              <div className="flex animate-marquee-trust w-max items-center gap-3 md:gap-10">
+                {[
+                  { label: "Cash on delivery", desc: "Pay at your doorstep" },
+                  { label: "Quality guaranteed", desc: "100% inspected timber" },
+                  { label: "West Bengal shipping", desc: "Free assembly in Jangipur" },
+                  { label: "Cash on delivery", desc: "Pay at your doorstep" },
+                  { label: "Quality guaranteed", desc: "100% inspected timber" },
+                  { label: "West Bengal shipping", desc: "Free assembly in Jangipur" }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 text-left glass px-4 py-2 rounded-full border border-border/60 flex-shrink-0">
+                    <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5 text-primary flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-foreground text-[11px] md:text-sm leading-tight">{item.label}</p>
+                      <p className="text-[9px] md:text-[10px] text-muted-foreground font-medium leading-tight">{item.desc}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Trending Products Zone */}
-      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <section className="py-6 sm:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center justify-between mb-8 pb-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-primary/15 dark:bg-primary/25 rounded-xl text-primary flex items-center justify-center shadow-sm">
@@ -128,7 +145,7 @@ export default async function HomePage() {
       </section>
 
       {/* Flagship Departments - Line-by-Line Shelves */}
-      <div className="space-y-10 sm:space-y-16 pb-24">
+      <div className="space-y-8 sm:space-y-12 pb-20">
         
         {/* Shelf 1: Living Room */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">

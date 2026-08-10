@@ -142,19 +142,21 @@ export function LiveChatWidget({ profile, userId }: { profile: Profile | null, u
   return (
     <>
       {/* Floating Chat Button */}
-      <div className="hidden md:block fixed bottom-8 right-8 z-50">
-        <Button 
-          onClick={handleOpenChat}
-          className="relative h-14 w-14 rounded-full bg-primary/80 hover:bg-primary shadow-2xl backdrop-blur-md border border-white/20 text-primary-foreground flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
-        >
-          <MessageCircle className="h-6 w-6" />
-        </Button>
-        {unreadCount > 0 && !isOpen && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[11px] font-bold h-6 min-w-[24px] flex items-center justify-center px-1.5 rounded-full shadow-[0_0_12px_rgba(239,68,68,0.8)] animate-pulse z-10 border-2 border-background">
-            {unreadCount > 99 ? '99+' : unreadCount}
-          </span>
-        )}
-      </div>
+      {pathname === '/' && (
+        <div className="hidden md:block fixed bottom-8 right-8 z-50">
+          <Button 
+            onClick={handleOpenChat}
+            className="relative h-14 w-14 rounded-full bg-primary/80 hover:bg-primary shadow-2xl backdrop-blur-md border border-white/20 text-primary-foreground flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+          >
+            <MessageCircle className="h-6 w-6" />
+          </Button>
+          {unreadCount > 0 && !isOpen && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[11px] font-bold h-6 min-w-[24px] flex items-center justify-center px-1.5 rounded-full shadow-[0_0_12px_rgba(239,68,68,0.8)] animate-pulse z-10 border-2 border-background">
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Phone Modal */}
       {isOpen && showPhoneModal && (
