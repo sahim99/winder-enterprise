@@ -48,7 +48,7 @@ export function LiveChatWidget({ profile, userId }: { profile: Profile | null, u
 
   useEffect(() => {
     if (profile?.phone) {
-      setTimeout(() => setPhone(profile.phone), 0)
+      setTimeout(() => setPhone(profile.phone || ''), 0)
     } else {
       const stored = typeof window !== 'undefined' ? localStorage.getItem('winder_customer_phone') : null
       if (stored) setTimeout(() => setPhone(stored), 0)

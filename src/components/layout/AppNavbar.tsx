@@ -46,7 +46,6 @@ export function AppNavbar() {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const searchContainerRef = useRef<HTMLDivElement>(null)
 
-  const totalItems = useCartStore(s => s.totalItems())
 
   useEffect(() => {
     const handleScroll = () => {
