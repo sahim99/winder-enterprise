@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { createServiceClient } from '@/lib/supabase/server'
 import { formatPrice } from '@/lib/utils'
-import { Users, Phone, Calendar, ShoppingBag, Mail, DollarSign } from 'lucide-react'
+import { Users, Phone, Calendar, ShoppingBag, Mail, DollarSign, Trash2 } from 'lucide-react'
+import { revalidatePath } from 'next/cache'
 
 export const metadata: Metadata = { title: 'Customers Directory — Winder Enterprise' }
 
@@ -56,12 +57,13 @@ export default async function AdminCustomersPage() {
                 <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Signed Up</th>
                 <th className="text-left px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Orders</th>
                 <th className="text-right px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Total Spent</th>
+                <th className="text-right px-6 py-3.5 font-semibold text-muted-foreground text-xs uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/40">
               {directory.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-12 text-muted-foreground">
+                  <td colSpan={7} className="text-center py-12 text-muted-foreground">
                     <Users className="h-10 w-10 text-muted-foreground/40 mx-auto mb-3" />
                     No registered customer profiles found.
                   </td>
@@ -133,6 +135,32 @@ export default async function AdminCustomersPage() {
                       </td>
                       <td className="px-6 py-4 font-bold text-foreground text-right">
                         {formatPrice(customer.totalSpent)}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <form action={async (formData: FormData) => {
+                          'use server'
+                          const id = formData.get('id') as string
+                          if (!id) return
+                          
+                          const supabase = await createServiceClient()
+                          
+                          // 1. Delete from profiles
+                          await supabase.from('profiles').delete().eq('id', id)
+                          
+                          // 2. Delete from auth.users (requires service role)
+                          await supabase.auth.admin.deleteUser(id)
+                          
+                          revalidatePath('/admin/customers')
+                        }}>
+                          <input type="hidden" name="id" value={customer.id} />
+                          <button 
+                            type="submit" 
+                            className="p-2 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+                            title="Delete Customer"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </form>
                       </td>
                     </tr>
                   )

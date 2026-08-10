@@ -24,7 +24,7 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 const navItems = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'Messages', href: '/admin/messages', icon: MessageCircle },
-  { label: 'Products', href: '/admin/products', icon: Package },
+  { label: 'Inventory', href: '/admin/products', icon: Package },
   { label: 'Bulk Uploader', href: '/admin/products/bulk', icon: Upload },
   { label: 'Orders', href: '/admin/orders', icon: ShoppingBag },
   { label: 'Billing & Invoices', href: '/admin/billing', icon: CreditCard },
