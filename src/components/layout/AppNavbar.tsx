@@ -110,8 +110,9 @@ export function AppNavbar() {
       if (u) {
         const name = u.user_metadata?.name || u.email || ''
         setUserInitial(name.charAt(0).toUpperCase())
-        useWishlistStore.getState().init()
+        useWishlistStore.getState().init().catch(console.error)
       }
+    }).catch(console.error).finally(() => {
       setAuthLoading(false)
     })
 
@@ -121,7 +122,7 @@ export function AppNavbar() {
       if (u) {
         const name = u.user_metadata?.name || u.email || ''
         setUserInitial(name.charAt(0).toUpperCase())
-        useWishlistStore.getState().init()
+        useWishlistStore.getState().init().catch(console.error)
       }
       setAuthLoading(false)
     })
