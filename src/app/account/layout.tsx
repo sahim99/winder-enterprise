@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
+import { signOut } from '@/app/actions/auth'
 
 const accountLinks = [
   { label: 'Overview', href: '/account' },
@@ -20,9 +20,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const pathname = usePathname()
 
   async function handleSignOut() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    window.location.href = '/'
+    await signOut()
   }
 
   return (
