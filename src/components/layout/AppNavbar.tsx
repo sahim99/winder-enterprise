@@ -71,19 +71,33 @@ export function AppNavbar() {
     setIsSearching(true)
     const supabase = createClient()
     
-    supabase
-      .from('products')
-      .select('id, name, slug, price, images, is_published')
-      .eq('is_published', true)
-      .ilike('name', `%${debouncedSearch.trim()}%`)
-      .limit(6)
-      .then(({ data }) => {
+    async function fetchSuggestions() {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('id, name, slug, price, images, is_published')
+          .eq('is_published', true)
+          .ilike('name', `%${debouncedSearch.trim()}%`)
+          .limit(6)
+          
         if (active) {
-          setSuggestions((data as Product[]) || [])
-          setIsSearching(false)
-          setShowSuggestions(true)
+          if (error) {
+            console.error(error)
+          } else {
+            setSuggestions((data as Product[]) || [])
+            setShowSuggestions(true)
+          }
         }
-      })
+      } catch (err) {
+        console.error(err)
+      } finally {
+        if (active) {
+          setIsSearching(false)
+        }
+      }
+    }
+    
+    fetchSuggestions()
 
     return () => {
       active = false
