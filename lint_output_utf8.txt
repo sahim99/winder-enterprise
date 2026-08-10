@@ -1,0 +1,309 @@
+﻿
+> tmpapp@0.1.0 lint
+> eslint
+
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\check-db-profiles.js
+   1:26  error    A `require()` style import is forbidden          @typescript-eslint/no-require-imports
+  20:17  warning  'roleCheck' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  28:17  warning  'orderCheck' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\check-db.js
+  1:26  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:7   warning  'fs' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  2:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\run-migration.js
+  1:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\run-test-products.js
+  1:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\scripts\check_table.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\scripts\test_insert.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\seed-catalog.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\seed-developer.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\seed-electronics.js
+   1:12  error    A `require()` style import is forbidden    @typescript-eslint/no-require-imports
+   2:14  error    A `require()` style import is forbidden    @typescript-eslint/no-require-imports
+   3:26  error    A `require()` style import is forbidden    @typescript-eslint/no-require-imports
+  40:13  warning  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\account\orders\page.tsx
+  6:10  warning  'Badge' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\account\page.tsx
+  3:10  warning  'Package' is defined but never used      @typescript-eslint/no-unused-vars
+  5:10  warning  'formatPrice' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\account\support\page.tsx
+   3:10  warning  'Badge' is defined but never used         @typescript-eslint/no-unused-vars
+  16:16  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\account\wishlist\page.tsx
+  49:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\actions\admin.ts
+  10:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\admin\billing\invoice\[id]\page.tsx
+  84:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\admin\billing\page.tsx
+  93:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\admin\customers\page.tsx
+   4:47  warning  'Mail' is defined but never used          @typescript-eslint/no-unused-vars
+   4:53  warning  'DollarSign' is defined but never used    @typescript-eslint/no-unused-vars
+  70:42  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\admin\messages\page.tsx
+   4:39  warning  'User' is defined but never used                                                                @typescript-eslint/no-unused-vars
+   4:52  warning  'MapPin' is defined but never used                                                              @typescript-eslint/no-unused-vars
+  66:3   warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  75:3   warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\admin\orders\page.tsx
+   9:7   warning  'STATUS_LABELS' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  16:7   warning  'STATUS_COLORS' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  47:30  error    Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+  91:36  error    Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\admin\page.tsx
+    7:3   warning  'MessageSquare' is defined but never used  @typescript-eslint/no-unused-vars
+  126:34  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  307:71  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  348:60  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\admin\products\page.tsx
+  63:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\admin\tickets\page.tsx
+   4:25  warning  'Phone' is defined but never used         @typescript-eslint/no-unused-vars
+   4:32  warning  'Mail' is defined but never used          @typescript-eslint/no-unused-vars
+  36:32  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\api\admin\products\[id]\route.ts
+  28:83  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\api\admin\products\route.ts
+  27:83  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\api\auth\dev-login\route.ts
+   4:28  warning  'request' is defined but never used  @typescript-eslint/no-unused-vars
+  25:12  warning  'error' is defined but never used    @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\api\auth\mark-developer\route.ts
+  4:28  warning  'request' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\api\messages\route.ts
+   48:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   50:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   95:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  182:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  208:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\api\orders\route.ts
+  54:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\checkout\page.tsx
+  83:9  error  Do not use an `<a>` element to navigate to `/products/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\login\page.tsx
+   23:9   warning  'router' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   50:5   error    Error: This value cannot be modified
+
+Modifying a variable defined outside a component or hook is not allowed. Consider using an effect.
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\login\page.tsx:50:5
+  48 |     await fetch('/api/auth/mark-developer', { method: 'POST' })
+  49 |     
+> 50 |     window.location.href = redirect
+     |     ^^^^^^^^^^^^^^^ value cannot be modified
+  51 |   }
+  52 |
+  53 |   async function handleGoogleLogin() {  react-hooks/immutability
+  155:31  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\page.tsx
+   3:48  warning  'Sparkles' is defined but never used             @typescript-eslint/no-unused-vars
+   4:10  warning  'buttonVariants' is defined but never used       @typescript-eslint/no-unused-vars
+   5:10  warning  'cn' is defined but never used                   @typescript-eslint/no-unused-vars
+  58:5   warning  'categories' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\products\[slug]\ProductDetailClient.tsx
+  25:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\products\page.tsx
+   5:10  warning  'Skeleton' is defined but never used                                                                                                                            @typescript-eslint/no-unused-vars
+  97:19  error    Do not use an `<a>` element to navigate to `/products/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\register\page.tsx
+  28:9  warning  'router' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  56:5  error    Error: This value cannot be modified
+
+Modifying a variable defined outside a component or hook is not allowed. Consider using an effect.
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\app\register\page.tsx:56:5
+  54 |     await fetch('/api/auth/mark-developer', { method: 'POST' })
+  55 |
+> 56 |     window.location.href = '/'
+     |     ^^^^^^^^^^^^^^^ value cannot be modified
+  57 |   }
+  58 |
+  59 |   async function handleGoogleLogin() {  react-hooks/immutability
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\account\LiveChatWidget.tsx
+  218:21  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  218:48  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  221:21  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  221:45  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\admin\AdminNav.tsx
+  48:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\admin\BulkUploadForm.tsx
+  142:19   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  198:85   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  198:95   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  198:98   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  198:110  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  267:21   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\admin\DeleteProductButton.tsx
+  47:45  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  47:59  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\admin\ProductForm.tsx
+   89:33  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  111:9   warning  'nameValue' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  111:21  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\admin\ProductForm.tsx:111:21
+  109 |   }
+  110 |
+> 111 |   const nameValue = watch('name')
+      |                     ^^^^^ React Hook Form's `useForm()` API returns a `watch()` function which cannot be memoized safely.
+  112 |
+  113 |   return (
+  114 |     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-2xl">  react-hooks/incompatible-library
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\admin\dashboard\CategoryRevenueBars.tsx
+  3:10  warning  'PieChart' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\admin\dashboard\LiveChatsWidget.tsx
+  19:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\admin\dashboard\OrderFunnelBars.tsx
+  18:11  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\admin\dashboard\StockHealthBars.tsx
+  2:8   warning  'Link' is defined but never used        @typescript-eslint/no-unused-vars
+  3:10  warning  'ArrowRight' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\cart\CartDrawer.tsx
+  9:10  warning  'Separator' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\home\HomeHero.tsx
+  7:10  warning  'Button' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\home\ScrollShowroom\index.tsx
+   3:38  warning  'useEffect' is defined but never used              @typescript-eslint/no-unused-vars
+   3:49  warning  'useCallback' is defined but never used            @typescript-eslint/no-unused-vars
+  31:7   warning  'DEPT_OFFSETS' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\layout\AppNavbar.tsx
+   5:24  warning  'Menu' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   5:30  warning  'X' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  15:23  warning  'SupabaseUser' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  74:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\layout\AppNavbar.tsx:74:5
+  72 |
+  73 |     let active = true
+> 74 |     setIsSearching(true)
+     |     ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  75 |     const supabase = createClient()
+  76 |     
+  77 |     async function fetchSuggestions() {  react-hooks/set-state-in-effect
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\layout\Footer.tsx
+   5:37  warning  'ArrowRight' is defined but never used           @typescript-eslint/no-unused-vars
+  31:10  warning  'isLoggedIn' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\layout\LandingNavbar.tsx
+  4:33  warning  'LogOut' is defined but never used   @typescript-eslint/no-unused-vars
+  4:41  warning  'User' is defined but never used     @typescript-eslint/no-unused-vars
+  4:47  warning  'Package' is defined but never used  @typescript-eslint/no-unused-vars
+  4:56  warning  'MapPin' is defined but never used   @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\layout\MobileBottomNav.tsx
+   6:42  warning  'User' is defined but never used                 @typescript-eslint/no-unused-vars
+   6:48  warning  'ShoppingBag' is defined but never used          @typescript-eslint/no-unused-vars
+  14:10  warning  'isLoggedIn' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  15:10  warning  'mounted' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  17:9   warning  'totalItems' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\layout\MobileSearchModal.tsx
+  56:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\layout\MobileSearchModal.tsx:56:5
+  54 |
+  55 |     let active = true
+> 56 |     setIsSearching(true)
+     |     ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  57 |     const supabase = createClient()
+  58 |
+  59 |     supabase  react-hooks/set-state-in-effect
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\orders\OrderTracker.tsx
+  13:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\src\components\products\ProductCard.tsx
+  12:10  warning  'ShoppingBag' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\test-pg.js
+  1:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\test-pg2.js
+  1:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\update_chair.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\Md Sahimuzzaman\Desktop\Winder-enterprise\verify-order.js
+  1:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+Γ£û 124 problems (69 errors, 55 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+

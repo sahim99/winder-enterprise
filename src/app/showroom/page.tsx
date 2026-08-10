@@ -15,10 +15,10 @@ async function getCategoryShelf(categorySlugs: string[], limit = 4) {
 
 export default async function ShowroomPage() {
   const [fashion, furniture, electronics, essentials] = await Promise.all([
-    getCategoryShelf(['fashion', 'clothing', 'shirts', 'pants'], 4),
-    getCategoryShelf(['sofas', 'chairs', 'tables', 'beds'], 4),
+    getCategoryShelf(['sofas', 'chairs', 'tables', 'office-chairs'], 4),
+    getCategoryShelf(['beds', 'wardrobes', 'dining-sets'], 4),
     getCategoryShelf(['televisions', 'air-conditioners', 'refrigerators', 'washing-machines'], 4),
-    getCategoryShelf(['decor', 'lighting', 'kitchen', 'wardrobes', 'dining-sets'], 4),
+    getCategoryShelf(['decor', 'lighting', 'kitchen'], 4),
   ])
 
   return (

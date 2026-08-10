@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useRef, useState, useEffect, useCallback } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { ScrollControls, useScroll, Preload, Text, Html, Billboard, Float } from '@react-three/drei'
 import * as THREE from 'three'
@@ -25,25 +25,22 @@ function formatINR(price: number) {
 }
 
 // ─── Scene Layout constants ───────────────────────────────────────────────────
-// Total scroll pages = 6, so scroll.offset goes 0 → 1 over 6 screen heights
-// Departments appear at: 20%, 40%, 60%, 80% of scroll
-const TOTAL_PAGES = 6
-const DEPT_OFFSETS = [0.18, 0.40, 0.62, 0.82] // scroll offset when each zone is front-and-center
+const TOTAL_PAGES = 7
 
-// Camera Z travel
-const CAM_Z_START = 10
-const CAM_Z_END = -10
-const CAM_Y = 2
+// Camera Z travel range
+const CAM_Z_START = 12
+const CAM_Z_END = -28
+const CAM_Y = 1.8
 
 // ─── CSS Background Layer (DOM-based, fog-immune, always crisp) ───────────────
 
 function BgLayer() {
   const backgrounds = [
     { src: '/winder-shop-v3.png',          label: 'Exterior',   activeFrom: 0,    activeTo: 0.15  },
-    { src: '/backgrounds/bg_fashion.png',  label: 'Fashion',    activeFrom: 0.14, activeTo: 0.34  },
-    { src: '/backgrounds/bg_furniture.png',label: 'Furniture',  activeFrom: 0.34, activeTo: 0.54  },
-    { src: '/backgrounds/bg_electronics.png', label: 'Electronics', activeFrom: 0.54, activeTo: 0.74 },
-    { src: '/backgrounds/bg_essentials.png',  label: 'Essentials',  activeFrom: 0.74, activeTo: 1.0  },
+    { src: '/backgrounds/bg_fashion.png',  label: 'Fashion',    activeFrom: 0.14, activeTo: 0.38  },
+    { src: '/backgrounds/bg_furniture.png',label: 'Furniture',  activeFrom: 0.36, activeTo: 0.60  },
+    { src: '/backgrounds/bg_electronics.png', label: 'Electronics', activeFrom: 0.58, activeTo: 0.82 },
+    { src: '/backgrounds/bg_essentials.png',  label: 'Essentials',  activeFrom: 0.80, activeTo: 1.0  },
   ]
 
   return (
@@ -58,7 +55,7 @@ function BgLayer() {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: i === 0 ? 1 : 0,
-            transition: 'opacity 0.1s linear',
+            transition: 'opacity 0.15s linear',
             willChange: 'opacity',
           }}
         />
@@ -75,17 +72,17 @@ function CameraController() {
   useFrame(({ camera }) => {
     const offset = scroll.offset
     
-    // Update backgrounds manually to bypass 60fps React renders
+    // Update backgrounds manually
     const bgContainer = document.getElementById('showroom-bg-container')
     if (bgContainer) {
       const backgrounds = [
         { activeFrom: 0,    activeTo: 0.15  },
-        { activeFrom: 0.14, activeTo: 0.34  },
-        { activeFrom: 0.34, activeTo: 0.54  },
-        { activeFrom: 0.54, activeTo: 0.74 },
-        { activeFrom: 0.74, activeTo: 1.0  },
+        { activeFrom: 0.14, activeTo: 0.38  },
+        { activeFrom: 0.36, activeTo: 0.60  },
+        { activeFrom: 0.58, activeTo: 0.82 },
+        { activeFrom: 0.80, activeTo: 1.0  },
       ]
-      const FADE_RANGE = 0.06
+      const FADE_RANGE = 0.08
       for (let i = 0; i < backgrounds.length; i++) {
         const bg = backgrounds[i]
         let opacity = 0
@@ -102,7 +99,7 @@ function CameraController() {
 
     const z = CAM_Z_START + offset * (CAM_Z_END - CAM_Z_START)
     camera.position.set(0, CAM_Y, z)
-    camera.lookAt(0, CAM_Y, z - 5)
+    camera.lookAt(0, CAM_Y - 0.2, z - 5)
   })
 
   return null
@@ -122,7 +119,7 @@ function ProductHotspot({ product, position, onSelect }: {
 
   useFrame(({ clock }) => {
     if (groupRef.current) {
-      groupRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * 1.5 + position[0]) * 0.08
+      groupRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * 1.5 + position[0]) * 0.06
     }
   })
 
@@ -134,60 +131,63 @@ function ProductHotspot({ product, position, onSelect }: {
       onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto' }}
       onClick={(e) => { e.stopPropagation(); onSelect() }}
     >
-      {/* HTML product card — no distanceFactor, so it's always full-size DOM overlay */}
-      <Html center zIndexRange={[50, 0]} occlude={false}>
+      {/* 3D HTML product card with distanceFactor for true 3D scaling */}
+      <Html center transform distanceFactor={7} zIndexRange={[50, 0]}>
         <div
           onClick={(e) => { e.stopPropagation(); onSelect() }}
           style={{
-            width: '170px',
-            background: 'rgba(255,255,255,0.98)',
-            borderRadius: '18px',
+            width: '210px',
+            background: 'rgba(255,255,255,0.95)',
+            backdropFilter: 'blur(12px)',
+            borderRadius: '20px',
             overflow: 'hidden',
             cursor: 'pointer',
+            border: '1px solid rgba(255,255,255,0.3)',
             transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
-            transform: hovered ? 'scale(1.1) translateY(-6px)' : 'scale(1)',
+            transform: hovered ? 'scale(1.08) translateY(-4px)' : 'scale(1)',
             boxShadow: hovered
-              ? '0 0 0 3px #d4a855, 0 20px 50px rgba(0,0,0,0.8)'
-              : '0 6px 24px rgba(0,0,0,0.6)',
+              ? '0 0 0 3px #d4a855, 0 20px 40px rgba(0,0,0,0.6)'
+              : '0 10px 30px rgba(0,0,0,0.4)',
           }}
         >
           {/* Product Image */}
-          <div style={{ height: '145px', background: '#1e293b', overflow: 'hidden', position: 'relative' }}>
+          <div style={{ height: '170px', background: '#0f172a', overflow: 'hidden', position: 'relative' }}>
             {imageUrl
               // eslint-disable-next-line @next/next/no-img-element
               ? <img src={imageUrl} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px' }}>🛍️</div>
+              : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px' }}>🛍️</div>
             }
             {/* Price badge */}
             <div style={{
               position: 'absolute', bottom: '8px', right: '8px',
               background: '#d4a855', color: '#0f172a',
-              padding: '3px 9px', borderRadius: '8px',
-              fontSize: '12px', fontWeight: 900,
+              padding: '4px 10px', borderRadius: '10px',
+              fontSize: '13px', fontWeight: 900,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
             }}>{price}</div>
           </div>
           {/* Product name */}
-          <div style={{ padding: '10px 12px', background: hovered ? '#0f172a' : '#fff', transition: 'background 0.2s' }}>
+          <div style={{ padding: '12px 14px', background: hovered ? '#0f172a' : '#ffffff', transition: 'background 0.2s' }}>
             <p style={{
               margin: 0, fontSize: '13px', fontWeight: 800, lineHeight: '1.3',
-              color: hovered ? '#fff' : '#0f172a',
+              color: hovered ? '#ffffff' : '#0f172a',
               display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
             }}>{product.name}</p>
-            <p style={{ margin: '4px 0 0', fontSize: '10px', color: hovered ? '#94a3b8' : '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>Tap to view</p>
+            <p style={{ margin: '4px 0 0', fontSize: '10px', color: hovered ? '#94a3b8' : '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tap to view</p>
           </div>
         </div>
       </Html>
 
       {/* Invisible hit-test box */}
       <mesh>
-        <boxGeometry args={[2, 3, 0.4]} />
+        <boxGeometry args={[2.5, 3.5, 0.4]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
       {/* Floor glow ring */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.5, 0]}>
-        <ringGeometry args={[0.5, 1, 32]} />
-        <meshBasicMaterial color="#d4a855" transparent opacity={hovered ? 0.5 : 0.12} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.2, 0]}>
+        <ringGeometry args={[0.6, 1.2, 32]} />
+        <meshBasicMaterial color="#d4a855" transparent opacity={hovered ? 0.6 : 0.18} />
       </mesh>
     </group>
   )
@@ -196,10 +196,10 @@ function ProductHotspot({ product, position, onSelect }: {
 // ─── Department Zone ──────────────────────────────────────────────────────────
 
 const ZONE_ICONS: Record<string, string> = {
-  'Fashion & Lifestyle':          '👗',
-  'Furniture & Home Décor':       '🛋️',
-  'Electronics & Appliances':     '📺',
-  'Home Essentials':              '🏠',
+  'Living Room & Sofas':        '🛋️',
+  'Bedroom & Dining':          '🛏️',
+  'Televisions & Appliances':   '📺',
+  'Home Decor & Essentials':    '✨',
 }
 
 function DepartmentZone({ name, products, position, onSelect }: {
@@ -216,10 +216,10 @@ function DepartmentZone({ name, products, position, onSelect }: {
       {/* Overhead department sign */}
       <Billboard follow>
         <Float speed={1} rotationIntensity={0} floatIntensity={0.1}>
-          <group position={[0, 4, 0]}>
+          <group position={[0, 4.2, 0]}>
             <mesh>
-              <planeGeometry args={[10, 1.4]} />
-              <meshBasicMaterial color="#000000" transparent opacity={0.35} />
+              <planeGeometry args={[11, 1.5]} />
+              <meshBasicMaterial color="#000000" transparent opacity={0.4} />
             </mesh>
             <Text
               position={[0, 0, 0.01]}
@@ -235,15 +235,16 @@ function DepartmentZone({ name, products, position, onSelect }: {
         </Float>
       </Billboard>
 
-      {/* Product cards spread horizontally */}
+      {/* Product cards arranged in a staggered 3D walkthrough aisle */}
       {valid.map((product, i) => {
-        const spacing = 3.2
-        const xOff = (i - (valid.length - 1) / 2) * spacing
+        const isLeft = i % 2 === 0
+        const xOff = isLeft ? -2.6 : 2.6
+        const zOff = -i * 2.2
         return (
           <ProductHotspot
             key={product.id}
             product={product}
-            position={[xOff, 0.5, 0]}
+            position={[xOff, 0.2, zOff]}
             onSelect={() => onSelect(product)}
           />
         )
@@ -252,28 +253,23 @@ function DepartmentZone({ name, products, position, onSelect }: {
   )
 }
 
-// ─── 3D Scene (transparent canvas over the CSS backgrounds) ──────────────────
+// ─── 3D Scene ─────────────────────────────────────────────────────────────────
 
 function Scene({ fashion, furniture, electronics, essentials, onSelect }: ShowroomProps & { onSelect: (p: Product) => void }) {
   return (
     <>
-      {/* Transparent background — CSS layers show through */}
       <color attach="background" args={['#000000']} />
       
-      <ambientLight intensity={0.7} />
+      <ambientLight intensity={0.8} />
       <directionalLight position={[0, 10, 5]} intensity={1.2} />
       
       <CameraController />
 
-      {/* Department Zones — positioned so they appear center-screen at the right scroll offset */}
-      {/* Fashion: visible at scroll 18-34%, centered at 26% */}
-      <DepartmentZone name="Fashion & Lifestyle"      products={fashion}     position={[0, 0, -1]}  onSelect={onSelect} />
-      {/* Furniture: visible at scroll 34-54%, centered at 47% */}
-      <DepartmentZone name="Furniture & Home Décor"   products={furniture}   position={[0, 0, -5]}  onSelect={onSelect} />
-      {/* Electronics: visible at scroll 54-74%, centered at 64% */}
-      <DepartmentZone name="Electronics & Appliances" products={electronics} position={[0, 0, -9]}  onSelect={onSelect} />
-      {/* Essentials: visible at scroll 74-100%, centered at 87% */}
-      <DepartmentZone name="Home Essentials"          products={essentials}  position={[0, 0, -13]} onSelect={onSelect} />
+      {/* Department Zones along Z-axis */}
+      <DepartmentZone name="Living Room & Sofas"      products={fashion}     position={[0, 0, 0]}   onSelect={onSelect} />
+      <DepartmentZone name="Bedroom & Dining"          products={furniture}   position={[0, 0, -8]}  onSelect={onSelect} />
+      <DepartmentZone name="Televisions & Appliances" products={electronics} position={[0, 0, -16]} onSelect={onSelect} />
+      <DepartmentZone name="Home Decor & Essentials"  products={essentials}  position={[0, 0, -24]} onSelect={onSelect} />
     </>
   )
 }
@@ -285,20 +281,19 @@ export default function ScrollShowroom(props: ShowroomProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div ref={containerRef} className="relative h-[100dvh] w-full bg-black overflow-hidden">
-      {/* Viewport locked to screen, ScrollControls handles internal scrolling */}
+    <div ref={containerRef} className="relative h-[100dvh] w-full bg-black overflow-hidden select-none">
       <div className="absolute inset-0">
         
-        {/* Layer 1: CSS background images (crisp, no fog, smooth crossfade) */}
+        {/* Layer 1: CSS background images */}
         <BgLayer />
 
-        {/* Layer 2: 3D canvas rendered over the backgrounds (transparent bg) */}
+        {/* Layer 2: 3D canvas */}
         <div className="absolute inset-0">
           <Canvas
             shadows={false}
             dpr={[1, 1.5]}
             camera={{ position: [0, CAM_Y, CAM_Z_START], fov: 55, near: 0.1, far: 100 }}
-            gl={{ antialias: true, alpha: true }} // alpha: true so canvas is transparent!
+            gl={{ antialias: true, alpha: true }}
           >
             <Suspense fallback={null}>
               <ScrollControls pages={TOTAL_PAGES} damping={0.2}>

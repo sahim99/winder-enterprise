@@ -102,7 +102,7 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
       {/* Sidebar: Desktop permanent sticky & Mobile slide-out drawer */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-56 lg:w-60 bg-background/60 backdrop-blur-2xl border-r border-border/40 flex flex-col shadow-2xl transition-transform duration-300 ease-in-out md:sticky md:top-0 md:h-screen md:translate-x-0 md:shadow-none shrink-0",
+          "fixed inset-y-0 left-0 z-50 w-56 lg:w-60 bg-background/60 backdrop-blur-2xl border-r border-border/40 flex flex-col shadow-2xl transition-transform duration-300 ease-in-out md:sticky md:top-0 md:h-screen md:translate-x-0 md:shadow-none shrink-0 hide-scrollbar",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -127,7 +127,7 @@ export function AdminNav({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto hide-scrollbar">
           {navItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href

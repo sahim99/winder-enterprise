@@ -3,6 +3,9 @@
 import { X, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { useCartStore } from '@/store/cart'
+import { useState } from 'react'
+import { Check } from 'lucide-react'
 import type { Product } from '@/types/supabase'
 
 interface VirtualShowroomPanelProps {
@@ -11,6 +14,10 @@ interface VirtualShowroomPanelProps {
 }
 
 export function VirtualShowroomPanel({ product, onClose }: VirtualShowroomPanelProps) {
+  const addItem = useCartStore((s) => s.addItem)
+  const setIsOpen = useCartStore((s) => s.setIsOpen)
+  const [added, setAdded] = useState(false)
+
   if (!product) return null
 
   // Get first image from the images array
@@ -91,11 +98,25 @@ export function VirtualShowroomPanel({ product, onClose }: VirtualShowroomPanelP
       {/* Action Buttons */}
       <div className="p-5 border-t border-white/10 bg-gray-900 space-y-3">
         <Button
-          className="w-full h-12 rounded-xl text-base font-bold bg-primary hover:bg-primary/90 text-white shadow-lg transition-all"
+          className="w-full h-12 rounded-xl text-base font-bold bg-primary hover:bg-primary/90 text-white shadow-lg transition-all cursor-pointer"
           disabled={!inStock}
+          onClick={() => {
+            addItem(product)
+            setAdded(true)
+            setTimeout(() => setAdded(false), 2000)
+            setIsOpen(true)
+          }}
         >
-          <ShoppingCart className="w-4 h-4 mr-2" />
-          {inStock ? 'Add to Cart' : 'Out of Stock'}
+          {added ? (
+            <>
+              <Check className="w-4 h-4 mr-2" /> Added to Cart!
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              {inStock ? 'Add to Cart' : 'Out of Stock'}
+            </>
+          )}
         </Button>
         <Link href={`/products/${product.slug}`} className="block w-full" onClick={onClose}>
           <Button variant="outline" className="w-full h-12 rounded-xl text-base font-bold border-white/20 text-white hover:bg-white/10 hover:text-white">
