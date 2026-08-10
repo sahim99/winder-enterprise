@@ -139,30 +139,7 @@ function LoginFormContent() {
             Don&apos;t have an account?{' '}
             <Link href="/register" className="text-foreground font-medium hover:underline">Register</Link>
           </p>
-          <div className="mt-6 border-t border-border/40 pt-4 text-center">
-            <button 
-              onClick={async () => {
-                setLoading(true)
-                setAuthError('')
-                try {
-                  const res = await fetch('/api/auth/dev-login', { method: 'POST' })
-                  if (!res.ok) {
-                    const data = await res.json()
-                    throw new Error(data.error || 'Failed to login as demo customer')
-                  }
-                  await fetch('/api/auth/mark-developer', { method: 'POST' })
-                  window.location.href = redirect
-                } catch (err: any) {
-                  setAuthError(err.message)
-                  setLoading(false)
-                }
-              }}
-              disabled={loading}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors bg-transparent border-none cursor-pointer"
-            >
-              Demo Customer Login (Bypass)
-            </button>
-          </div>
+
         </CardContent>
       </Card>
     </div>
